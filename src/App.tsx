@@ -227,7 +227,7 @@ function App({
               ),
             ].join(', ')}
           </div>
-          <div style={{ margin: 20, display: 'flex', maxHeight: 800 }}>
+          <div className="container">
             <div style={{ overflow: 'auto' }}>
               <div>
                 <ResultsTable

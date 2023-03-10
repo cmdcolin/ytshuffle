@@ -26,3 +26,16 @@ th,
 td {
   padding: 5px;
 }
+
+.container {
+  max-height: 800px;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 600px) {
+  .container {
+    flex-direction: row;
+    margin: 20px;
+  }
+}
