@@ -88,8 +88,22 @@ function ResultsTable({
 const root =
   'https://39b5dlncof.execute-api.us-east-1.amazonaws.com/youtubeApiV3'
 const start = 'https://www.youtube.com/watch?v=5Q5lry5g0ms'
-export default function App() {
-  const [text, setText] = useState(start)
+
+export default function App2() {
+  const queryString = window.location.search
+  const urlParams = new URLSearchParams(queryString)
+  const text = urlParams.get('ids')
+  const r =
+    text
+      ?.split(',')
+      .map(videoId => `https://www.youtube.com/watch?v=${videoId}`)
+      .join('\n') || start
+  console.log({ r })
+  return <App initialText={r} />
+}
+
+function App({ initialText }: { initialText: string }) {
+  const [text, setText] = useState(initialText)
   const [playlist, setPlaylist] = useState<Playlist>()
   const [error, setError] = useState<unknown>()
   const [maxResults, setMaxResults] = useState('50')
@@ -104,8 +118,11 @@ export default function App() {
             .split('\n')
             .map(f => f.trim())
             .filter(f => !!f)
+            .map(f => getvideoid(f))
             .map(async id => {
-              const res = await myfetch(`${root}?videoId=${getvideoid(id)}`)
+              const res = await myfetch(
+                `${root}?videoId=${id}&maxResults=${maxResults}`,
+              )
               return res.items
             }),
         )
@@ -156,9 +173,20 @@ export default function App() {
     setPlaylist({ ...playlist, items: shuffle(playlist.items) })
   }
 
+  useEffect(() => {
+    const ids = text
+      .split('\n')
+      .map(f => f.trim())
+      .filter(f => !!f)
+      .map(f => getvideoid(f))
+    var url = new URL(window.location.href)
+    url.searchParams.set('ids', ids.join(','))
+    window.history.replaceState({}, '', url)
+  }, [text])
+
   return (
     <div className="App">
-      <h1>schnuffler</h1>
+      <h1>ytshuffle</h1>
       <div style={{ display: 'block' }}>
         <label htmlFor="video">
           Enter a list of youtube videos, will gather ALL videos from channels
@@ -203,15 +231,15 @@ export default function App() {
                   onPlay={videoId => setPlaying(videoId)}
                 />
               </div>
-              <div>
-                {playing ? (
-                  <YouTube
-                    videoId={playing}
-                    opts={opts}
-                    onEnd={() => goToNext()}
-                  />
-                ) : null}
-              </div>
+            </div>
+            <div>
+              {playing ? (
+                <YouTube
+                  videoId={playing}
+                  opts={opts}
+                  onEnd={() => goToNext()}
+                />
+              ) : null}
             </div>
           </div>
         </div>
