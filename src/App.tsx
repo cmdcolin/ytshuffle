@@ -93,30 +93,39 @@ function App({
   initialMaxResults: string
 }) {
   const [text, setText] = useState(initialText)
-  const [playlist, setPlaylist] = useState<Playlist>()
+  const [videoMap, setVideoMap] = useState<Record<string, Playlist>>()
   const [error, setError] = useState<unknown>()
   const [maxResults, setMaxResults] = useState(initialMaxResults)
   const [playing, setPlaying] = useState<string>()
   const [shuffle, setShuffle] = useState(true)
+  const playlist = videoMap ? Object.values(videoMap).flat() : undefined
 
   useEffect(() => {
     let controller = new AbortController()
     ;(async () => {
       try {
         setError(undefined)
-        const items = await Promise.all(
-          text
-            .split('\n')
-            .map(f => f.trim())
-            .filter(f => !!f)
-            .map(f => getvideoid(f))
-            .map(id =>
-              myfetch(`${root}?videoId=${id}&maxResults=${maxResults}`, {
-                signal: controller.signal,
-              }),
-            ),
+        const videos = text
+          .split('\n')
+          .map(f => f.trim())
+          .filter((f): f is string => !!f)
+          .map(f => getvideoid(f))
+          .filter((f): f is string => !!f)
+        const items = Object.fromEntries(
+          await Promise.all(
+            videos.map(async id => [
+              id,
+              videoMap?.[id] ||
+                (await myfetch(
+                  `${root}?videoId=${id}&maxResults=${maxResults}`,
+                  {
+                    signal: controller.signal,
+                  },
+                )),
+            ]),
+          ),
         )
-        setPlaylist(items.flat())
+        setVideoMap(items)
       } catch (e) {
         if (!controller.signal.aborted) {
           console.error(e)
@@ -209,6 +218,14 @@ function App({
               checked={shuffle}
               onChange={event => setShuffle(event.target.checked)}
             />
+          </div>
+          <div>
+            Channels loaded:{' '}
+            {[
+              ...new Set(
+                playlist.map(item => item.snippet.videoOwnerChannelTitle),
+              ),
+            ].join(', ')}
           </div>
           <div style={{ margin: 20, display: 'flex', maxHeight: 800 }}>
             <div style={{ overflow: 'auto' }}>
