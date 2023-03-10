@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import YouTube from 'react-youtube'
+import { format } from 'timeago.js'
 import { getvideoid, myfetch } from './util'
 
 const opts = {
@@ -21,6 +22,7 @@ interface Item {
     videoOwnerChannelTitle: string
     resourceId: { videoId: string }
     title: string
+    publishedAt: string
   }
 }
 
@@ -42,6 +44,7 @@ function ResultsTable({
           <th>np</th>
           <th>title</th>
           <th>channel</th>
+          <th>published at</th>
           <th>play</th>
         </tr>
       </thead>
@@ -52,6 +55,7 @@ function ResultsTable({
               <td>{item.snippet.resourceId.videoId === playing ? '>' : ''}</td>
               <td>{item.snippet.title}</td>
               <td>{item.snippet.videoOwnerChannelTitle}</td>
+              <td>{format(item.snippet.publishedAt)}</td>
               <td>
                 <button onClick={() => onPlay(item.snippet.resourceId.videoId)}>
                   Play
@@ -100,10 +104,11 @@ function App({
   const [playing, setPlaying] = useState<string>()
   const [shuffle, setShuffle] = useState(true)
   const preFiltered = videoMap ? Object.values(videoMap).flat() : undefined
+  const lcFilter = filter.toLowerCase()
   const playlist = preFiltered?.filter(
     f =>
-      f.snippet.videoOwnerChannelTitle.toLowerCase().includes(filter) ||
-      f.snippet.title.toLowerCase().includes(filter),
+      f.snippet.videoOwnerChannelTitle.toLowerCase().includes(lcFilter) ||
+      f.snippet.title.toLowerCase().includes(lcFilter),
   )
 
   useEffect(() => {
@@ -119,16 +124,20 @@ function App({
           .filter((f): f is string => !!f)
         const items = Object.fromEntries(
           await Promise.all(
-            videos.map(async id => [
-              id,
-              videoMap?.[id] ||
-                (await myfetch(
-                  `${root}?videoId=${id}&maxResults=${maxResults}`,
-                  {
-                    signal: controller.signal,
-                  },
-                )),
-            ]),
+            videos.map(async id => {
+              // key map based on maxResults so that it is reactive to maxResult updates
+              const key = id + '_' + maxResults
+              return [
+                key,
+                videoMap?.[key] ||
+                  (await myfetch(
+                    `${root}?videoId=${id}&maxResults=${maxResults}`,
+                    {
+                      signal: controller.signal,
+                    },
+                  )),
+              ]
+            }),
           ),
         )
         setVideoMap(items)
