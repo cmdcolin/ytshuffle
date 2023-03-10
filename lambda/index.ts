@@ -40,12 +40,20 @@ async function getVideos(videoId: string, maxResults = '50') {
 exports.handler = async (event: {
   queryStringParameters: { videoId: string; maxResults: string }
 }) => {
-  const result = await getVideos(
-    event.queryStringParameters.videoId,
-    event.queryStringParameters.maxResults,
-  )
-  return {
-    statusCode: 200,
-    body: JSON.stringify(result),
+  try {
+    const result = await getVideos(
+      event.queryStringParameters.videoId,
+      event.queryStringParameters.maxResults,
+    )
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(result),
+    }
+  } catch (e) {
+    return {
+      statusCode: 500,
+      body: `${e}`,
+    }
   }
 }

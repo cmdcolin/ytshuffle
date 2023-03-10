@@ -251,7 +251,9 @@ function App({
                   [],
               ),
             ].map(s => (
-              <button onClick={() => setFilter(s)}>{s}</button>
+              <button onClick={() => setFilter(s)}>
+                {s} {videoMap?.[s].length}
+              </button>
             ))}
             <button onClick={() => setFilter('')}>All</button>
           </div>
@@ -276,9 +278,9 @@ function App({
             </div>
           </div>
         </div>
-      ) : (
+      ) : !error ? (
         'Loading...'
-      )}
+      ) : null}
       <a href="https://github.com/cmdcolin/ytshuffle">Github</a>
     </div>
   )

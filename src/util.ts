@@ -1,7 +1,7 @@
 export async function myfetch(url: string, rest?: RequestInit) {
   const response = await fetch(url, rest)
   if (!response.ok) {
-    throw new Error(`Failed to fetch ${response.status} ${response.statusText}`)
+    throw new Error(await response.text())
   }
   return response.json()
 }
