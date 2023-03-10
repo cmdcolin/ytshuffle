@@ -94,11 +94,17 @@ function App({
 }) {
   const [text, setText] = useState(initialText)
   const [videoMap, setVideoMap] = useState<Record<string, Playlist>>()
+  const [filter, setFilter] = useState('')
   const [error, setError] = useState<unknown>()
   const [maxResults, setMaxResults] = useState(initialMaxResults)
   const [playing, setPlaying] = useState<string>()
   const [shuffle, setShuffle] = useState(true)
-  const playlist = videoMap ? Object.values(videoMap).flat() : undefined
+  const preFiltered = videoMap ? Object.values(videoMap).flat() : undefined
+  const playlist = preFiltered?.filter(
+    f =>
+      f.snippet.videoOwnerChannelTitle.toLowerCase().includes(filter) ||
+      f.snippet.title.toLowerCase().includes(filter),
+  )
 
   useEffect(() => {
     let controller = new AbortController()
@@ -211,21 +217,34 @@ function App({
             <button onClick={() => setPlaying(undefined)}>Stop</button>
             <button onClick={() => goToNext()}>Next</button>
             <button onClick={() => goToPrev()}>Prev</button>
-            <label htmlFor="shuffle">Shuffle?</label>
+            <label htmlFor="shuffle">Shuffle? </label>
             <input
               id="shuffle"
               type="checkbox"
               checked={shuffle}
               onChange={event => setShuffle(event.target.checked)}
             />
+            <div>
+              <label htmlFor="filter">Filter: </label>
+              <input
+                id="filter"
+                type="text"
+                value={filter}
+                onChange={event => setFilter(event.target.value)}
+              />
+            </div>
           </div>
           <div>
             Channels loaded:{' '}
             {[
               ...new Set(
-                playlist.map(item => item.snippet.videoOwnerChannelTitle),
+                preFiltered?.map(item => item.snippet.videoOwnerChannelTitle) ||
+                  [],
               ),
-            ].join(', ')}
+            ].map(s => (
+              <button onClick={() => setFilter(s)}>{s}</button>
+            ))}
+            <button onClick={() => setFilter('')}>All</button>
           </div>
           <div className="container">
             <div style={{ overflow: 'auto' }}>
