@@ -1,5 +1,6 @@
 const API_KEY = '/* key */'
 const root = 'https://www.googleapis.com/youtube/v3'
+const playlistRoot = `${root}/playlistItems?part=snippet`
 
 async function myfetch(url: string) {
   const response = await fetch(url)
@@ -22,12 +23,20 @@ async function getVideos(videoId: string, maxResults = '50') {
     `${root}/channels?part=contentDetails&id=${channelId}&key=${API_KEY}`,
   )
   const playlistId = res1.items[0].contentDetails.relatedPlaylists.uploads
-  const res2 = await myfetch(
-    `${root}/playlistItems?part=snippet&maxResults=${maxResults}&playlistId=${playlistId}&key=${API_KEY}`,
+  let res2 = await myfetch(
+    `${playlistRoot}&maxResults=${maxResults}&playlistId=${playlistId}&key=${API_KEY}`,
   )
-  return res2
+  let items = res2.items
+  while (res2.nextPageToken) {
+    res2 = await myfetch(
+      `${playlistRoot}&maxResults=${maxResults}&playlistId=${playlistId}&key=${API_KEY}&pageToken=${res2.nextPageToken}`,
+    )
+    items = [...items, ...res2.items]
+  }
+  return items
 }
 
+// @ts-expect-error
 exports.handler = async (event: {
   queryStringParameters: { videoId: string; maxResults: string }
 }) => {

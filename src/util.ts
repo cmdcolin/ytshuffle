@@ -1,19 +1,18 @@
-export function shuffle<T>(array: T[]) {
-  let currentIndex = array.length,
-    randomIndex
-
-  // While there remain elements to shuffle.
-  while (currentIndex != 0) {
-    // Pick a remaining element.
-    randomIndex = Math.floor(Math.random() * currentIndex)
-    currentIndex--
-
-    // And swap it with the current element.
-    ;[array[currentIndex], array[randomIndex]] = [
-      array[randomIndex],
-      array[currentIndex],
-    ]
+export async function myfetch(url: string, rest?: RequestInit) {
+  const response = await fetch(url, rest)
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${response.status} ${response.statusText}`)
   }
+  return response.json()
+}
 
-  return array
+export function getvideoid(url: string) {
+  const regExp =
+    /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
+  const match = url.match(regExp)
+  if (match?.[2].length == 11) {
+    return match[2]
+  } else {
+    return undefined
+  }
 }

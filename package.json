@@ -1,20 +1,27 @@
 {
-  "name": "t2",
+  "name": "ytshuffle",
   "version": "0.0.0",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build"
+    "build": "tsc && vite build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
+    "postdeploy": "git push",
+    "lambda": "yarn tsc --target es2020 --moduleResolution nodenext lambda/index.ts"
   },
   "dependencies": {
-    "react": "^17.0.0",
-    "react-dom": "^17.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-youtube": "^10.1.0"
   },
   "devDependencies": {
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@types/youtube-player": "^5.5.7",
+    "@vitejs/plugin-react": "^3.1.0",
+    "gh-pages": "^5.0.0",
     "typescript": "^4.1.2",
-    "vite": "^1.0.0-rc.13",
-    "vite-plugin-react": "^4.0.0"
+    "vite": "^4.1.4"
   }
 }

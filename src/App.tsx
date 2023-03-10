@@ -1,33 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import YouTube from 'react-youtube'
-import { shuffle } from './util'
+import { getvideoid, myfetch } from './util'
 
 const opts = {
   height: '390',
   width: '640',
   playerVars: {
     // https://developers.google.com/youtube/player_parameters
-    autoplay: 1,
+    autoplay: 1 as const,
   },
-}
-
-async function myfetch(url: string) {
-  const response = await fetch(url)
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${response.status} ${response.statusText}`)
-  }
-  return response.json()
-}
-
-function getvideoid(url: string) {
-  const regExp =
-    /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
-  const match = url.match(regExp)
-  if (match?.[2].length == 11) {
-    return match[2]
-  } else {
-    return undefined
-  }
 }
 
 function ErrorMessage({ error }: { error: unknown }) {
@@ -43,9 +24,7 @@ interface Item {
   }
 }
 
-interface Playlist {
-  items: Item[]
-}
+type Playlist = Item[]
 
 function ResultsTable({
   playlist,
@@ -60,14 +39,14 @@ function ResultsTable({
     <table>
       <thead>
         <tr>
-          <th>playing</th>
+          <th>np</th>
           <th>title</th>
           <th>channel</th>
           <th>play</th>
         </tr>
       </thead>
       <tbody>
-        {playlist.items.map(item => {
+        {playlist.map(item => {
           return (
             <tr key={item.id}>
               <td>{item.snippet.resourceId.videoId === playing ? '>' : ''}</td>
@@ -90,26 +69,38 @@ const root =
 const start = 'https://www.youtube.com/watch?v=5Q5lry5g0ms'
 
 export default function App2() {
-  const queryString = window.location.search
-  const urlParams = new URLSearchParams(queryString)
+  const urlParams = new URLSearchParams(window.location.search)
   const text = urlParams.get('ids')
-  const r =
-    text
-      ?.split(',')
-      .map(videoId => `https://www.youtube.com/watch?v=${videoId}`)
-      .join('\n') || start
-  console.log({ r })
-  return <App initialText={r} />
+  const maxResults = urlParams.get('max')
+  return (
+    <App
+      initialText={
+        text
+          ?.split(',')
+          .map(videoId => `https://www.youtube.com/watch?v=${videoId}`)
+          .join('\n') || start
+      }
+      initialMaxResults={maxResults || '50'}
+    />
+  )
 }
 
-function App({ initialText }: { initialText: string }) {
+function App({
+  initialText,
+  initialMaxResults,
+}: {
+  initialText: string
+  initialMaxResults: string
+}) {
   const [text, setText] = useState(initialText)
   const [playlist, setPlaylist] = useState<Playlist>()
   const [error, setError] = useState<unknown>()
-  const [maxResults, setMaxResults] = useState('50')
+  const [maxResults, setMaxResults] = useState(initialMaxResults)
   const [playing, setPlaying] = useState<string>()
+  const [shuffle, setShuffle] = useState(true)
 
   useEffect(() => {
+    let controller = new AbortController()
     ;(async () => {
       try {
         setError(undefined)
@@ -119,58 +110,48 @@ function App({ initialText }: { initialText: string }) {
             .map(f => f.trim())
             .filter(f => !!f)
             .map(f => getvideoid(f))
-            .map(async id => {
-              const res = await myfetch(
-                `${root}?videoId=${id}&maxResults=${maxResults}`,
-              )
-              return res.items
-            }),
+            .map(id =>
+              myfetch(`${root}?videoId=${id}&maxResults=${maxResults}`, {
+                signal: controller.signal,
+              }),
+            ),
         )
-        setPlaylist({ items: items.flat() })
+        setPlaylist(items.flat())
       } catch (e) {
-        console.error(e)
-        setError(e)
+        if (!controller.signal.aborted) {
+          console.error(e)
+          setError(e)
+        }
       }
     })()
+
+    return () => controller.abort()
   }, [text, maxResults])
 
   function goToNext() {
     if (!playlist) {
       return
     }
-    setPlaying(
-      playlist.items[
-        Math.max(
-          0,
-          playlist.items.findIndex(
-            p => playing === p.snippet.resourceId.videoId,
-          ),
-        ) - 1
-      ].snippet.resourceId.videoId,
-    )
+    const next = shuffle
+      ? Math.floor(Math.random() * playlist.length)
+      : Math.min(
+          playlist.length,
+          playlist.findIndex(p => playing === p.snippet.resourceId.videoId),
+        ) + 1
+    setPlaying(playlist[next].snippet.resourceId.videoId)
   }
 
   function goToPrev() {
     if (!playlist) {
       return
     }
-    setPlaying(
-      playlist.items[
-        Math.max(
+    const prev = shuffle
+      ? Math.floor(Math.random() * playlist.length)
+      : Math.max(
           0,
-          playlist.items.findIndex(
-            p => playing === p.snippet.resourceId.videoId,
-          ),
+          playlist.findIndex(p => playing === p.snippet.resourceId.videoId),
         ) - 1
-      ].snippet.resourceId.videoId,
-    )
-  }
-
-  function shufflePlaylist() {
-    if (!playlist) {
-      return
-    }
-    setPlaylist({ ...playlist, items: shuffle(playlist.items) })
+    setPlaying(playlist[prev].snippet.resourceId.videoId)
   }
 
   useEffect(() => {
@@ -181,16 +162,17 @@ function App({ initialText }: { initialText: string }) {
       .map(f => getvideoid(f))
     var url = new URL(window.location.href)
     url.searchParams.set('ids', ids.join(','))
+    url.searchParams.set('max', maxResults)
     window.history.replaceState({}, '', url)
-  }, [text])
+  }, [text, maxResults])
 
   return (
     <div className="App">
       <h1>ytshuffle</h1>
       <div style={{ display: 'block' }}>
         <label htmlFor="video">
-          Enter a list of youtube videos, will gather ALL videos from channels
-          associated with these videos:
+          Enter a list of youtube videos, will gather "Max results" videos from
+          channels associated with these videos:
         </label>
         <div>
           <textarea
@@ -220,7 +202,13 @@ function App({ initialText }: { initialText: string }) {
             <button onClick={() => setPlaying(undefined)}>Stop</button>
             <button onClick={() => goToNext()}>Next</button>
             <button onClick={() => goToPrev()}>Prev</button>
-            <button onClick={() => shufflePlaylist()}>Shuffle</button>
+            <label htmlFor="shuffle">Shuffle?</label>
+            <input
+              id="shuffle"
+              type="checkbox"
+              checked={shuffle}
+              onChange={event => setShuffle(event.target.checked)}
+            />
           </div>
           <div style={{ margin: 20, display: 'flex', maxHeight: 800 }}>
             <div style={{ overflow: 'auto' }}>
@@ -246,6 +234,7 @@ function App({ initialText }: { initialText: string }) {
       ) : (
         'Loading...'
       )}
+      <a href="https://github.com/cmdcolin/ytshuffle">Github</a>
     </div>
   )
 }
