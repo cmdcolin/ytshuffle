@@ -36,7 +36,7 @@ function ResultsTable({
   playing?: string
 }) {
   return (
-    <table>
+    <table className="fixed_header">
       <thead>
         <tr>
           <th>np</th>

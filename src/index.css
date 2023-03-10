@@ -7,9 +7,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+th {
+  text-align: left;
+  background: black;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 table,
@@ -21,7 +25,4 @@ td {
 th,
 td {
   padding: 5px;
-}
-th {
-  text-align: left;
 }
