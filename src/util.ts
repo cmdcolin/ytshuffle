@@ -16,3 +16,17 @@ export function getvideoid(url: string) {
     return undefined
   }
 }
+
+export interface Item {
+  id: string
+  snippet: {
+    videoOwnerChannelTitle: string
+    resourceId: { videoId: string }
+    title: string
+    publishedAt: string
+  }
+}
+
+export type Playlist = Item[]
+
+export type PlaylistMap = Record<string, Playlist>

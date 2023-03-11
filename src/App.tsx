@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import YouTube from 'react-youtube'
-import { format } from 'timeago.js'
-import { getvideoid, myfetch } from './util'
+import { getvideoid, myfetch, PlaylistMap } from './util'
+import PlaylistTable from './PlaylistTable'
 
 const opts = {
   height: '390',
@@ -16,58 +16,6 @@ function ErrorMessage({ error }: { error: unknown }) {
   return <div style={{ color: 'red' }}>{`${error}`}</div>
 }
 
-interface Item {
-  id: string
-  snippet: {
-    videoOwnerChannelTitle: string
-    resourceId: { videoId: string }
-    title: string
-    publishedAt: string
-  }
-}
-
-type Playlist = Item[]
-
-function ResultsTable({
-  playlist,
-  onPlay,
-  playing,
-}: {
-  playlist: Playlist
-  onPlay: (str: string) => void
-  playing?: string
-}) {
-  return (
-    <table className="fixed_header">
-      <thead>
-        <tr>
-          <th>np</th>
-          <th>title</th>
-          <th>channel</th>
-          <th>published at</th>
-          <th>play</th>
-        </tr>
-      </thead>
-      <tbody>
-        {playlist.map(item => {
-          return (
-            <tr key={item.id}>
-              <td>{item.snippet.resourceId.videoId === playing ? '>' : ''}</td>
-              <td>{item.snippet.title}</td>
-              <td>{item.snippet.videoOwnerChannelTitle}</td>
-              <td>{format(item.snippet.publishedAt)}</td>
-              <td>
-                <button onClick={() => onPlay(item.snippet.resourceId.videoId)}>
-                  Play
-                </button>
-              </td>
-            </tr>
-          )
-        })}
-      </tbody>
-    </table>
-  )
-}
 const root =
   'https://39b5dlncof.execute-api.us-east-1.amazonaws.com/youtubeApiV3'
 const start = 'https://www.youtube.com/watch?v=5Q5lry5g0ms'
@@ -76,6 +24,7 @@ export default function App2() {
   const urlParams = new URLSearchParams(window.location.search)
   const text = urlParams.get('ids')
   const maxResults = urlParams.get('max')
+  const initialMap = localStorage.getItem('map')
   return (
     <App
       initialText={
@@ -85,6 +34,7 @@ export default function App2() {
           .join('\n') || start
       }
       initialMaxResults={maxResults || '50'}
+      initialMap={initialMap ? JSON.parse(initialMap) : undefined}
     />
   )
 }
@@ -92,18 +42,29 @@ export default function App2() {
 function App({
   initialText,
   initialMaxResults,
+  initialMap,
 }: {
   initialText: string
   initialMaxResults: string
+  initialMap?: PlaylistMap
 }) {
   const [text, setText] = useState(initialText)
-  const [videoMap, setVideoMap] = useState<Record<string, Playlist>>()
+  const [videoMap, setVideoMap] = useState<PlaylistMap | undefined>(initialMap)
   const [filter, setFilter] = useState('')
   const [error, setError] = useState<unknown>()
   const [maxResults, setMaxResults] = useState(initialMaxResults)
   const [playing, setPlaying] = useState<string>()
   const [shuffle, setShuffle] = useState(true)
   const preFiltered = videoMap ? Object.values(videoMap).flat() : undefined
+  const counts = {} as Record<string, number>
+  if (preFiltered) {
+    for (const row of preFiltered) {
+      if (!counts[row.snippet.videoOwnerChannelTitle]) {
+        counts[row.snippet.videoOwnerChannelTitle] = 0
+      }
+      counts[row.snippet.videoOwnerChannelTitle]++
+    }
+  }
   const lcFilter = filter.toLowerCase()
   const playlist = preFiltered?.filter(
     f =>
@@ -116,7 +77,7 @@ function App({
     ;(async () => {
       try {
         setError(undefined)
-        const videos = text
+        const videoIds = text
           .split('\n')
           .map(f => f.trim())
           .filter((f): f is string => !!f)
@@ -124,7 +85,7 @@ function App({
           .filter((f): f is string => !!f)
         const items = Object.fromEntries(
           await Promise.all(
-            videos.map(async id => {
+            videoIds.map(async id => {
               // key map based on maxResults so that it is reactive to maxResult updates
               const key = id + '_' + maxResults
               return [
@@ -140,6 +101,8 @@ function App({
             }),
           ),
         )
+
+        localStorage.setItem('map', JSON.stringify(items))
         setVideoMap(items)
       } catch (e) {
         if (!controller.signal.aborted) {
@@ -152,29 +115,29 @@ function App({
     return () => controller.abort()
   }, [text, maxResults])
 
+  function findIdx(playing: string) {
+    return (
+      playlist?.findIndex(p => playing === p.snippet.resourceId.videoId) || -1
+    )
+  }
+
   function goToNext() {
-    if (!playlist) {
+    if (!playlist || !playing) {
       return
     }
     const next = shuffle
       ? Math.floor(Math.random() * playlist.length)
-      : Math.min(
-          playlist.length,
-          playlist.findIndex(p => playing === p.snippet.resourceId.videoId),
-        ) + 1
+      : Math.min(playlist.length, findIdx(playing)) + 1
     setPlaying(playlist[next].snippet.resourceId.videoId)
   }
 
   function goToPrev() {
-    if (!playlist) {
+    if (!playlist || !playing) {
       return
     }
     const prev = shuffle
       ? Math.floor(Math.random() * playlist.length)
-      : Math.max(
-          0,
-          playlist.findIndex(p => playing === p.snippet.resourceId.videoId),
-        ) - 1
+      : Math.max(0, findIdx(playing)) - 1
     setPlaying(playlist[prev].snippet.resourceId.videoId)
   }
 
@@ -193,10 +156,12 @@ function App({
   return (
     <div className="App">
       <h1>ytshuffle</h1>
-      <div style={{ display: 'block' }}>
+      <div style={{ maxWidth: 600 }}>
         <label htmlFor="video">
-          Enter a list of youtube videos, will gather "Max results" videos from
-          channels associated with these videos:
+          Enter a list of youtube videos separated by newlines, this page will
+          then gather all the videos from the channels that uploaded these
+          videos (I couldn't figure out how to fetch videos from the channel URL
+          itself):
         </label>
         <div>
           <textarea
@@ -208,10 +173,10 @@ function App({
           />
         </div>
       </div>
-      <div style={{ display: 'block' }}>
-        <label htmlFor="maxResults">Max results: </label>
+      <div>
+        <label htmlFor="maxres">Max results: </label>
         <input
-          id="maxResults"
+          id="maxres"
           type="text"
           value={maxResults}
           onChange={event => setMaxResults(event.target.value)}
@@ -233,40 +198,31 @@ function App({
               checked={shuffle}
               onChange={event => setShuffle(event.target.checked)}
             />
-            <div>
-              <label htmlFor="filter">Filter: </label>
-              <input
-                id="filter"
-                type="text"
-                value={filter}
-                onChange={event => setFilter(event.target.value)}
-              />
-            </div>
           </div>
           <div>
-            Channels loaded:{' '}
-            {[
-              ...new Set(
-                preFiltered?.map(item => item.snippet.videoOwnerChannelTitle) ||
-                  [],
-              ),
-            ].map(s => (
-              <button onClick={() => setFilter(s)}>
-                {s} {videoMap?.[s].length}
+            Channels loaded (click button to filter particular channel):{' '}
+            {Object.entries(counts).map(([key, value]) => (
+              <button onClick={() => setFilter(key)}>
+                {key} ({value || 0})
               </button>
             ))}
             <button onClick={() => setFilter('')}>All</button>
           </div>
+          <div>
+            <label htmlFor="filter">Filter/search table: </label>
+            <input
+              id="filter"
+              type="text"
+              value={filter}
+              onChange={event => setFilter(event.target.value)}
+            />
+          </div>
           <div className="container">
-            <div style={{ overflow: 'auto' }}>
-              <div>
-                <ResultsTable
-                  playlist={playlist}
-                  playing={playing}
-                  onPlay={videoId => setPlaying(videoId)}
-                />
-              </div>
-            </div>
+            <PlaylistTable
+              playlist={playlist}
+              playing={playing}
+              onPlay={videoId => setPlaying(videoId)}
+            />
             <div>
               {playing ? (
                 <YouTube
