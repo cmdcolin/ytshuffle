@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import YouTube from 'react-youtube'
-import { getvideoid, myfetch, PlaylistMap } from './util'
+import { getvideoid, myfetch, PreItem, Item, PlaylistMap } from './util'
+import localForage from 'localforage'
 import PlaylistTable from './PlaylistTable'
 
 const opts = {
@@ -24,7 +25,6 @@ export default function App2() {
   const urlParams = new URLSearchParams(window.location.search)
   const text = urlParams.get('ids')
   const maxResults = urlParams.get('max')
-  const initialMap = localStorage.getItem('map')
   return (
     <App
       initialText={
@@ -34,22 +34,29 @@ export default function App2() {
           .join('\n') || start
       }
       initialMaxResults={maxResults || '50'}
-      initialMap={initialMap ? JSON.parse(initialMap) : undefined}
     />
   )
+}
+
+function remap(items: PreItem[]): Item[] {
+  return items.map(item => ({
+    id: item.id,
+    channel: item.snippet.videoOwnerChannelTitle,
+    videoId: item.snippet.resourceId.videoId,
+    title: item.snippet.title,
+    publishedAt: item.snippet.publishedAt,
+  }))
 }
 
 function App({
   initialText,
   initialMaxResults,
-  initialMap,
 }: {
   initialText: string
   initialMaxResults: string
-  initialMap?: PlaylistMap
 }) {
   const [text, setText] = useState(initialText)
-  const [videoMap, setVideoMap] = useState<PlaylistMap | undefined>(initialMap)
+  const [videoMap, setVideoMap] = useState<PlaylistMap>()
   const [filter, setFilter] = useState('')
   const [error, setError] = useState<unknown>()
   const [maxResults, setMaxResults] = useState(initialMaxResults)
@@ -59,17 +66,17 @@ function App({
   const counts = {} as Record<string, number>
   if (preFiltered) {
     for (const row of preFiltered) {
-      if (!counts[row.snippet.videoOwnerChannelTitle]) {
-        counts[row.snippet.videoOwnerChannelTitle] = 0
+      if (!counts[row.channel]) {
+        counts[row.channel] = 0
       }
-      counts[row.snippet.videoOwnerChannelTitle]++
+      counts[row.channel]++
     }
   }
   const lcFilter = filter.toLowerCase()
   const playlist = preFiltered?.filter(
     f =>
-      f.snippet.videoOwnerChannelTitle.toLowerCase().includes(lcFilter) ||
-      f.snippet.title.toLowerCase().includes(lcFilter),
+      f.channel.toLowerCase().includes(lcFilter) ||
+      f.title.toLowerCase().includes(lcFilter),
   )
 
   useEffect(() => {
@@ -83,26 +90,31 @@ function App({
           .filter((f): f is string => !!f)
           .map(f => getvideoid(f))
           .filter((f): f is string => !!f)
+        const map = JSON.parse(
+          (await localForage.getItem('map')) || '{}',
+        ) as PlaylistMap
+        console.log({ map })
         const items = Object.fromEntries(
           await Promise.all(
             videoIds.map(async id => {
-              // key map based on maxResults so that it is reactive to maxResult updates
               const key = id + '_' + maxResults
               return [
                 key,
-                videoMap?.[key] ||
-                  (await myfetch(
-                    `${root}?videoId=${id}&maxResults=${maxResults}`,
-                    {
-                      signal: controller.signal,
-                    },
-                  )),
-              ]
+                map?.[key] ||
+                  remap(
+                    await myfetch<PreItem[]>(
+                      `${root}?videoId=${id}&maxResults=${maxResults}`,
+                      {
+                        signal: controller.signal,
+                      },
+                    ),
+                  ),
+              ] as const
             }),
           ),
         )
 
-        localStorage.setItem('map', JSON.stringify(items))
+        localForage.setItem('map', JSON.stringify(items))
         setVideoMap(items)
       } catch (e) {
         if (!controller.signal.aborted) {
@@ -116,9 +128,7 @@ function App({
   }, [text, maxResults])
 
   function findIdx(playing: string) {
-    return (
-      playlist?.findIndex(p => playing === p.snippet.resourceId.videoId) || -1
-    )
+    return playlist?.findIndex(p => playing === p.videoId) || -1
   }
 
   function goToNext() {
@@ -128,7 +138,7 @@ function App({
     const next = shuffle
       ? Math.floor(Math.random() * playlist.length)
       : Math.min(playlist.length, findIdx(playing)) + 1
-    setPlaying(playlist[next].snippet.resourceId.videoId)
+    setPlaying(playlist[next].videoId)
   }
 
   function goToPrev() {
@@ -138,7 +148,7 @@ function App({
     const prev = shuffle
       ? Math.floor(Math.random() * playlist.length)
       : Math.max(0, findIdx(playing)) - 1
-    setPlaying(playlist[prev].snippet.resourceId.videoId)
+    setPlaying(playlist[prev].videoId)
   }
 
   useEffect(() => {
@@ -202,7 +212,7 @@ function App({
           <div>
             Channels loaded (click button to filter particular channel):{' '}
             {Object.entries(counts).map(([key, value]) => (
-              <button onClick={() => setFilter(key)}>
+              <button key={key} onClick={() => setFilter(key)}>
                 {key} ({value || 0})
               </button>
             ))}

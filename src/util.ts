@@ -1,9 +1,9 @@
-export async function myfetch(url: string, rest?: RequestInit) {
+export async function myfetch<T>(url: string, rest?: RequestInit) {
   const response = await fetch(url, rest)
   if (!response.ok) {
     throw new Error(await response.text())
   }
-  return response.json()
+  return response.json() as T
 }
 
 export function getvideoid(url: string) {
@@ -17,7 +17,7 @@ export function getvideoid(url: string) {
   }
 }
 
-export interface Item {
+export interface PreItem {
   id: string
   snippet: {
     videoOwnerChannelTitle: string
@@ -25,6 +25,14 @@ export interface Item {
     title: string
     publishedAt: string
   }
+}
+
+export interface Item {
+  id: string
+  channel: string
+  videoId: string
+  title: string
+  publishedAt: string
 }
 
 export type Playlist = Item[]

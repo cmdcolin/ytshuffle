@@ -27,18 +27,12 @@ export default function PlaylistTable({
           {playlist.map(item => {
             return (
               <tr key={item.id}>
+                <td>{item.videoId === playing ? '>' : ''}</td>
+                <td>{item.title}</td>
+                <td>{item.channel}</td>
+                <td>{format(item.publishedAt)}</td>
                 <td>
-                  {item.snippet.resourceId.videoId === playing ? '>' : ''}
-                </td>
-                <td>{item.snippet.title}</td>
-                <td>{item.snippet.videoOwnerChannelTitle}</td>
-                <td>{format(item.snippet.publishedAt)}</td>
-                <td>
-                  <button
-                    onClick={() => onPlay(item.snippet.resourceId.videoId)}
-                  >
-                    Play
-                  </button>
+                  <button onClick={() => onPlay(item.videoId)}>Play</button>
                 </td>
               </tr>
             )
