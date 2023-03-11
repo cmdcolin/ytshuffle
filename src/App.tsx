@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import YouTube from 'react-youtube'
-import { getvideoid, myfetch, PreItem, Item, PlaylistMap } from './util'
+import {
+  getvideoid,
+  myfetch,
+  PreItem,
+  Item,
+  PlaylistMap,
+  Playlist,
+} from './util'
 import localForage from 'localforage'
 import PlaylistTable from './PlaylistTable'
 
@@ -62,6 +69,7 @@ function App({
   const [maxResults, setMaxResults] = useState(initialMaxResults)
   const [playing, setPlaying] = useState<string>()
   const [shuffle, setShuffle] = useState(true)
+  const [autoplay, setAutoplay] = useState(true)
   const preFiltered = videoMap ? Object.values(videoMap).flat() : undefined
   const counts = {} as Record<string, number>
   if (preFiltered) {
@@ -90,31 +98,28 @@ function App({
           .filter((f): f is string => !!f)
           .map(f => getvideoid(f))
           .filter((f): f is string => !!f)
-        const map = JSON.parse(
-          (await localForage.getItem('map')) || '{}',
-        ) as PlaylistMap
-        console.log({ map })
+
         const items = Object.fromEntries(
           await Promise.all(
             videoIds.map(async id => {
               const key = id + '_' + maxResults
-              return [
-                key,
-                map?.[key] ||
-                  remap(
-                    await myfetch<PreItem[]>(
-                      `${root}?videoId=${id}&maxResults=${maxResults}`,
-                      {
-                        signal: controller.signal,
-                      },
-                    ),
+              let r1 = await localForage.getItem<Playlist>(key)
+              if (!r1) {
+                r1 = remap(
+                  await myfetch<PreItem[]>(
+                    `${root}?videoId=${id}&maxResults=${maxResults}`,
+                    {
+                      signal: controller.signal,
+                    },
                   ),
-              ] as const
+                )
+                await localForage.setItem(key, r1)
+              }
+              return [key, r1] as const
             }),
           ),
         )
 
-        localForage.setItem('map', JSON.stringify(items))
         setVideoMap(items)
       } catch (e) {
         if (!controller.signal.aborted) {
@@ -208,6 +213,13 @@ function App({
               checked={shuffle}
               onChange={event => setShuffle(event.target.checked)}
             />
+            <label htmlFor="autoplay">Autoplay? </label>
+            <input
+              id="autoplay"
+              type="checkbox"
+              checked={autoplay}
+              onChange={event => setAutoplay(event.target.checked)}
+            />
           </div>
           <div>
             Channels loaded (click button to filter particular channel):{' '}
@@ -238,7 +250,11 @@ function App({
                 <YouTube
                   videoId={playing}
                   opts={opts}
-                  onEnd={() => goToNext()}
+                  onEnd={() => {
+                    if (autoplay) {
+                      goToNext()
+                    }
+                  }}
                 />
               ) : null}
             </div>
