@@ -264,6 +264,13 @@ function App({
         'Loading...'
       ) : null}
       <a href="https://github.com/cmdcolin/ytshuffle">Github</a>
+      <p>
+        Note: this app does not refresh channel contents after first fetching
+        them, and persists the channel feed in your local storage to avoid
+        hammering the youtube API repeatedly on page refresh. If you want to
+        refresh the channels content, clear your local storage. I will aim to
+        make a built in refresh button on the app soon.
+      </p>
     </div>
   )
 }
