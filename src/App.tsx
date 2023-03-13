@@ -24,24 +24,73 @@ function ErrorMessage({ error }: { error: unknown }) {
   return <div style={{ color: 'red' }}>{`${error}`}</div>
 }
 
+function getIds(text: string) {
+  return text
+    .split('\n')
+    .map(f => f.trim())
+    .filter((f): f is string => !!f)
+    .map(f => getvideoid(f))
+    .filter((f): f is string => !!f)
+}
 const root =
   'https://39b5dlncof.execute-api.us-east-1.amazonaws.com/youtubeApiV3'
 const start = 'https://www.youtube.com/watch?v=5Q5lry5g0ms'
 
 export default function App2() {
+  const [showModal, setShowModal] = useState(!localStorage.getItem('confirmed'))
   const urlParams = new URLSearchParams(window.location.search)
   const text = urlParams.get('ids')
   const maxResults = urlParams.get('max')
   return (
-    <App
-      initialText={
-        text
-          ?.split(',')
-          .map(videoId => `https://www.youtube.com/watch?v=${videoId}`)
-          .join('\n') || start
-      }
-      initialMaxResults={maxResults || '50'}
-    />
+    <>
+      <dialog open={showModal} style={{ maxWidth: 500 }}>
+        <p>
+          By using this website you agree to usage of the "Privacy Policy" below
+        </p>
+        <p>
+          This website (the "app") uses an "API Client" to access the Youtube
+          Data API. This app does not collect any data related to your usage.
+          The app allows third parties to serve content, including
+          advertisements just by virtue of Youtube doing so. See also{' '}
+          <a href="https://www.youtube.com/t/terms">
+            YouTube's Terms of Service
+          </a>{' '}
+          and{' '}
+          <a href="http://www.google.com/policies/privacy">
+            Google's privacy policy
+          </a>
+          .
+        </p>
+        <p>
+          I added this consent screen because Google asks users of their API to
+          do so{' '}
+          <a href="https://developers.google.com/youtube/terms/developer-policies">
+            here
+          </a>
+          . If there are any concerns, you can e-mail{' '}
+          <a href="mailto:colin.diesh@gmail.com">me</a>.
+        </p>
+
+        <button
+          onClick={() => {
+            localStorage.setItem('confirmed', 'true')
+            setShowModal(false)
+          }}
+        >
+          accept
+        </button>
+      </dialog>
+      <App
+        initialText={
+          text
+            ?.split(',')
+            .map(videoId => `https://www.youtube.com/watch?v=${videoId}`)
+            .join('\n') || start
+        }
+        initialMaxResults={maxResults || '50'}
+        showPrivacyPolicy={() => setShowModal(true)}
+      />
+    </>
   )
 }
 
@@ -58,9 +107,11 @@ function remap(items: PreItem[]): Item[] {
 function App({
   initialText,
   initialMaxResults,
+  showPrivacyPolicy,
 }: {
   initialText: string
   initialMaxResults: string
+  showPrivacyPolicy: () => void
 }) {
   const [text, setText] = useState(initialText)
   const [videoMap, setVideoMap] = useState<PlaylistMap>()
@@ -92,13 +143,7 @@ function App({
     ;(async () => {
       try {
         setError(undefined)
-        const videoIds = text
-          .split('\n')
-          .map(f => f.trim())
-          .filter((f): f is string => !!f)
-          .map(f => getvideoid(f))
-          .filter((f): f is string => !!f)
-
+        const videoIds = getIds(text)
         const items = Object.fromEntries(
           await Promise.all(
             videoIds.map(async id => {
@@ -157,13 +202,8 @@ function App({
   }
 
   useEffect(() => {
-    const ids = text
-      .split('\n')
-      .map(f => f.trim())
-      .filter(f => !!f)
-      .map(f => getvideoid(f))
     var url = new URL(window.location.href)
-    url.searchParams.set('ids', ids.join(','))
+    url.searchParams.set('ids', getIds(text).join(','))
     url.searchParams.set('max', maxResults)
     window.history.replaceState({}, '', url)
   }, [text, maxResults])
@@ -265,12 +305,19 @@ function App({
       ) : null}
       <a href="https://github.com/cmdcolin/ytshuffle">Github</a>
       <p>
-        Note: this app does not refresh channel contents after first fetching
-        them, and persists the channel feed in your local storage to avoid
-        hammering the youtube API repeatedly on page refresh. If you want to
-        refresh the channels content, clear your local storage. I will aim to
-        make a built in refresh button on the app soon.
+        Note: this app caches data to avoid repeatedly fetching data from
+        youtube, but will new uploads from channels. Click here to clear this
+        cache and get e.g. the latest videos from the channel{' '}
+        <button
+          onClick={() => {
+            localForage.clear()
+            window.location.reload()
+          }}
+        >
+          Clear cache
+        </button>
       </p>
+      <button onClick={() => showPrivacyPolicy()}>Show privacy policy</button>
     </div>
   )
 }
