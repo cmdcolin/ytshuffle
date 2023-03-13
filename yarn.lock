@@ -924,6 +924,11 @@ react-refresh@^0.14.0:
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.14.0.tgz#4e02825378a5f227079554d4284889354e5f553e"
   integrity sha512-wViHqhAd8OHeLS/IRMJjTSDHF3U9eWi62F/MledQGPdJGDhodXJ9PBLNGr6WWL7qlH12Mt3TyTpbS+hGXMjCzQ==
 
+react-tiny-modal@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-tiny-modal/-/react-tiny-modal-1.0.0.tgz#a6c1614848409290c181d57605781d51afca90f1"
+  integrity sha512-oTkJBD5KTwVbyymkv9CbFviMhkk+5PbPDpHXIFM/TOTQRRbaDEwurXYoRn3OdEfBKWbLMTkXVkKNKYepesqZRQ==
+
 react-youtube@^10.1.0:
   version "10.1.0"
   resolved "https://registry.yarnpkg.com/react-youtube/-/react-youtube-10.1.0.tgz#7e5670c764f12eb408166e8eb438d788dc64e8b5"
