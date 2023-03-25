@@ -1,6 +1,11 @@
+import PlaylistSelector from './PlaylistSelector'
+
 export default function PlayerControls({
   shuffle,
   autoplay,
+  playlists,
+  currentPlaylist,
+  setCurrentPlaylist,
   setAutoplay,
   setPlaying,
   goToNext,
@@ -9,6 +14,9 @@ export default function PlayerControls({
 }: {
   shuffle: boolean
   autoplay: boolean
+  playlists: Record<string, string>
+  currentPlaylist: string
+  setCurrentPlaylist: (arg: string) => void
   setAutoplay: (arg: boolean) => void
   setQuery: (arg: string) => void
   setPlaying: (arg?: string) => void
@@ -17,7 +25,7 @@ export default function PlayerControls({
   goToPrev: () => void
 }) {
   return (
-    <div className="header">
+    <div className="playlist_controls">
       <button onClick={() => setPlaying(undefined)}>Stop</button>
       <button onClick={() => goToNext()}>Next</button>
       <button onClick={() => goToPrev()}>Prev</button>
@@ -38,6 +46,11 @@ export default function PlayerControls({
         type="checkbox"
         checked={autoplay}
         onChange={event => setAutoplay(event.target.checked)}
+      />
+      <PlaylistSelector
+        playlists={playlists}
+        currentPlaylist={currentPlaylist}
+        setCurrentPlaylist={setCurrentPlaylist}
       />
     </div>
   )

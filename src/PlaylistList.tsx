@@ -28,11 +28,15 @@ export default function Filtering({
             <td>
               <button
                 onClick={async () => {
-                  await localforage.clear()
+                  await Promise.all(
+                    Object.values(channelToId).map(item =>
+                      localforage.removeItem(item),
+                    ),
+                  )
                   window.location.reload()
                 }}
               >
-                Refresh all
+                Refresh all (download latest from youtube)
               </button>
             </td>
           </tr>
@@ -43,7 +47,7 @@ export default function Filtering({
               </td>
               <td>
                 <button onClick={() => setFilter(key)}>
-                  Play from only this channel
+                  Select this channel as filter
                 </button>
               </td>
               <td>
@@ -53,7 +57,7 @@ export default function Filtering({
                     window.location.reload()
                   }}
                 >
-                  Refresh channel
+                  Refresh (download latest from youtube)
                 </button>
               </td>
             </tr>

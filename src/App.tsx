@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import YouTube from 'react-youtube'
 
 // locals
@@ -13,6 +13,7 @@ import Footer from './Footer'
 import useFetch from './useFetch'
 import usePlayerControls from './usePlayerControls'
 import useUrlParams from './useUrlParams'
+import usePlaylists from './usePlaylists'
 
 const opts = {
   height: '390',
@@ -51,6 +52,12 @@ export default function App({
 
   useUrlParams(query, currentPlaylist)
 
+  useEffect(() => {
+    setQuery(playlists[currentPlaylist] || '')
+  }, [currentPlaylist])
+
+  const [playlists, setPlaylists] = usePlaylists(query, currentPlaylist)
+
   return (
     <>
       <div className="App">
@@ -63,17 +70,23 @@ export default function App({
               <div>
                 <PlaylistEditor
                   query={query}
-                  setQuery={setQuery}
+                  playlists={playlists}
                   currentPlaylist={currentPlaylist}
+                  setQuery={setQuery}
+                  setPlaylists={setPlaylists}
                   setCurrentPlaylist={setCurrentPlaylist}
                 />
+
                 <PlayerControls
-                  setPlaying={setPlaying}
+                  currentPlaylist={currentPlaylist}
                   goToNext={goToNext}
                   goToPrev={goToPrev}
-                  setQuery={setQuery}
                   autoplay={autoplay}
                   shuffle={shuffle}
+                  playlists={playlists}
+                  setQuery={setQuery}
+                  setCurrentPlaylist={setCurrentPlaylist}
+                  setPlaying={setPlaying}
                   setShuffle={setShuffle}
                   setAutoplay={setAutoplay}
                 />
@@ -92,34 +105,36 @@ export default function App({
                 <div>Currently processing: {currentlyProcessing}</div>
               ) : null}
             </div>
-
-            <div className="filter">
-              <label htmlFor="filter">Filter/search table: </label>
-              <input
-                id="filter"
-                type="text"
-                value={filter}
-                onChange={event => setFilter(event.target.value)}
-              />
-            </div>
-            <div className="container">
-              <PlaylistTable
-                playlist={playlist}
-                playing={playing}
-                onPlay={videoId => setPlaying(videoId)}
-              />
+            <div className="player_panel">
               <div>
-                {playing ? (
-                  <YouTube
-                    videoId={playing}
-                    opts={opts}
-                    onEnd={() => {
-                      if (autoplay) {
-                        goToNext()
-                      }
-                    }}
-                  />
-                ) : null}
+                <label htmlFor="filter">Filter/search table: </label>
+                <input
+                  id="filter"
+                  type="text"
+                  value={filter}
+                  onChange={event => setFilter(event.target.value)}
+                />
+                <button onClick={() => setFilter('')}>Clear filter</button>
+              </div>
+              <div className="container">
+                <PlaylistTable
+                  playlist={playlist}
+                  playing={playing}
+                  onPlay={videoId => setPlaying(videoId)}
+                />
+                <div>
+                  {playing ? (
+                    <YouTube
+                      videoId={playing}
+                      opts={opts}
+                      onEnd={() => {
+                        if (autoplay) {
+                          goToNext()
+                        }
+                      }}
+                    />
+                  ) : null}
+                </div>
               </div>
             </div>
           </div>

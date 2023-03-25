@@ -24,13 +24,15 @@ td {
 }
 th,
 td {
-  padding: 5px;
   max-width: 500px;
 }
 
 .container {
   display: flex;
   flex-direction: column;
+}
+
+.player_panel {
   margin-top: 20px;
 }
 
@@ -45,7 +47,7 @@ td {
   max-height: 200px;
 }
 
-.header {
+.playlist_controls {
   margin-top: 20px;
 }
 
@@ -55,7 +57,7 @@ td {
   }
 
   .playlist_header {
-    flex-direction: row !important;
+    flex-direction: row;
   }
 
   .App {
@@ -74,10 +76,7 @@ dialog::backdrop {
 
 .playlist_editor {
   max-width: 600px;
-}
-
-.playlist_controls {
-  margin-top: 20px;
+  border: 1px solid #aaa;
 }
 
 .privacy {
@@ -87,4 +86,10 @@ dialog::backdrop {
 .playlist_header {
   display: flex;
   flex-direction: column;
+}
+
+.text_header {
+  background: black;
+  color: white;
+  font-weight: bold;
 }

@@ -21,7 +21,7 @@ export default function PlaylistControls({
   const [renameModalOpen, setRenameModalOpen] = useState(false)
   const [newModalOpen, setNewModalOpen] = useState(false)
   return (
-    <div className="playlist_controls">
+    <div>
       <button onClick={() => setModalOpen(true)}>
         Save current playlist as...
       </button>

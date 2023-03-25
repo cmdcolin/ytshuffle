@@ -7,9 +7,17 @@ export default function Footer({
 }) {
   return (
     <div className="footer">
-      (c) 2023 <a href="https://github.com/cmdcolin/ytshuffle">Github</a>
+      <a href="https://github.com/cmdcolin/ytshuffle">Source code</a>
       <div className="privacy">
         <button onClick={() => showPrivacyPolicy()}>Show privacy policy</button>
+        <button
+          onClick={async () => {
+            await localforage.clear()
+            window.location.reload()
+          }}
+        >
+          Clear entire local cache
+        </button>
       </div>
     </div>
   )
