@@ -1,3 +1,6 @@
+import { useEffect, useState } from 'react'
+import SavePlaylistModal from './SavePlaylistModal'
+
 export default function FormInputs({
   query,
   setQuery,
@@ -5,6 +8,15 @@ export default function FormInputs({
   query: string
   setQuery: (arg: string) => void
 }) {
+  const [modalOpen, setModalOpen] = useState(false)
+  const [playlists, setPlaylists] = useState(
+    JSON.parse(localStorage.getItem('playlists') || '{}'),
+  )
+
+  useEffect(() => {
+    localStorage.setItem('playlists', JSON.stringify(playlists))
+  }, [playlists])
+  const keys = Object.keys(playlists)
   return (
     <div>
       <div style={{ maxWidth: 600 }}>
@@ -14,16 +26,33 @@ export default function FormInputs({
           videos (I couldn't figure out how to fetch videos from the channel URL
           itself):
         </label>
-        <div>
-          <textarea
-            cols={80}
-            rows={10}
-            id="video"
-            value={query}
-            onChange={event => setQuery(event.target.value)}
-          />
-        </div>
+        <textarea
+          cols={80}
+          rows={5}
+          id="video"
+          value={query}
+          onChange={event => setQuery(event.target.value)}
+        />
+        <button onClick={() => setModalOpen(true)}>
+          Save current playlist
+        </button>
+        <select onChange={event => setQuery(playlists[event.target.value])}>
+          {(keys.length ? keys : ['No playlists saved yet']).map(name => (
+            <option key={name} value={name}>
+              {name}
+            </option>
+          ))}
+        </select>
       </div>
+      <SavePlaylistModal
+        open={modalOpen}
+        onClose={name => {
+          if (name) {
+            setPlaylists({ ...playlists, [name]: query })
+          }
+          setModalOpen(false)
+        }}
+      />
     </div>
   )
 }

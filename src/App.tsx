@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import YouTube from 'react-youtube'
 import localForage from 'localforage'
 
 // locals
-import { getIds } from './util'
 import PlaylistTable from './PlaylistTable'
 import ErrorMessage from './ErrorMessage'
 import Filtering from './Filtering'
@@ -11,6 +10,7 @@ import PlayerControls from './PlayerControls'
 import FormInputs from './FormInputs'
 import useFetch from './useFetch'
 import usePlayerControls from './usePlayerControls'
+import useUrlParams from './useUrlParams'
 
 const opts = {
   height: '390',
@@ -37,11 +37,7 @@ export default function App({
   const { playlist, counts, goToNext, goToPrev, setPlaying, playing } =
     usePlayerControls(videoMap, filter, shuffle)
 
-  useEffect(() => {
-    var url = new URL(window.location.href)
-    url.searchParams.set('ids', getIds(query).join(','))
-    window.history.replaceState({}, '', url)
-  }, [query])
+  useUrlParams(query)
 
   return (
     <div className="App">

@@ -32,6 +32,7 @@ td {
   max-height: 800px;
   display: flex;
   flex-direction: column;
+  margin-top: 20px;
 }
 
 .filtering {
@@ -45,7 +46,6 @@ td {
 @media (min-width: 600px) {
   .container {
     flex-direction: row;
-    margin: 20px;
   }
 
   .App {

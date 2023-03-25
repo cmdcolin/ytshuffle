@@ -7,7 +7,6 @@ export default function usePlayerControls(
   shuffle: boolean,
 ) {
   const [playing, setPlaying] = useState<string>()
-
   const preFiltered = videoMap ? Object.values(videoMap).flat() : undefined
   const counts = {} as Record<string, number>
   if (preFiltered) {
