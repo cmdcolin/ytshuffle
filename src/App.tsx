@@ -6,7 +6,7 @@ import PlaylistTable from './PlaylistTable'
 import ErrorMessage from './ErrorMessage'
 import Filtering from './Filtering'
 import PlayerControls from './PlayerControls'
-import FormInputs from './FormInputs'
+import PlaylistEditor from './PlaylistEditor'
 import Footer from './Footer'
 
 // hooks
@@ -53,7 +53,7 @@ export default function App({
         {playlist ? (
           <div>
             <div>
-              <FormInputs
+              <PlaylistEditor
                 query={query}
                 setQuery={setQuery}
                 currentPlaylist={currentPlaylist}

@@ -31,7 +31,7 @@ export default function FormInputs({
     localStorage.setItem('playlists', JSON.stringify(playlists))
   }, [query, playlists, currentPlaylist])
 
-  const keys = Object.keys(playlists)
+  const keys = Object.keys(playlists).sort()
   return (
     <div>
       <div style={{ maxWidth: 600 }}>
@@ -117,9 +117,9 @@ export default function FormInputs({
         currentPlaylist={''}
         onClose={name => {
           if (name) {
-            setPlaylists({ ...playlists, [name]: query })
-            setCurrentPlaylist(name)
+            setPlaylists({ ...playlists, [name]: '' })
             setQuery('')
+            setCurrentPlaylist(name)
           }
           setNewModalOpen(false)
         }}
