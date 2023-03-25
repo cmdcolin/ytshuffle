@@ -5,6 +5,8 @@ import localForage from 'localforage'
 import PlaylistTable from './PlaylistTable'
 import ConfirmDialog from './ConfirmDialog'
 import ErrorMessage from './ErrorMessage'
+import Filtering from './Filtering'
+import Header from './Header'
 
 const opts = {
   height: '390',
@@ -50,7 +52,7 @@ function App({
   initialMaxResults: string
   showPrivacyPolicy: () => void
 }) {
-  const [text, setText] = useState(initialText)
+  const [query, setQuery] = useState(initialText)
   const [videoMap, setVideoMap] = useState<PlaylistMap>()
   const [filter, setFilter] = useState('')
   const [error, setError] = useState<unknown>()
@@ -80,7 +82,7 @@ function App({
     ;(async () => {
       try {
         setError(undefined)
-        const videoIds = getIds(text)
+        const videoIds = getIds(query)
         const items = Object.fromEntries(
           await Promise.all(
             videoIds.map(async id => {
@@ -112,7 +114,7 @@ function App({
     })()
 
     return () => controller.abort()
-  }, [text, maxResults])
+  }, [query, maxResults])
 
   function findIdx(playing: string) {
     return playlist?.findIndex(p => playing === p.videoId) || -1
@@ -140,10 +142,10 @@ function App({
 
   useEffect(() => {
     var url = new URL(window.location.href)
-    url.searchParams.set('ids', getIds(text).join(','))
+    url.searchParams.set('ids', getIds(query).join(','))
     url.searchParams.set('max', maxResults)
     window.history.replaceState({}, '', url)
-  }, [text, maxResults])
+  }, [query, maxResults])
 
   return (
     <div className="App">
@@ -160,8 +162,8 @@ function App({
             cols={80}
             rows={10}
             id="video"
-            value={text}
-            onChange={event => setText(event.target.value)}
+            value={query}
+            onChange={event => setQuery(event.target.value)}
           />
         </div>
       </div>
@@ -178,45 +180,18 @@ function App({
       {error ? <ErrorMessage error={error} /> : null}
       {playlist ? (
         <div>
-          <div>
-            <button onClick={() => setText('')}>Clear</button>
-            <button onClick={() => setPlaying(undefined)}>Stop</button>
-            <button onClick={() => goToNext()}>Next</button>
-            <button onClick={() => goToPrev()}>Prev</button>
-            <label htmlFor="shuffle">Shuffle? </label>
-            <input
-              id="shuffle"
-              type="checkbox"
-              checked={shuffle}
-              onChange={event => setShuffle(event.target.checked)}
-            />
-            <label htmlFor="autoplay">Autoplay? </label>
-            <input
-              id="autoplay"
-              type="checkbox"
-              checked={autoplay}
-              onChange={event => setAutoplay(event.target.checked)}
-            />
-          </div>
-          <div>
-            Channels loaded (click button to filter particular channel):{' '}
-            {Object.entries(counts).map(([key, value]) => (
-              <button key={key} onClick={() => setFilter(key)}>
-                {key} ({value || 0})
-              </button>
-            ))}
-            <button onClick={() => setFilter('')}>All</button>
-          </div>
-          <div>
-            <label htmlFor="filter">Filter/search table: </label>
-            <input
-              id="filter"
-              type="text"
-              value={filter}
-              onChange={event => setFilter(event.target.value)}
-            />
-          </div>
           <div className="container">
+            <Header
+              setPlaying={setPlaying}
+              goToNext={goToNext}
+              goToPrev={goToPrev}
+              setQuery={setQuery}
+              autoplay={autoplay}
+              shuffle={shuffle}
+              setShuffle={setShuffle}
+              setAutoplay={setAutoplay}
+            />
+            <Filtering filter={filter} setFilter={setFilter} counts={counts} />
             <PlaylistTable
               playlist={playlist}
               playing={playing}
