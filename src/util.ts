@@ -6,7 +6,7 @@ export async function myfetch<T>(url: string, rest?: RequestInit) {
   return response.json() as T
 }
 
-export function getvideoid(url: string) {
+export function getVideoId(url: string) {
   const regExp =
     /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
   const match = url.match(regExp)
@@ -15,6 +15,25 @@ export function getvideoid(url: string) {
   } else {
     return undefined
   }
+}
+
+export function remap(items: PreItem[]): Item[] {
+  return items.map(item => ({
+    id: item.id,
+    channel: item.snippet.videoOwnerChannelTitle,
+    videoId: item.snippet.resourceId.videoId,
+    title: item.snippet.title,
+    publishedAt: item.snippet.publishedAt,
+  }))
+}
+
+export function getIds(text: string) {
+  return text
+    .split('\n')
+    .map(f => f.trim())
+    .filter((f): f is string => !!f)
+    .map(f => getVideoId(f))
+    .filter((f): f is string => !!f)
 }
 
 export interface PreItem {

@@ -1,15 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import YouTube from 'react-youtube'
-import {
-  getvideoid,
-  myfetch,
-  PreItem,
-  Item,
-  PlaylistMap,
-  Playlist,
-} from './util'
+import { myfetch, PreItem, PlaylistMap, Playlist, getIds, remap } from './util'
 import localForage from 'localforage'
 import PlaylistTable from './PlaylistTable'
+import ConfirmDialog from './ConfirmDialog'
+import ErrorMessage from './ErrorMessage'
 
 const opts = {
   height: '390',
@@ -20,18 +15,6 @@ const opts = {
   },
 }
 
-function ErrorMessage({ error }: { error: unknown }) {
-  return <div style={{ color: 'red' }}>{`${error}`}</div>
-}
-
-function getIds(text: string) {
-  return text
-    .split('\n')
-    .map(f => f.trim())
-    .filter((f): f is string => !!f)
-    .map(f => getvideoid(f))
-    .filter((f): f is string => !!f)
-}
 const root =
   'https://39b5dlncof.execute-api.us-east-1.amazonaws.com/youtubeApiV3'
 const start = 'https://www.youtube.com/watch?v=5Q5lry5g0ms'
@@ -43,47 +26,7 @@ export default function App2() {
   const maxResults = urlParams.get('max')
   return (
     <>
-      <dialog open={showModal} style={{ maxWidth: 500 }}>
-        <p>
-          By using this website you agree to usage of the "Privacy Policy" below
-        </p>
-        <p>
-          This website (the "app") uses an "API Client" to access the Youtube
-          Data API. The "app" allows third parties to serve content, including
-          advertisements just by virtue of YouTube doing so. See also{' '}
-          <a href="https://www.youtube.com/t/terms">
-            YouTube's Terms of Service
-          </a>{' '}
-          and{' '}
-          <a href="http://www.google.com/policies/privacy">
-            Google's privacy policy
-          </a>
-          . By using this website you agree to the YouTube Terms of Service. The
-          "app" processes data that the user pastes into the "app", and shares
-          it with the YouTube Data API. User data may also be collected from
-          their device by analytics scripts from the page by the YouTube
-          embedded widget. The "app" itself does not collect any user data or
-          analytics.
-        </p>
-        <p>
-          I added this consent screen because Google asks users of their API to
-          do so{' '}
-          <a href="https://developers.google.com/youtube/terms/developer-policies">
-            here
-          </a>
-          . If there are any concerns, you can e-mail{' '}
-          <a href="mailto:colin.diesh@gmail.com">me</a>.
-        </p>
-
-        <button
-          onClick={() => {
-            localStorage.setItem('confirmed', 'true')
-            setShowModal(false)
-          }}
-        >
-          accept
-        </button>
-      </dialog>
+      <ConfirmDialog open={showModal} setOpen={setShowModal} />
       <App
         initialText={
           text
@@ -96,16 +39,6 @@ export default function App2() {
       />
     </>
   )
-}
-
-function remap(items: PreItem[]): Item[] {
-  return items.map(item => ({
-    id: item.id,
-    channel: item.snippet.videoOwnerChannelTitle,
-    videoId: item.snippet.resourceId.videoId,
-    title: item.snippet.title,
-    publishedAt: item.snippet.publishedAt,
-  }))
 }
 
 function App({
