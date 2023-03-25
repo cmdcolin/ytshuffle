@@ -16,7 +16,9 @@ export default function Filtering({
             {key} ({value || 0})
           </button>
         ))}
-        <button onClick={() => setFilter('')}>All</button>
+        <button onClick={() => setFilter('')}>
+          All ({Object.values(counts).reduce((a, b) => a + b, 0)})
+        </button>
       </div>
       <div>
         <label htmlFor="filter">Filter/search table: </label>

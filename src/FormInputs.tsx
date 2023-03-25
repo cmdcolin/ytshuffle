@@ -6,14 +6,18 @@ const mydef = {
 }
 export default function FormInputs({
   query,
+  currentPlaylist,
   setQuery,
+  setCurrentPlaylist,
 }: {
   query: string
+  currentPlaylist: string
   setQuery: (arg: string) => void
+  setCurrentPlaylist: (arg: string) => void
 }) {
   const [modalOpen, setModalOpen] = useState(false)
   const [renameModalOpen, setRenameModalOpen] = useState(false)
-  const [currentPlaylist, setCurrentPlaylist] = useState('default')
+  const [newModalOpen, setNewModalOpen] = useState(false)
   const [playlists, setPlaylists] = useState(
     JSON.parse(localStorage.getItem('playlists') || JSON.stringify(mydef)),
   )
@@ -53,12 +57,14 @@ export default function FormInputs({
           <button onClick={() => setRenameModalOpen(true)}>
             Rename current playlist
           </button>
+          <button onClick={() => setNewModalOpen(true)}>New playlist</button>
           <button
             onClick={() => {
               const { [currentPlaylist]: curr, ...rest } = playlists
               setPlaylists(rest)
               const next = Object.keys(rest)[0] || 'default'
-              if (!rest[next]) {
+              console.log({ rest, next })
+              if (rest[next] === undefined) {
                 // just go back to defaults if nothing is there
                 setPlaylists(mydef)
               }
@@ -104,6 +110,18 @@ export default function FormInputs({
             setCurrentPlaylist(name)
           }
           setRenameModalOpen(false)
+        }}
+      />
+      <SavePlaylistModal
+        open={newModalOpen}
+        currentPlaylist={''}
+        onClose={name => {
+          if (name) {
+            setPlaylists({ ...playlists, [name]: query })
+            setCurrentPlaylist(name)
+            setQuery('')
+          }
+          setNewModalOpen(false)
         }}
       />
     </div>
