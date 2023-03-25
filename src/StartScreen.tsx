@@ -2,8 +2,6 @@ import { useState } from 'react'
 import App from './App'
 import ConfirmDialog from './ConfirmDialog'
 
-const start = 'https://www.youtube.com/watch?v=5Q5lry5g0ms'
-
 export default function StartScreen() {
   const [showModal, setShowModal] = useState(!localStorage.getItem('confirmed'))
   const urlParams = new URLSearchParams(window.location.search)
@@ -15,8 +13,9 @@ export default function StartScreen() {
         initialText={
           text
             ?.split(',')
+            .filter(f => !!f)
             .map(videoId => `https://www.youtube.com/watch?v=${videoId}`)
-            .join('\n') || start
+            .join('\n') || ''
         }
         showPrivacyPolicy={() => setShowModal(true)}
       />

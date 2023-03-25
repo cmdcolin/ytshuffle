@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function SavePlaylistModal({
   open,
@@ -10,6 +10,9 @@ export default function SavePlaylistModal({
   onClose: (arg?: string) => void
 }) {
   const [name, setName] = useState(currentPlaylist)
+  useEffect(() => {
+    setName(currentPlaylist)
+  }, [currentPlaylist])
   return (
     <dialog onClose={() => onClose()} open={open}>
       <div>
