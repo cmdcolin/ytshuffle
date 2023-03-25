@@ -2,12 +2,14 @@ import { useState } from 'react'
 
 export default function SavePlaylistModal({
   open,
+  currentPlaylist,
   onClose,
 }: {
   open: boolean
+  currentPlaylist: string
   onClose: (arg?: string) => void
 }) {
-  const [name, setName] = useState('playlistName')
+  const [name, setName] = useState(currentPlaylist)
   return (
     <dialog onClose={() => onClose()} open={open}>
       <div>
@@ -15,6 +17,7 @@ export default function SavePlaylistModal({
         <input
           id="playlist"
           type="text"
+          value={name}
           onChange={event => setName(event.target.value)}
         />
       </div>

@@ -9,13 +9,22 @@ export default function FormInputs({
   setQuery: (arg: string) => void
 }) {
   const [modalOpen, setModalOpen] = useState(false)
+  const [currentPlaylist, setCurrentPlaylist] = useState(
+    localStorage.getItem('lastPlaylist') || 'default',
+  )
   const [playlists, setPlaylists] = useState(
     JSON.parse(localStorage.getItem('playlists') || '{}'),
   )
 
   useEffect(() => {
+    setQuery(playlists[currentPlaylist] || '')
+  }, [currentPlaylist])
+
+  useEffect(() => {
+    playlists[currentPlaylist] = query
     localStorage.setItem('playlists', JSON.stringify(playlists))
-  }, [playlists])
+  }, [query, playlists, currentPlaylist])
+
   const keys = Object.keys(playlists)
   return (
     <div>
@@ -34,9 +43,23 @@ export default function FormInputs({
           onChange={event => setQuery(event.target.value)}
         />
         <button onClick={() => setModalOpen(true)}>
-          Save current playlist
+          Save current playlist as...
         </button>
-        <select onChange={event => setQuery(playlists[event.target.value])}>
+        <button
+          onClick={() => {
+            const { [currentPlaylist]: curr, ...rest } = playlists
+            setPlaylists(rest)
+            setCurrentPlaylist(Object.keys(playlists)[0])
+          }}
+        >
+          Delete current playlist
+        </button>
+        <label htmlFor="currplaylist">Current playlist: </label>
+        <select
+          id="currplaylist"
+          value={currentPlaylist}
+          onChange={event => setCurrentPlaylist(event.target.value)}
+        >
           {(keys.length ? keys : ['No playlists saved yet']).map(name => (
             <option key={name} value={name}>
               {name}
@@ -46,9 +69,11 @@ export default function FormInputs({
       </div>
       <SavePlaylistModal
         open={modalOpen}
+        currentPlaylist={currentPlaylist}
         onClose={name => {
           if (name) {
             setPlaylists({ ...playlists, [name]: query })
+            setCurrentPlaylist(name)
           }
           setModalOpen(false)
         }}
