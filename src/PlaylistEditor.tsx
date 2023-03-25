@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react'
-import SavePlaylistModal from './SavePlaylistModal'
-const mydef = {
-  default: '',
-  example: 'https://www.youtube.com/watch?v=3oJqulA8lQc',
-}
+import PlaylistControls from './PlaylistControls'
+import { mydef } from './util'
+
 export default function FormInputs({
   query,
   currentPlaylist,
@@ -15,12 +13,11 @@ export default function FormInputs({
   setQuery: (arg: string) => void
   setCurrentPlaylist: (arg: string) => void
 }) {
-  const [modalOpen, setModalOpen] = useState(false)
-  const [renameModalOpen, setRenameModalOpen] = useState(false)
-  const [newModalOpen, setNewModalOpen] = useState(false)
-  const [playlists, setPlaylists] = useState(
-    JSON.parse(localStorage.getItem('playlists') || JSON.stringify(mydef)),
+  const ret = JSON.parse(
+    localStorage.getItem('playlists') || JSON.stringify(mydef),
   )
+  // we add default back if there is none because it gets confused on visiting with blank urlparams otherwise
+  const [playlists, setPlaylists] = useState({ default: '', ...ret })
 
   useEffect(() => {
     setQuery(playlists[currentPlaylist] || '')
@@ -33,8 +30,8 @@ export default function FormInputs({
 
   const keys = Object.keys(playlists).sort()
   return (
-    <div>
-      <div style={{ maxWidth: 600 }}>
+    <div className="playlist_editor">
+      <div>
         <div>
           <label htmlFor="video">
             Enter a list of youtube videos separated by newlines, this page will
@@ -42,6 +39,8 @@ export default function FormInputs({
             videos (I couldn't figure out how to fetch videos from the channel
             URL itself):
           </label>
+        </div>
+        <div>
           <textarea
             cols={80}
             rows={5}
@@ -50,30 +49,15 @@ export default function FormInputs({
             onChange={event => setQuery(event.target.value)}
           />
         </div>
-        <div>
-          <button onClick={() => setModalOpen(true)}>
-            Save current playlist as...
-          </button>
-          <button onClick={() => setRenameModalOpen(true)}>
-            Rename current playlist
-          </button>
-          <button onClick={() => setNewModalOpen(true)}>New playlist</button>
-          <button
-            onClick={() => {
-              const { [currentPlaylist]: curr, ...rest } = playlists
-              setPlaylists(rest)
-              const next = Object.keys(rest)[0] || 'default'
-              console.log({ rest, next })
-              if (rest[next] === undefined) {
-                // just go back to defaults if nothing is there
-                setPlaylists(mydef)
-              }
-              setCurrentPlaylist(next)
-            }}
-          >
-            Delete current playlist
-          </button>
-        </div>
+        <PlaylistControls
+          query={query}
+          playlists={playlists}
+          currentPlaylist={currentPlaylist}
+          setPlaylists={setPlaylists}
+          setCurrentPlaylist={setCurrentPlaylist}
+          setQuery={setQuery}
+        />
+
         <div>
           <label htmlFor="currplaylist">Current playlist: </label>
           <select
@@ -89,41 +73,6 @@ export default function FormInputs({
           </select>
         </div>
       </div>
-      <SavePlaylistModal
-        open={modalOpen}
-        currentPlaylist={currentPlaylist}
-        onClose={name => {
-          if (name) {
-            setPlaylists({ ...playlists, [name]: query })
-            setCurrentPlaylist(name)
-          }
-          setModalOpen(false)
-        }}
-      />
-      <SavePlaylistModal
-        open={renameModalOpen}
-        currentPlaylist={currentPlaylist}
-        onClose={name => {
-          if (name) {
-            const { [currentPlaylist]: curr, ...rest } = playlists
-            setPlaylists({ ...rest, [name]: query })
-            setCurrentPlaylist(name)
-          }
-          setRenameModalOpen(false)
-        }}
-      />
-      <SavePlaylistModal
-        open={newModalOpen}
-        currentPlaylist={''}
-        onClose={name => {
-          if (name) {
-            setPlaylists({ ...playlists, [name]: '' })
-            setQuery('')
-            setCurrentPlaylist(name)
-          }
-          setNewModalOpen(false)
-        }}
-      />
     </div>
   )
 }

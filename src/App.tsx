@@ -52,29 +52,23 @@ export default function App({
         {error ? <ErrorMessage error={error} /> : null}
         {playlist ? (
           <div>
-            <div>
-              <PlaylistEditor
-                query={query}
-                setQuery={setQuery}
-                currentPlaylist={currentPlaylist}
-                setCurrentPlaylist={setCurrentPlaylist}
-              />
-              <PlayerControls
-                setPlaying={setPlaying}
-                goToNext={goToNext}
-                goToPrev={goToPrev}
-                setQuery={setQuery}
-                autoplay={autoplay}
-                shuffle={shuffle}
-                setShuffle={setShuffle}
-                setAutoplay={setAutoplay}
-              />
-              <Filtering
-                filter={filter}
-                setFilter={setFilter}
-                counts={counts}
-              />
-            </div>
+            <PlaylistEditor
+              query={query}
+              setQuery={setQuery}
+              currentPlaylist={currentPlaylist}
+              setCurrentPlaylist={setCurrentPlaylist}
+            />
+            <PlayerControls
+              setPlaying={setPlaying}
+              goToNext={goToNext}
+              goToPrev={goToPrev}
+              setQuery={setQuery}
+              autoplay={autoplay}
+              shuffle={shuffle}
+              setShuffle={setShuffle}
+              setAutoplay={setAutoplay}
+            />
+            <Filtering filter={filter} setFilter={setFilter} counts={counts} />
             <div>
               {currentlyProcessing ? (
                 <div>Currently processing: {currentlyProcessing}</div>

@@ -62,3 +62,11 @@ td {
 dialog::backdrop {
   background: rgba(255, 0, 0, 0.25);
 }
+
+.playlist_editor {
+  max-width: 600px;
+}
+
+.playlist_controls {
+  margin-top: 20px;
+}

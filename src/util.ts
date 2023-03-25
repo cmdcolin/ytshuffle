@@ -57,3 +57,8 @@ export interface Item {
 export type Playlist = Item[]
 
 export type PlaylistMap = Record<string, Playlist>
+
+export const mydef = {
+  default: '',
+  example: 'https://www.youtube.com/watch?v=3oJqulA8lQc',
+}
