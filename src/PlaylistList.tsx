@@ -43,7 +43,7 @@ export default function Filtering({
               </td>
               <td>
                 <button onClick={() => setFilter(key)}>
-                  Show only this channel
+                  Play from only this channel
                 </button>
               </td>
               <td>

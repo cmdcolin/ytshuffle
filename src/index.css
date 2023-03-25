@@ -29,7 +29,6 @@ td {
 }
 
 .container {
-  max-height: 500px;
   display: flex;
   flex-direction: column;
   margin-top: 20px;
@@ -55,6 +54,10 @@ td {
     flex-direction: row;
   }
 
+  .playlist_header {
+    flex-direction: row !important;
+  }
+
   .App {
     margin-left: 20px;
   }
@@ -65,6 +68,7 @@ dialog::backdrop {
 }
 
 .playlist_table {
+  max-height: 500px;
   overflow: auto;
 }
 
@@ -78,4 +82,9 @@ dialog::backdrop {
 
 .privacy {
   margin-top: 20px;
+}
+
+.playlist_header {
+  display: flex;
+  flex-direction: column;
 }

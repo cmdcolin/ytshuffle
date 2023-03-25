@@ -59,7 +59,7 @@ export default function App({
         {error ? <ErrorMessage error={error} /> : null}
         {playlist ? (
           <div>
-            <div style={{ display: 'flex' }}>
+            <div className="playlist_header">
               <div>
                 <PlaylistEditor
                   query={query}

@@ -45,6 +45,7 @@ export default function PlaylistEditor({
           <textarea
             cols={70}
             rows={5}
+            style={{ maxWidth: '100%' }}
             id="video"
             value={query}
             onChange={event => setQuery(event.target.value)}
