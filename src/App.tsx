@@ -32,7 +32,7 @@ export default function App({
   const [filter, setFilter] = useState('')
   const [shuffle, setShuffle] = useState(true)
   const [autoplay, setAutoplay] = useState(true)
-  const [videoMap, error] = useFetch(query)
+  const [videoMap, error, currentlyProcessing] = useFetch(query)
 
   const { playlist, counts, goToNext, goToPrev, setPlaying, playing } =
     usePlayerControls(videoMap, filter, shuffle)
@@ -59,6 +59,11 @@ export default function App({
               setAutoplay={setAutoplay}
             />
             <Filtering filter={filter} setFilter={setFilter} counts={counts} />
+          </div>
+          <div>
+            {currentlyProcessing ? (
+              <div>Currently processing: {currentlyProcessing}</div>
+            ) : null}
           </div>
           <div className="container">
             <PlaylistTable

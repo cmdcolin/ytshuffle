@@ -6,6 +6,7 @@ const root =
   'https://39b5dlncof.execute-api.us-east-1.amazonaws.com/youtubeApiV3'
 export default function useFetch(query: string) {
   const [error, setError] = useState<unknown>()
+  const [currentlyProcessing, setCurrentlyProcessing] = useState('')
   const [videoMap, setVideoMap] = useState<PlaylistMap>()
   useEffect(() => {
     let controller = new AbortController()
@@ -20,6 +21,7 @@ export default function useFetch(query: string) {
               const key = id + '_' + maxResults
               let r1 = await localforage.getItem<Playlist>(key)
               if (!r1) {
+                setCurrentlyProcessing(id)
                 r1 = remap(
                   await myfetch<PreItem[]>(
                     `${root}?videoId=${id}&maxResults=${maxResults}`,
@@ -36,6 +38,7 @@ export default function useFetch(query: string) {
         )
 
         setVideoMap(items)
+        setCurrentlyProcessing('')
       } catch (e) {
         if (!controller.signal.aborted) {
           console.error(e)
@@ -47,5 +50,5 @@ export default function useFetch(query: string) {
     return () => controller.abort()
   }, [query])
 
-  return [videoMap, error] as const
+  return [videoMap, error, currentlyProcessing] as const
 }
