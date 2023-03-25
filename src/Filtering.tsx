@@ -8,7 +8,7 @@ export default function Filtering({
   setFilter: (arg: string) => void
 }) {
   return (
-    <div>
+    <div className="filtering">
       <div>
         Channels loaded (click button to filter particular channel):{' '}
         {Object.entries(counts).map(([key, value]) => (

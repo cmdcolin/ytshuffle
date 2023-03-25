@@ -1,4 +1,4 @@
-export default function Header({
+export default function PlayerControls({
   shuffle,
   autoplay,
   setAutoplay,
@@ -18,7 +18,7 @@ export default function Header({
   goToPrev: () => void
 }) {
   return (
-    <div>
+    <div className="header">
       <div>
         <button onClick={() => setQuery('')}>Clear</button>
         <button onClick={() => setPlaying(undefined)}>Stop</button>

@@ -34,9 +34,21 @@ td {
   flex-direction: column;
 }
 
+.filtering {
+  margin-top: 20px;
+}
+
+.header {
+  margin-top: 20px;
+}
+
 @media (min-width: 600px) {
   .container {
     flex-direction: row;
+    margin: 20px;
+  }
+
+  .App {
     margin: 20px;
   }
 }
