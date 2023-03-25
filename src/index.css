@@ -29,20 +29,21 @@ td {
 }
 
 .container {
-  max-height: 800px;
+  max-height: 500px;
   display: flex;
   flex-direction: column;
   margin-top: 20px;
 }
 
 .footer {
-  margin-top: 200px;
   padding: 20px;
   background: #ccc;
 }
 
 .filtering {
+  overflow: auto;
   margin-top: 20px;
+  max-height: 200px;
 }
 
 .header {
@@ -55,7 +56,7 @@ td {
   }
 
   .App {
-    margin: 20px;
+    margin-left: 20px;
   }
 }
 
@@ -63,10 +64,18 @@ dialog::backdrop {
   background: rgba(255, 0, 0, 0.25);
 }
 
+.playlist_table {
+  overflow: auto;
+}
+
 .playlist_editor {
   max-width: 600px;
 }
 
 .playlist_controls {
+  margin-top: 20px;
+}
+
+.privacy {
   margin-top: 20px;
 }

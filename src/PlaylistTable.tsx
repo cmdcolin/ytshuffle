@@ -11,8 +11,8 @@ export default function PlaylistTable({
   playing?: string
 }) {
   return (
-    <div style={{ overflow: 'auto' }}>
-      <table className="fixed_header">
+    <div className="playlist_table">
+      <table>
         <thead>
           <tr>
             <th>np</th>

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import PlaylistControls from './PlaylistControls'
 import { mydef } from './util'
 
-export default function FormInputs({
+export default function PlaylistEditor({
   query,
   currentPlaylist,
   setQuery,
@@ -16,7 +16,8 @@ export default function FormInputs({
   const ret = JSON.parse(
     localStorage.getItem('playlists') || JSON.stringify(mydef),
   )
-  // we add default back if there is none because it gets confused on visiting with blank urlparams otherwise
+  // we add default back if there is none because it gets
+  // confused on visiting with blank urlparams otherwise
   const [playlists, setPlaylists] = useState({ default: '', ...ret })
 
   useEffect(() => {
@@ -42,7 +43,7 @@ export default function FormInputs({
         </div>
         <div>
           <textarea
-            cols={80}
+            cols={70}
             rows={5}
             id="video"
             value={query}

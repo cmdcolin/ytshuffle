@@ -4,7 +4,7 @@ import YouTube from 'react-youtube'
 // locals
 import PlaylistTable from './PlaylistTable'
 import ErrorMessage from './ErrorMessage'
-import Filtering from './Filtering'
+import PlaylistList from './PlaylistList'
 import PlayerControls from './PlayerControls'
 import PlaylistEditor from './PlaylistEditor'
 import Footer from './Footer'
@@ -39,8 +39,15 @@ export default function App({
   const [autoplay, setAutoplay] = useState(true)
   const [videoMap, error, currentlyProcessing] = useFetch(query)
 
-  const { playlist, counts, goToNext, goToPrev, setPlaying, playing } =
-    usePlayerControls(videoMap, filter, shuffle)
+  const {
+    playlist,
+    channelToId,
+    counts,
+    goToNext,
+    goToPrev,
+    setPlaying,
+    playing,
+  } = usePlayerControls(videoMap, filter, shuffle)
 
   useUrlParams(query, currentPlaylist)
 
@@ -52,27 +59,48 @@ export default function App({
         {error ? <ErrorMessage error={error} /> : null}
         {playlist ? (
           <div>
-            <PlaylistEditor
-              query={query}
-              setQuery={setQuery}
-              currentPlaylist={currentPlaylist}
-              setCurrentPlaylist={setCurrentPlaylist}
-            />
-            <PlayerControls
-              setPlaying={setPlaying}
-              goToNext={goToNext}
-              goToPrev={goToPrev}
-              setQuery={setQuery}
-              autoplay={autoplay}
-              shuffle={shuffle}
-              setShuffle={setShuffle}
-              setAutoplay={setAutoplay}
-            />
-            <Filtering filter={filter} setFilter={setFilter} counts={counts} />
+            <div style={{ display: 'flex' }}>
+              <div>
+                <PlaylistEditor
+                  query={query}
+                  setQuery={setQuery}
+                  currentPlaylist={currentPlaylist}
+                  setCurrentPlaylist={setCurrentPlaylist}
+                />
+                <PlayerControls
+                  setPlaying={setPlaying}
+                  goToNext={goToNext}
+                  goToPrev={goToPrev}
+                  setQuery={setQuery}
+                  autoplay={autoplay}
+                  shuffle={shuffle}
+                  setShuffle={setShuffle}
+                  setAutoplay={setAutoplay}
+                />
+              </div>
+              <div>
+                <PlaylistList
+                  setFilter={setFilter}
+                  counts={counts}
+                  channelToId={channelToId}
+                />
+              </div>
+            </div>
+
             <div>
               {currentlyProcessing ? (
                 <div>Currently processing: {currentlyProcessing}</div>
               ) : null}
+            </div>
+
+            <div className="filter">
+              <label htmlFor="filter">Filter/search table: </label>
+              <input
+                id="filter"
+                type="text"
+                value={filter}
+                onChange={event => setFilter(event.target.value)}
+              />
             </div>
             <div className="container">
               <PlaylistTable

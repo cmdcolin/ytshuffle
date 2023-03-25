@@ -9,12 +9,18 @@ export default function usePlayerControls(
   const [playing, setPlaying] = useState<string>()
   const preFiltered = videoMap ? Object.values(videoMap).flat() : undefined
   const counts = {} as Record<string, number>
+  const channelToId = {} as Record<string, string>
   if (preFiltered) {
     for (const row of preFiltered) {
       if (!counts[row.channel]) {
         counts[row.channel] = 0
       }
       counts[row.channel]++
+    }
+  }
+  if (videoMap) {
+    for (const [key, val] of Object.entries(videoMap)) {
+      channelToId[val[0].channel] = key
     }
   }
   const lcFilter = filter.toLowerCase()
@@ -46,5 +52,13 @@ export default function usePlayerControls(
     setPlaying(playlist[prev].videoId)
   }
 
-  return { goToPrev, goToNext, playing, setPlaying, counts, playlist }
+  return {
+    goToPrev,
+    goToNext,
+    playing,
+    setPlaying,
+    counts,
+    playlist,
+    channelToId,
+  }
 }

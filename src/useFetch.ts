@@ -10,7 +10,6 @@ export default function useFetch(query: string) {
   const [videoMap, setVideoMap] = useState<PlaylistMap>()
   useEffect(() => {
     let controller = new AbortController()
-    const maxResults = 50
     ;(async () => {
       try {
         setError(undefined)
@@ -18,21 +17,20 @@ export default function useFetch(query: string) {
         const items = Object.fromEntries(
           await Promise.all(
             videoIds.map(async id => {
-              const key = id + '_' + maxResults
-              let r1 = await localforage.getItem<Playlist>(key)
+              let r1 = await localforage.getItem<Playlist>(id)
               if (!r1) {
                 setCurrentlyProcessing(id)
                 r1 = remap(
                   await myfetch<PreItem[]>(
-                    `${root}?videoId=${id}&maxResults=${maxResults}`,
+                    `${root}?videoId=${id}&maxResults=50`,
                     {
                       signal: controller.signal,
                     },
                   ),
                 )
-                await localforage.setItem(key, r1)
+                await localforage.setItem(id, r1)
               }
-              return [key, r1] as const
+              return [id, r1] as const
             }),
           ),
         )
