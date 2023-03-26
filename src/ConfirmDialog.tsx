@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import useDialogShown from './useDialogShown'
 
 export default function ConfirmDialog({
   open,
@@ -7,18 +7,7 @@ export default function ConfirmDialog({
   open: boolean
   setOpen: (arg: boolean) => void
 }) {
-  const ref = useRef<HTMLDialogElement>(null)
-  useEffect(() => {
-    if (!ref.current) {
-      return
-    }
-
-    if (open) {
-      ref.current.showModal()
-    } else {
-      ref.current.close()
-    }
-  }, [open])
+  const ref = useDialogShown(open)
   return (
     <dialog ref={ref} style={{ maxWidth: 500 }}>
       <p>

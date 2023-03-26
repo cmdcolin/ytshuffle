@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react'
 import YouTube from 'react-youtube'
 
+// @ts-expect-error
+import logo from './favicon.svg'
+console.log({ logo })
+
 // locals
 import PlaylistTable from './PlaylistTable'
 import ErrorMessage from './ErrorMessage'
@@ -61,7 +65,10 @@ export default function App({
   return (
     <>
       <div className="App">
-        <h1>ytshuffle</h1>
+        <div style={{ display: 'flex', marginBottom: 20 }}>
+          <img height={40} src={logo} />
+          <h1 style={{ margin: 0, marginLeft: 10 }}>{'  '}ytshuffle</h1>
+        </div>
 
         {error ? <ErrorMessage error={error} /> : null}
         {playlist ? (

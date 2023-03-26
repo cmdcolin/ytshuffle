@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
+import useDialogShown from './useDialogShown'
 
 export default function SavePlaylistModal({
   open,
@@ -9,23 +10,12 @@ export default function SavePlaylistModal({
   currentPlaylist: string
   onClose: (arg?: string) => void
 }) {
-  const ref = useRef<HTMLDialogElement>(null)
+  const ref = useDialogShown(open)
   const [name, setName] = useState(currentPlaylist)
   useEffect(() => {
     setName(currentPlaylist)
   }, [currentPlaylist])
 
-  useEffect(() => {
-    if (!ref.current) {
-      return
-    }
-
-    if (open) {
-      ref.current.showModal()
-    } else {
-      ref.current.close()
-    }
-  }, [open])
   return (
     <dialog ref={ref} onClose={() => onClose()}>
       <div>
