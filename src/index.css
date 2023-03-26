@@ -9,8 +9,7 @@ body {
 
 th {
   text-align: left;
-  background: black;
-  color: white;
+  background: #ccc;
   position: sticky;
   top: 0;
   z-index: 2;
@@ -19,7 +18,7 @@ th {
 table,
 th,
 td {
-  border: 1px solid black;
+  border: 1px solid #ccc;
   border-collapse: collapse;
 }
 th,
@@ -38,6 +37,7 @@ td {
 
 .footer {
   padding: 20px;
+  margin-top: 200px;
   background: #ccc;
 }
 
@@ -56,17 +56,17 @@ td {
     flex-direction: row;
   }
 
-  .playlist_header {
-    flex-direction: row;
-  }
-
   .App {
     margin-left: 20px;
   }
 }
-
 dialog::backdrop {
-  background: rgba(255, 0, 0, 0.25);
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .playlist_table {
@@ -89,7 +89,6 @@ dialog::backdrop {
 }
 
 .text_header {
-  background: black;
-  color: white;
+  background: #ccc;
   font-weight: bold;
 }

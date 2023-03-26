@@ -25,15 +25,15 @@ const opts = {
 }
 
 export default function App({
-  initialText,
+  initialQuery,
   initialPlaylist,
   showPrivacyPolicy,
 }: {
-  initialText: string
+  initialQuery: string
   initialPlaylist: string
   showPrivacyPolicy: () => void
 }) {
-  const [query, setQuery] = useState(initialText)
+  const [query, setQuery] = useState(initialQuery)
   const [filter, setFilter] = useState('')
   const [shuffle, setShuffle] = useState(true)
   const [currentPlaylist, setCurrentPlaylist] = useState(initialPlaylist)
