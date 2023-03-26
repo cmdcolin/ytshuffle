@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react'
+
 export default function ConfirmDialog({
   open,
   setOpen,
@@ -5,8 +7,20 @@ export default function ConfirmDialog({
   open: boolean
   setOpen: (arg: boolean) => void
 }) {
+  const ref = useRef<HTMLDialogElement>(null)
+  useEffect(() => {
+    if (!ref.current) {
+      return
+    }
+
+    if (open) {
+      ref.current.showModal()
+    } else {
+      ref.current.close()
+    }
+  }, [open])
   return (
-    <dialog open={open} style={{ maxWidth: 500 }}>
+    <dialog ref={ref} style={{ maxWidth: 500 }}>
       <p>
         By using this website you agree to usage of the "Privacy Policy" below
       </p>
