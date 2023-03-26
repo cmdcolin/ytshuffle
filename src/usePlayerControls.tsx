@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import { PlaylistMap } from './util'
 
+function clamp(p: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, p))
+}
+
 export default function usePlayerControls(
   videoMap: PlaylistMap | undefined,
   filter: string,
@@ -10,6 +14,7 @@ export default function usePlayerControls(
   const preFiltered = videoMap ? Object.values(videoMap).flat() : undefined
   const counts = {} as Record<string, number>
   const channelToId = {} as Record<string, string>
+
   if (preFiltered) {
     for (const row of preFiltered) {
       if (!counts[row.channel]) {
@@ -29,32 +34,25 @@ export default function usePlayerControls(
       f.channel.toLowerCase().includes(lcFilter) ||
       f.title.toLowerCase().includes(lcFilter),
   )
-  function findIdx(playing: string) {
-    return playlist?.findIndex(p => playing === p.videoId) || -1
-  }
-  function goToNext() {
-    if (!playlist || !playing) {
-      return
-    }
-    const next = shuffle
-      ? Math.floor(Math.random() * playlist.length)
-      : Math.min(playlist.length, findIdx(playing)) + 1
-    setPlaying(playlist[next].videoId)
-  }
 
-  function goToPrev() {
-    if (!playlist || !playing) {
-      return
+  function idx(r: number) {
+    if (!playlist) {
+      return undefined
     }
-    const prev = shuffle
-      ? Math.floor(Math.random() * playlist.length)
-      : Math.max(0, findIdx(playing)) - 1
-    setPlaying(playlist[prev].videoId)
+    return playlist[
+      shuffle
+        ? Math.floor(Math.random() * playlist.length)
+        : clamp(
+            playlist?.findIndex(p => playing === p.videoId) + r,
+            0,
+            playlist.length,
+          )
+    ]
   }
 
   return {
-    goToPrev,
-    goToNext,
+    goToNext: () => setPlaying(idx(1)?.videoId),
+    goToPrev: () => setPlaying(idx(-1)?.videoId),
     playing,
     setPlaying,
     counts,

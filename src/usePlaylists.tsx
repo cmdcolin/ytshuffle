@@ -7,7 +7,10 @@ export default function usePlaylists(query: string, currentPlaylist: string) {
   )
   // we add default back if there is none because it gets
   // confused on visiting with blank urlparams otherwise
-  const [playlists, setPlaylists] = useState({ default: '', ...ret })
+  const [playlists, setPlaylists] = useState({
+    ...ret,
+    [currentPlaylist]: query || '',
+  })
 
   useEffect(() => {
     playlists[currentPlaylist] = query
