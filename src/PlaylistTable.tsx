@@ -23,19 +23,17 @@ export default function PlaylistTable({
           </tr>
         </thead>
         <tbody>
-          {playlist.map(item => {
-            return (
-              <tr key={item.id}>
-                <td>{item.videoId === playing ? '>' : ''}</td>
-                <td>{item.title}</td>
-                <td>{item.channel}</td>
-                <td>{format(item.publishedAt)}</td>
-                <td>
-                  <button onClick={() => onPlay(item.videoId)}>Play</button>
-                </td>
-              </tr>
-            )
-          })}
+          {playlist.map(item => (
+            <tr key={item.id}>
+              <td>{item.videoId === playing ? '>' : ''}</td>
+              <td>{item.title}</td>
+              <td>{item.channel}</td>
+              <td>{format(item.publishedAt)}</td>
+              <td>
+                <button onClick={() => onPlay(item.videoId)}>Play</button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

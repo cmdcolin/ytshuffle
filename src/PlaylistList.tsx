@@ -11,6 +11,7 @@ export default function Filtering({
 }) {
   return (
     <div className="filtering">
+      <p>Note: clearing and re-downloading can take a little while</p>
       <table>
         <thead>
           <tr>
@@ -36,7 +37,7 @@ export default function Filtering({
                   window.location.reload()
                 }}
               >
-                Refresh all (download latest from youtube)
+                Clear all and download latest
               </button>
             </td>
           </tr>
@@ -57,7 +58,7 @@ export default function Filtering({
                     window.location.reload()
                   }}
                 >
-                  Refresh (download latest from youtube)
+                  Clear data and redownload latest{' '}
                 </button>
               </td>
             </tr>
