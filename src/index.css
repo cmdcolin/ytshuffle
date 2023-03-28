@@ -31,6 +31,12 @@ td {
   flex-direction: column;
 }
 
+.header {
+  display: flex;
+  margin-bottom: 20px;
+  background: #ccc;
+  padding: 20px;
+}
 .footer {
   padding: 20px;
   margin-top: 200px;
