@@ -20,7 +20,7 @@ export default function PlaylistTable({
         .querySelector(`#vid${playing}`)
         ?.scrollIntoView({ block: 'center', behavior: 'smooth' })
     }
-  }, [playing])
+  }, [playing, followPlaying])
   return (
     <div className="playlist_table">
       <table>

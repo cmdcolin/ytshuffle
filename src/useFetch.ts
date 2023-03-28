@@ -9,7 +9,7 @@ export default function useFetch(query: string) {
   const [currentlyProcessing, setCurrentlyProcessing] = useState('')
   const [videoMap, setVideoMap] = useState<PlaylistMap>()
   useEffect(() => {
-    let controller = new AbortController()
+    const controller = new AbortController()
     ;(async () => {
       try {
         setError(undefined)

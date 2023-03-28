@@ -31,6 +31,7 @@ export default function PlaylistControls({
       <button onClick={() => setNewModalOpen(true)}>New playlist</button>
       <button
         onClick={() => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { [currentPlaylist]: curr, ...rest } = playlists
           setPlaylists(rest)
           const next = Object.keys(rest)[0] || 'default'

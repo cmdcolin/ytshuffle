@@ -3,7 +3,7 @@ import { getIds } from './util'
 
 export default function useUrlParams(query: string, playlist: string) {
   useEffect(() => {
-    var url = new URL(window.location.href)
+    const url = new URL(window.location.href)
     url.searchParams.set('ids', getIds(query).join(','))
     window.history.replaceState({}, '', url)
   }, [query, playlist])
