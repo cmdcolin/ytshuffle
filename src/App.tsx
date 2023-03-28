@@ -1,20 +1,17 @@
 import { useEffect, useState } from 'react'
-
-// @ts-expect-error
-import logo from './favicon.svg'
-
 // locals
 import ErrorMessage from './ErrorMessage'
 import PlaylistList from './PlaylistList'
 import PlaylistEditor from './PlaylistEditor'
 import Footer from './Footer'
+import PlayerPanel from './PlayerPanel'
+import Header from './Header'
 
 // hooks
 import useFetch from './useFetch'
 import usePlayerControls from './usePlayerControls'
 import useUrlParams from './useUrlParams'
 import usePlaylists from './usePlaylists'
-import PlayerPanel from './PlayerPanel'
 
 export default function App({
   initialQuery,
@@ -53,14 +50,11 @@ export default function App({
 
   return (
     <>
-      <div className="header">
-        <img height={40} src={logo} />
-        <h1 style={{ margin: 0, marginLeft: 10 }}>{'  '}ytshuffle</h1>
-      </div>
+      <Header />
       <div className="App">
         {error ? <ErrorMessage error={error} /> : null}
         {playlist ? (
-          <div>
+          <>
             <div className="playlist_header">
               <div>
                 <PlaylistEditor
@@ -105,9 +99,7 @@ export default function App({
               setPlaying={setPlaying}
               playlist={playlist}
             />
-          </div>
-        ) : !error ? (
-          'Loading...'
+          </>
         ) : null}
       </div>
       <Footer showPrivacyPolicy={showPrivacyPolicy} />
