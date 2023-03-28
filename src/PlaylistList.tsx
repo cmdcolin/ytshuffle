@@ -1,6 +1,6 @@
 import localforage from 'localforage'
 
-export default function Filtering({
+export default function PlaylistList({
   counts,
   channelToId,
   setFilter,
@@ -11,7 +11,6 @@ export default function Filtering({
 }) {
   return (
     <div className="filtering">
-      <p>Note: clearing and re-downloading can take a little while</p>
       <table>
         <thead>
           <tr>
@@ -37,7 +36,7 @@ export default function Filtering({
                   window.location.reload()
                 }}
               >
-                Clear all and download latest
+                Clear all and refresh
               </button>
             </td>
           </tr>
@@ -47,9 +46,7 @@ export default function Filtering({
                 {key} ({value || 0})
               </td>
               <td>
-                <button onClick={() => setFilter(key)}>
-                  Select this channel as filter
-                </button>
+                <button onClick={() => setFilter(key)}>Filter</button>
               </td>
               <td>
                 <button
@@ -58,7 +55,7 @@ export default function Filtering({
                     window.location.reload()
                   }}
                 >
-                  Clear data and redownload latest{' '}
+                  Clear data and refresh
                 </button>
               </td>
             </tr>
