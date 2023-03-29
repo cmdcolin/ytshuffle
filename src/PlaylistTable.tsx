@@ -9,7 +9,7 @@ export default function PlaylistTable({
   followPlaying,
 }: {
   playlist: Playlist
-  onPlay: (str: string) => void
+  onPlay: (string_: string) => void
   playing?: string
   followPlaying: boolean
 }) {

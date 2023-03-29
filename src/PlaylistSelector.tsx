@@ -18,7 +18,7 @@ export default function PlaylistSelector({
         value={currentPlaylist}
         onChange={event => setCurrentPlaylist(event.target.value)}
       >
-        {(keys.length ? keys : ['No playlists saved yet']).map(name => (
+        {(keys.length > 0 ? keys : ['No playlists saved yet']).map(name => (
           <option key={name} value={name}>
             {name}
           </option>

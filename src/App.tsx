@@ -10,7 +10,7 @@ import Header from './Header'
 // hooks
 import useFetch from './useFetch'
 import usePlayerControls from './usePlayerControls'
-import useUrlParams from './useUrlParams'
+import useUrlParameters from './useUrlParameters'
 import usePlaylists from './usePlaylists'
 
 export default function App({
@@ -40,7 +40,7 @@ export default function App({
     playing,
   } = usePlayerControls(videoMap, filter, shuffle)
 
-  useUrlParams(query, currentPlaylist)
+  useUrlParameters(query, currentPlaylist)
 
   useEffect(() => {
     setQuery(playlists[currentPlaylist] || '')
@@ -56,23 +56,19 @@ export default function App({
         {playlist ? (
           <>
             <div className="playlist_header">
-              <div>
-                <PlaylistEditor
-                  query={query}
-                  playlists={playlists}
-                  currentPlaylist={currentPlaylist}
-                  setQuery={setQuery}
-                  setPlaylists={setPlaylists}
-                  setCurrentPlaylist={setCurrentPlaylist}
-                />
-              </div>
-              <div>
-                <PlaylistList
-                  setFilter={setFilter}
-                  counts={counts}
-                  channelToId={channelToId}
-                />
-              </div>
+              <PlaylistEditor
+                query={query}
+                playlists={playlists}
+                currentPlaylist={currentPlaylist}
+                setQuery={setQuery}
+                setPlaylists={setPlaylists}
+                setCurrentPlaylist={setCurrentPlaylist}
+              />
+              <PlaylistList
+                setFilter={setFilter}
+                counts={counts}
+                channelToId={channelToId}
+              />
             </div>
 
             <div>

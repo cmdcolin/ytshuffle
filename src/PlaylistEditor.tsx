@@ -27,7 +27,7 @@ export default function PlaylistEditor({
   return (
     <div>
       <button onClick={() => setHide(s => !s)}>
-        {!hide ? 'Hide form' : 'Show form'}
+        {hide ? 'Show form' : 'Hide form'}
       </button>
       {hide ? null : (
         <div className="playlist_editor">

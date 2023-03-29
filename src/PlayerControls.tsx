@@ -31,7 +31,7 @@ export default function PlayerControls({
   return (
     <div className="player_controls">
       <div>
-        <button onClick={() => setPlaying(undefined)}>Stop</button>
+        <button onClick={() => setPlaying()}>Stop</button>
         <button onClick={() => goToNext()}>Next</button>
         <button onClick={() => goToPrev()}>Prev</button>
         <PlaylistSelector

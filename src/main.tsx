@@ -4,7 +4,7 @@ import './index.css'
 
 import StartScreen from './StartScreen'
 
-const rootElement = document.getElementById('root')
+const rootElement = document.querySelector('#root')
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const root = createRoot(rootElement!)
 

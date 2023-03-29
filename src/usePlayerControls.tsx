@@ -24,8 +24,8 @@ export default function usePlayerControls(
     }
   }
   if (videoMap) {
-    for (const [key, val] of Object.entries(videoMap)) {
-      channelToId[val[0].channel] = key
+    for (const [key, value] of Object.entries(videoMap)) {
+      channelToId[value[0].channel] = key
     }
   }
   const lcFilter = filter.toLowerCase()
@@ -35,9 +35,9 @@ export default function usePlayerControls(
       f.title.toLowerCase().includes(lcFilter),
   )
 
-  function idx(r: number) {
+  function index(r: number) {
     if (!playlist) {
-      return undefined
+      return
     }
     return playlist[
       shuffle
@@ -51,8 +51,8 @@ export default function usePlayerControls(
   }
 
   return {
-    goToNext: () => setPlaying(idx(1)?.videoId),
-    goToPrev: () => setPlaying(idx(-1)?.videoId),
+    goToNext: () => setPlaying(index(1)?.videoId),
+    goToPrev: () => setPlaying(index(-1)?.videoId),
     playing,
     setPlaying,
     counts,

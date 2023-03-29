@@ -1,6 +1,6 @@
 ## Lambda function
 
-Setting up AWS lambdas requries a lot of clicking and pointing in the web
+Setting up AWS lambdas requires a lot of clicking and pointing in the web
 interface that I did not keep track of properly but roughly I
 
 - Added a lambda

@@ -8,13 +8,9 @@ export async function myfetch<T>(url: string, rest?: RequestInit) {
 
 export function getVideoId(url: string) {
   const regExp =
-    /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
+    /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/
   const match = url.match(regExp)
-  if (match?.[2].length == 11) {
-    return match[2]
-  } else {
-    return undefined
-  }
+  return match?.[2].length == 11 ? match[2] : undefined
 }
 
 export function remap(items: PreItem[]): Item[] {

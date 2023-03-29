@@ -4,9 +4,9 @@ import ConfirmDialog from './ConfirmDialog'
 
 export default function StartScreen() {
   const [showModal, setShowModal] = useState(!localStorage.getItem('confirmed'))
-  const urlParams = new URLSearchParams(window.location.search)
-  const ids = urlParams.get('ids')
-  const playlist = urlParams.get('playlist') || 'default'
+  const urlParameters = new URLSearchParams(window.location.search)
+  const ids = urlParameters.get('ids')
+  const playlist = urlParameters.get('playlist') || 'default'
 
   return (
     <>

@@ -32,7 +32,7 @@ export default function PlaylistControls({
       <button
         onClick={() => {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { [currentPlaylist]: curr, ...rest } = playlists
+          const { [currentPlaylist]: current, ...rest } = playlists
           setPlaylists(rest)
           const next = Object.keys(rest)[0] || 'default'
           if (rest[next] === undefined) {
@@ -60,7 +60,8 @@ export default function PlaylistControls({
         currentPlaylist={currentPlaylist}
         onClose={name => {
           if (name) {
-            const { [currentPlaylist]: curr, ...rest } = playlists
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { [currentPlaylist]: current, ...rest } = playlists
             setPlaylists({ ...rest, [name]: query })
             setCurrentPlaylist(name)
           }
