@@ -13,9 +13,9 @@
     "lambda": "yarn tsc --target es2020 --moduleResolution nodenext lambda/index.ts"
   },
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.57.0",
-    "@typescript-eslint/parser": "^5.57.0",
-    "eslint": "^8.36.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.1",
+    "@typescript-eslint/parser": "^5.59.1",
+    "eslint": "^8.39.0",
     "eslint-plugin-unicorn": "^46.0.0",
     "localforage": "^1.10.0",
     "react": "^18.2.0",
@@ -24,12 +24,12 @@
     "timeago.js": "^4.0.2"
   },
   "devDependencies": {
-    "@types/react": "^18.0.28",
-    "@types/react-dom": "^18.0.11",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
     "@types/youtube-player": "^5.5.7",
-    "@vitejs/plugin-react": "^3.1.0",
+    "@vitejs/plugin-react": "^4.0.0",
     "gh-pages": "^5.0.0",
-    "typescript": "^5.0.2",
-    "vite": "^4.1.4"
+    "typescript": "^5.0.4",
+    "vite": "^4.3.1"
   }
 }
