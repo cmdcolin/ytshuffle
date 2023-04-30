@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 // locals
 import ErrorMessage from './ErrorMessage'
 import PlaylistList from './PlaylistList'
@@ -8,11 +8,10 @@ import PlayerPanel from './PlayerPanel'
 import Header from './Header'
 
 // hooks
-import useFetch from './useFetch'
 import usePlayerControls from './usePlayerControls'
 import useUrlParameters from './useUrlParameters'
-import usePlaylists from './usePlaylists'
-import createStore from './store'
+import createStore, { StoreModel } from './store'
+import { observer } from 'mobx-react'
 
 export default function App({
   initialQuery,
@@ -23,13 +22,19 @@ export default function App({
   initialPlaylist: string
   showPrivacyPolicy: () => void
 }) {
-  const [query, setQuery] = useState(initialQuery)
   const model = createStore().create({
     query: initialQuery,
     playlist: initialPlaylist,
   })
-  const [videoMap, error, currentlyProcessing] = useFetch(query)
-
+  return <App2 model={model} showPrivacyPolicy={showPrivacyPolicy} />
+}
+const App2 = observer(function ({
+  model,
+  showPrivacyPolicy,
+}: {
+  model: StoreModel
+  showPrivacyPolicy: () => void
+}) {
   const {
     playlist,
     channelToId,
@@ -38,29 +43,25 @@ export default function App({
     goToNext,
     goToPrev,
     setPlaying,
-  } = usePlayerControls(videoMap, model.filter, model.shuffle)
+  } = usePlayerControls(model.videoMap, model.filter, model.shuffle)
 
-  useUrlParameters(query, model.playlist)
+  useUrlParameters(model.query, model.playlist)
+
+  console.log(model.playlist)
 
   useEffect(() => {
-    setQuery(playlists[model.playlist] || '')
+    model.setQuery(model.playlists[model.playlist] || '')
   }, [model.playlist])
-
-  const [playlists, setPlaylists] = usePlaylists(query, model.playlist)
 
   return (
     <>
       <Header />
       <div className="App">
-        {error ? <ErrorMessage error={error} /> : null}
+        {model.error ? <ErrorMessage error={model.error} /> : null}
         {playlist ? (
           <>
             <div className="playlist_header">
-              <PlaylistEditor
-                model={model}
-                playlists={playlists}
-                setPlaylists={setPlaylists}
-              />
+              <PlaylistEditor model={model} />
               <PlaylistList
                 model={model}
                 counts={counts}
@@ -69,14 +70,13 @@ export default function App({
             </div>
 
             <div>
-              {currentlyProcessing ? (
-                <div>Currently processing: {currentlyProcessing}</div>
+              {model.currentlyProcessing ? (
+                <div>Currently processing: {model.currentlyProcessing}</div>
               ) : null}
             </div>
             <PlayerPanel
               model={model}
               playing={playing}
-              playlists={playlists}
               goToNext={goToNext}
               goToPrev={goToPrev}
               setPlaying={setPlaying}
@@ -88,4 +88,4 @@ export default function App({
       <Footer showPrivacyPolicy={showPrivacyPolicy} />
     </>
   )
-}
+})

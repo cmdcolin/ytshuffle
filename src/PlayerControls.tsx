@@ -4,13 +4,11 @@ import { StoreModel } from './store'
 
 export default observer(function PlayerControls({
   model,
-  playlists,
   setPlaying,
   goToNext,
   goToPrev,
 }: {
   model: StoreModel
-  playlists: Record<string, string>
   setPlaying: (arg?: string) => void
   goToNext: () => void
   goToPrev: () => void
@@ -21,7 +19,7 @@ export default observer(function PlayerControls({
         <button onClick={() => setPlaying()}>Stop</button>
         <button onClick={() => goToNext()}>Next</button>
         <button onClick={() => goToPrev()}>Prev</button>
-        <PlaylistSelector model={model} playlists={playlists} />
+        <PlaylistSelector model={model} />
       </div>
       <div>
         <input

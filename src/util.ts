@@ -7,8 +7,7 @@ export async function myfetch<T>(url: string, rest?: RequestInit) {
 }
 
 export function getVideoId(url: string) {
-  const regExp =
-    /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/
+  const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/
   const match = url.match(regExp)
   return match?.[2].length == 11 ? match[2] : undefined
 }
@@ -57,4 +56,8 @@ export type PlaylistMap = Record<string, Playlist>
 export const mydef = {
   default: '',
   example: 'https://www.youtube.com/watch?v=3oJqulA8lQc',
+}
+
+export function clamp(p: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, p))
 }

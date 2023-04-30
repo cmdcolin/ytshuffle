@@ -3,12 +3,10 @@ import { StoreModel } from './store'
 
 export default observer(function PlaylistSelector({
   model,
-  playlists,
 }: {
   model: StoreModel
-  playlists: Record<string, string>
 }) {
-  const keys = Object.keys(playlists).sort()
+  const keys = Object.keys(model.playlists).sort()
   return (
     <>
       <label style={{ marginLeft: 20 }} htmlFor="currplaylist">

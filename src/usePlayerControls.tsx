@@ -1,9 +1,5 @@
 import { useState } from 'react'
-import { PlaylistMap } from './util'
-
-function clamp(p: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, p))
-}
+import { PlaylistMap, clamp } from './util'
 
 export default function usePlayerControls(
   videoMap: PlaylistMap | undefined,

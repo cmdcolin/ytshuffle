@@ -1,16 +1,14 @@
 import { useEffect, useState } from 'react'
+import { observer } from 'mobx-react'
+
+// locals
 import PlaylistControls from './PlaylistControls'
 import { StoreModel } from './store'
-import { observer } from 'mobx-react'
 
 export default observer(function PlaylistEditor({
   model,
-  playlists,
-  setPlaylists,
 }: {
   model: StoreModel
-  playlists: Record<string, string>
-  setPlaylists: (arg: Record<string, string>) => void
 }) {
   const [hide, setHide] = useState(
     JSON.parse(localStorage.getItem('hide_form') || 'false') as boolean,
@@ -47,11 +45,7 @@ export default observer(function PlaylistEditor({
                 onChange={event => model.setQuery(event.target.value)}
               />
             </div>
-            <PlaylistControls
-              model={model}
-              playlists={playlists}
-              setPlaylists={setPlaylists}
-            />
+            <PlaylistControls model={model} />
           </div>
         </div>
       )}

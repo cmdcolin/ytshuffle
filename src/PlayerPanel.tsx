@@ -18,7 +18,6 @@ export default observer(function PlayerPanel({
   model,
   playing,
   playlist,
-  playlists,
   goToNext,
   goToPrev,
   setPlaying,
@@ -26,7 +25,6 @@ export default observer(function PlayerPanel({
   model: StoreModel
   playing?: string
   playlist: Playlist
-  playlists: Record<string, string>
   goToPrev: () => void
   goToNext: () => void
   setPlaying: (arg?: string) => void
@@ -57,7 +55,6 @@ export default observer(function PlayerPanel({
           model={model}
           goToNext={goToNext}
           goToPrev={goToPrev}
-          playlists={playlists}
           setPlaying={setPlaying}
         />
         {playing ? (
