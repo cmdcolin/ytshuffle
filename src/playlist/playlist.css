@@ -6,7 +6,8 @@
 
 .playlist_editor {
   max-width: 600px;
-  border: 1px solid #aaa;
+  margin-top: 10px;
+  border: 1px solid #ccc;
 }
 
 .text_header {

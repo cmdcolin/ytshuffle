@@ -1,5 +1,9 @@
-- Switch to mobx-state-tree for state management. Tried zustand, but found it
-  tricky
+## v0.0.2
+
+- Switch to mobx-state-tree for state management
+- Put the playlist name in the URL
+- Allow hiding the playlist table
+- Modularize codebase more
 
 ## v0.0.1
 

@@ -18,19 +18,26 @@ export default function SavePlaylistModal({
 
   return (
     <dialog ref={ref} onClose={() => onClose()}>
-      <div>
-        <label htmlFor="playlist">Playlist name: </label>
-        <input
-          id="playlist"
-          type="text"
-          value={name}
-          onChange={event => setName(event.target.value)}
-        />
-      </div>
-      <div>
-        <button onClick={() => onClose(name)}>Submit</button>
-        <button onClick={() => onClose()}>Cancel</button>
-      </div>
+      <form
+        onSubmit={event => {
+          event.preventDefault()
+          onClose(name)
+        }}
+      >
+        <div>
+          <label htmlFor="playlist">Playlist name: </label>
+          <input
+            id="playlist"
+            type="text"
+            value={name}
+            onChange={event => setName(event.target.value)}
+          />
+        </div>
+        <div>
+          <button type="submit">Submit</button>
+          <button onClick={() => onClose()}>Cancel</button>
+        </div>
+      </form>
     </dialog>
   )
 }

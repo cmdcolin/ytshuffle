@@ -1,8 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
 
-import StartScreen from './StartScreen'
+import StartScreen from './startscreen/StartScreen'
+import './index.css'
 
 const rootElement = document.querySelector('#root')
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

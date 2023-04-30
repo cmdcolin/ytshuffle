@@ -15,6 +15,8 @@ import localforage from 'localforage'
 const root =
   'https://39b5dlncof.execute-api.us-east-1.amazonaws.com/youtubeApiV3'
 
+const s = (l: string) => encodeURIComponent(l)
+
 export default function createStore() {
   return types
     .model({
@@ -25,14 +27,14 @@ export default function createStore() {
       autoplay: true,
       playlist: types.string,
       playing: types.maybe(types.string),
-      playlists: types.optional(types.frozen(), () =>
+      playlists: types.optional(types.map(types.string), () =>
         JSON.parse(localStorage.getItem('playlists') || JSON.stringify(mydef)),
       ),
     })
     .volatile(() => ({
       videoMap: undefined as PlaylistMap | undefined,
       error: undefined as unknown,
-      currentlyProcessing: '',
+      processing: '',
     }))
     .actions(self => ({
       setPlaying(arg?: string) {
@@ -40,17 +42,15 @@ export default function createStore() {
       },
       setPlaylist(arg: string) {
         self.playlist = arg
+        console.log('here', arg)
+        self.query = self.playlists.get(arg) || ''
       },
       setQuery(arg: string) {
         self.query = arg
+        console.log('here2', arg, self.playlist)
+        self.playlists.set(self.playlist, self.query)
       },
-      updateCurrPlaylist(arg: string) {
-        self.query = arg
-        this.setPlaylists({
-          ...self.playlists,
-          [self.playlist]: arg,
-        })
-      },
+
       setFilter(arg: string) {
         self.filter = arg
       },
@@ -70,10 +70,10 @@ export default function createStore() {
         self.videoMap = arg
       },
       setCurrentlyProcessing(arg: string) {
-        self.currentlyProcessing = arg
+        self.processing = arg
       },
-      setPlaylists(arg: any) {
-        self.playlists = arg
+      setPlaylists(arg: Record<string, string>) {
+        self.playlists.replace(arg)
       },
     }))
     .views(self => ({
@@ -126,29 +126,24 @@ export default function createStore() {
           autorun(async () => {
             try {
               self.setError(undefined)
-              const items = Object.fromEntries(
-                await Promise.all(
-                  getIds(self.query).map(async id => {
-                    let r1 = await localforage.getItem<Playlist>(id)
-                    if (!r1) {
-                      self.setCurrentlyProcessing(id)
-                      r1 = remap(
-                        await myfetch<PreItem[]>(
-                          `${root}?videoId=${id}&maxResults=50`,
-                        ),
-                      )
-                      await localforage.setItem(id, r1)
-                    }
-                    return [id, r1] as const
-                  }),
-                ),
-              )
-
-              self.setVideoMap(items)
-              self.setCurrentlyProcessing('')
+              for (const id of getIds(self.query)) {
+                let r1 = await localforage.getItem<Playlist>(id)
+                if (!r1) {
+                  self.setCurrentlyProcessing(id)
+                  r1 = remap(
+                    await myfetch<PreItem[]>(
+                      `${root}?videoId=${id}&maxResults=50`,
+                    ),
+                  )
+                  await localforage.setItem(id, r1)
+                }
+                self.setVideoMap({ ...self.videoMap, [id]: r1 })
+              }
             } catch (e) {
               console.error(e)
               self.setError(e)
+            } finally {
+              self.setCurrentlyProcessing('')
             }
           }),
         )
@@ -156,20 +151,22 @@ export default function createStore() {
         addDisposer(
           self,
           autorun(() => {
-            self.setQuery(self.playlists[self.playlist] || '')
-          }),
-        )
-        addDisposer(
-          self,
-          autorun(() => {
-            localStorage.setItem('playlists', JSON.stringify(self.playlists))
+            console.log(self.playlists.toJSON())
+            localStorage.setItem(
+              'playlists',
+              JSON.stringify({
+                ...self.playlists.toJSON(),
+                [self.playlist]: self.query,
+              }),
+            )
           }),
         )
         addDisposer(
           self,
           autorun(() => {
             const url = new URL(window.location.href)
-            url.searchParams.set('ids', getIds(self.query).join(','))
+            url.searchParams.set('ids', s(getIds(self.query).join(',')))
+            url.searchParams.set('playlist', s(self.playlist))
             window.history.replaceState({}, '', url)
           }),
         )

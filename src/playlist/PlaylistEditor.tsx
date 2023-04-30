@@ -1,27 +1,21 @@
-import { useEffect, useState } from 'react'
 import { observer } from 'mobx-react'
 
 // locals
 import PlaylistControls from './PlaylistControls'
 import { StoreModel } from '../store'
+import { useLocalStorage } from '../util'
+import './playlist.css'
 
 export default observer(function PlaylistEditor({
   model,
 }: {
   model: StoreModel
 }) {
-  const [hide, setHide] = useState(
-    JSON.parse(localStorage.getItem('hide_form') || 'false') as boolean,
-  )
-
-  useEffect(() => {
-    localStorage.setItem('hide_form', JSON.stringify(hide))
-  }, [hide])
-
+  const [hide, setHide] = useLocalStorage('hide_form', false)
   return (
     <div>
       <button onClick={() => setHide(s => !s)}>
-        {hide ? 'Show form' : 'Hide form'}
+        {hide ? 'Show controls' : 'Hide controls'}
       </button>
       {hide ? null : (
         <div className="playlist_editor">
@@ -42,7 +36,7 @@ export default observer(function PlaylistEditor({
                 style={{ maxWidth: '100%' }}
                 id="video"
                 value={model.query}
-                onChange={event => model.updateCurrPlaylist(event.target.value)}
+                onChange={event => model.setQuery(event.target.value)}
               />
             </div>
             <PlaylistControls model={model} />

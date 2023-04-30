@@ -1,0 +1,8 @@
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.filter {
+  margin-bottom: 10px;
+}

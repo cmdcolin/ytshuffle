@@ -5,6 +5,10 @@
   padding: 20px;
 }
 .title {
-  margin: 0;
-  margin-left: 10;
+  margin: 0px;
+  margin-left: 10px;
+}
+
+.version {
+  margin: 0px;
 }

@@ -11,12 +11,12 @@ export default observer(function PlaylistControls({
 }: {
   model: StoreModel
 }) {
-  const [modalOpen, setModalOpen] = useState(false)
+  const [saveAsModalOpen, setSaveAsModalOpen] = useState(false)
   const [renameModalOpen, setRenameModalOpen] = useState(false)
   const [newModalOpen, setNewModalOpen] = useState(false)
   return (
     <div>
-      <button onClick={() => setModalOpen(true)}>
+      <button onClick={() => setSaveAsModalOpen(true)}>
         Save current playlist as...
       </button>
       <button onClick={() => setRenameModalOpen(true)}>
@@ -25,8 +25,9 @@ export default observer(function PlaylistControls({
       <button onClick={() => setNewModalOpen(true)}>New playlist</button>
       <button
         onClick={() => {
+          const { playlist, playlists } = model
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { [model.playlist]: current, ...rest } = model.playlists
+          const { [playlist]: current, ...rest } = playlists.toJSON()
           model.setPlaylists(rest)
           const next = Object.keys(rest)[0] || 'default'
           if (rest[next] === undefined) {
@@ -39,14 +40,15 @@ export default observer(function PlaylistControls({
         Delete current playlist
       </button>
       <SavePlaylistModal
-        open={modalOpen}
+        open={saveAsModalOpen}
         currentPlaylist={model.playlist}
         onClose={name => {
           if (name) {
-            model.setPlaylists({ ...model.playlists, [name]: model.query })
+            const { playlists, query } = model
+            model.setPlaylists({ ...playlists.toJSON(), [name]: query })
             model.setPlaylist(name)
           }
-          setModalOpen(false)
+          setSaveAsModalOpen(false)
         }}
       />
       <SavePlaylistModal
@@ -54,9 +56,10 @@ export default observer(function PlaylistControls({
         currentPlaylist={model.playlist}
         onClose={name => {
           if (name) {
+            const { query, playlist, playlists } = model
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { [model.playlist]: current, ...rest } = model.playlists
-            model.setPlaylists({ ...rest, [name]: model.query })
+            const { [playlist]: current, ...rest } = playlists.toJSON()
+            model.setPlaylists({ ...rest, [name]: query })
             model.setPlaylist(name)
           }
           setRenameModalOpen(false)
@@ -67,7 +70,8 @@ export default observer(function PlaylistControls({
         currentPlaylist={''}
         onClose={name => {
           if (name) {
-            model.setPlaylists({ ...model.playlists, [name]: '' })
+            const { playlists } = model
+            model.setPlaylists({ ...playlists.toJSON(), [name]: '' })
             model.setQuery('')
             model.setPlaylist(name)
           }

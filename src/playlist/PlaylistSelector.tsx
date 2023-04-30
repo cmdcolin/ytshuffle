@@ -6,7 +6,7 @@ export default observer(function PlaylistSelector({
 }: {
   model: StoreModel
 }) {
-  const keys = Object.keys(model.playlists).sort()
+  const { playlist, playlists } = model
   return (
     <>
       <label style={{ marginLeft: 20 }} htmlFor="currplaylist">
@@ -14,10 +14,13 @@ export default observer(function PlaylistSelector({
       </label>
       <select
         id="currplaylist"
-        value={model.playlist}
+        value={playlist}
         onChange={event => model.setPlaylist(event.target.value)}
       >
-        {(keys.length > 0 ? keys : ['No playlists saved yet']).map(name => (
+        {(playlists.size > 0
+          ? [...playlists.keys()]
+          : ['No playlists saved yet']
+        ).map(name => (
           <option key={name} value={name}>
             {name}
           </option>

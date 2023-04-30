@@ -1,24 +1,16 @@
-import YouTube from 'react-youtube'
 import { observer } from 'mobx-react'
 
 import PlaylistTable from '../library/Table'
 import PlayerControls from './PlayerControls'
+import YoutubePanel from './YoutubePanel'
 import { StoreModel } from '../store'
-
-const options = {
-  height: 390,
-  width: 640,
-  playerVars: {
-    // https://developers.google.com/youtube/player_parameters
-    autoplay: 1 as const,
-  },
-}
+import './player.css'
 
 export default observer(function PlayerPanel({ model }: { model: StoreModel }) {
   return (
     <div className="container">
       <div>
-        <div>
+        <div className="filter">
           <label htmlFor="filter">Filter: </label>
           <input
             id="filter"
@@ -34,24 +26,7 @@ export default observer(function PlayerPanel({ model }: { model: StoreModel }) {
       </div>
       <div>
         <PlayerControls model={model} />
-        {model.playing ? (
-          <YouTube
-            videoId={model.playing}
-            opts={options}
-            onEnd={() => {
-              if (model.autoplay) {
-                model.goToNext()
-              }
-            }}
-          />
-        ) : (
-          <div
-            style={{
-              ...options,
-              background: 'grey',
-            }}
-          />
-        )}
+        <YoutubePanel model={model} />
       </div>
     </div>
   )
