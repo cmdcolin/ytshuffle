@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 // locals
 import ErrorMessage from './ErrorMessage'
 import PlaylistList from './PlaylistList'
@@ -12,6 +12,7 @@ import useFetch from './useFetch'
 import usePlayerControls from './usePlayerControls'
 import useUrlParameters from './useUrlParameters'
 import usePlaylists from './usePlaylists'
+import createStore from './store'
 
 export default function App({
   initialQuery,
@@ -23,30 +24,29 @@ export default function App({
   showPrivacyPolicy: () => void
 }) {
   const [query, setQuery] = useState(initialQuery)
-  const [filter, setFilter] = useState('')
-  const [shuffle, setShuffle] = useState(true)
-  const [followPlaying, setFollowPlaying] = useState(true)
-  const [currentPlaylist, setCurrentPlaylist] = useState(initialPlaylist)
-  const [autoplay, setAutoplay] = useState(true)
+  const model = createStore().create({
+    query: initialQuery,
+    playlist: initialPlaylist,
+  })
   const [videoMap, error, currentlyProcessing] = useFetch(query)
 
   const {
     playlist,
     channelToId,
     counts,
+    playing,
     goToNext,
     goToPrev,
     setPlaying,
-    playing,
-  } = usePlayerControls(videoMap, filter, shuffle)
+  } = usePlayerControls(videoMap, model.filter, model.shuffle)
 
-  useUrlParameters(query, currentPlaylist)
+  useUrlParameters(query, model.playlist)
 
   useEffect(() => {
-    setQuery(playlists[currentPlaylist] || '')
-  }, [currentPlaylist])
+    setQuery(playlists[model.playlist] || '')
+  }, [model.playlist])
 
-  const [playlists, setPlaylists] = usePlaylists(query, currentPlaylist)
+  const [playlists, setPlaylists] = usePlaylists(query, model.playlist)
 
   return (
     <>
@@ -57,15 +57,12 @@ export default function App({
           <>
             <div className="playlist_header">
               <PlaylistEditor
-                query={query}
+                model={model}
                 playlists={playlists}
-                currentPlaylist={currentPlaylist}
-                setQuery={setQuery}
                 setPlaylists={setPlaylists}
-                setCurrentPlaylist={setCurrentPlaylist}
               />
               <PlaylistList
-                setFilter={setFilter}
+                model={model}
                 counts={counts}
                 channelToId={channelToId}
               />
@@ -77,21 +74,11 @@ export default function App({
               ) : null}
             </div>
             <PlayerPanel
+              model={model}
               playing={playing}
-              followPlaying={followPlaying}
-              setFollowPlaying={setFollowPlaying}
-              currentPlaylist={currentPlaylist}
-              filter={filter}
               playlists={playlists}
-              shuffle={shuffle}
-              autoplay={autoplay}
               goToNext={goToNext}
               goToPrev={goToPrev}
-              setQuery={setQuery}
-              setFilter={setFilter}
-              setCurrentPlaylist={setCurrentPlaylist}
-              setShuffle={setShuffle}
-              setAutoplay={setAutoplay}
               setPlaying={setPlaying}
               playlist={playlist}
             />

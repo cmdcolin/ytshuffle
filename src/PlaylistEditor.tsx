@@ -1,20 +1,16 @@
 import { useEffect, useState } from 'react'
 import PlaylistControls from './PlaylistControls'
+import { StoreModel } from './store'
+import { observer } from 'mobx-react'
 
-export default function PlaylistEditor({
-  query,
-  currentPlaylist,
+export default observer(function PlaylistEditor({
+  model,
   playlists,
   setPlaylists,
-  setQuery,
-  setCurrentPlaylist,
 }: {
-  query: string
-  currentPlaylist: string
+  model: StoreModel
   playlists: Record<string, string>
   setPlaylists: (arg: Record<string, string>) => void
-  setQuery: (arg: string) => void
-  setCurrentPlaylist: (arg: string) => void
 }) {
   const [hide, setHide] = useState(
     JSON.parse(localStorage.getItem('hide_form') || 'false') as boolean,
@@ -47,21 +43,18 @@ export default function PlaylistEditor({
                 rows={5}
                 style={{ maxWidth: '100%' }}
                 id="video"
-                value={query}
-                onChange={event => setQuery(event.target.value)}
+                value={model.query}
+                onChange={event => model.setQuery(event.target.value)}
               />
             </div>
             <PlaylistControls
-              query={query}
+              model={model}
               playlists={playlists}
-              currentPlaylist={currentPlaylist}
               setPlaylists={setPlaylists}
-              setCurrentPlaylist={setCurrentPlaylist}
-              setQuery={setQuery}
             />
           </div>
         </div>
       )}
     </div>
   )
-}
+})

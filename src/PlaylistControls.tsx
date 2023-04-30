@@ -1,21 +1,17 @@
 import { useState } from 'react'
 import SavePlaylistModal from './SavePlaylistModal'
 import { mydef } from './util'
+import { StoreModel } from './store'
+import { observer } from 'mobx-react'
 
-export default function PlaylistControls({
-  currentPlaylist,
+export default observer(function PlaylistControls({
+  model,
   playlists,
-  query,
-  setCurrentPlaylist,
   setPlaylists,
-  setQuery,
 }: {
-  query: string
-  currentPlaylist: string
+  model: StoreModel
   playlists: Record<string, string>
-  setCurrentPlaylist: (arg: string) => void
   setPlaylists: (arg: Record<string, string>) => void
-  setQuery: (arg: string) => void
 }) {
   const [modalOpen, setModalOpen] = useState(false)
   const [renameModalOpen, setRenameModalOpen] = useState(false)
@@ -32,38 +28,38 @@ export default function PlaylistControls({
       <button
         onClick={() => {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { [currentPlaylist]: current, ...rest } = playlists
+          const { [model.playlist]: current, ...rest } = playlists
           setPlaylists(rest)
           const next = Object.keys(rest)[0] || 'default'
           if (rest[next] === undefined) {
             // just go back to defaults if nothing is there
             setPlaylists(mydef)
           }
-          setCurrentPlaylist(next)
+          model.setPlaylist(next)
         }}
       >
         Delete current playlist
       </button>
       <SavePlaylistModal
         open={modalOpen}
-        currentPlaylist={currentPlaylist}
+        currentPlaylist={model.playlist}
         onClose={name => {
           if (name) {
-            setPlaylists({ ...playlists, [name]: query })
-            setCurrentPlaylist(name)
+            setPlaylists({ ...playlists, [name]: model.query })
+            model.setPlaylist(name)
           }
           setModalOpen(false)
         }}
       />
       <SavePlaylistModal
         open={renameModalOpen}
-        currentPlaylist={currentPlaylist}
+        currentPlaylist={model.playlist}
         onClose={name => {
           if (name) {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { [currentPlaylist]: current, ...rest } = playlists
-            setPlaylists({ ...rest, [name]: query })
-            setCurrentPlaylist(name)
+            const { [model.playlist]: current, ...rest } = playlists
+            setPlaylists({ ...rest, [name]: model.query })
+            model.setPlaylist(name)
           }
           setRenameModalOpen(false)
         }}
@@ -74,12 +70,12 @@ export default function PlaylistControls({
         onClose={name => {
           if (name) {
             setPlaylists({ ...playlists, [name]: '' })
-            setQuery('')
-            setCurrentPlaylist(name)
+            model.setQuery('')
+            model.setPlaylist(name)
           }
           setNewModalOpen(false)
         }}
       />
     </div>
   )
-}
+})

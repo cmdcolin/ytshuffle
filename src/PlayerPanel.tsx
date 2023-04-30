@@ -2,6 +2,8 @@ import YouTube from 'react-youtube'
 import PlaylistTable from './PlaylistTable'
 import { Playlist } from './util'
 import PlayerControls from './PlayerControls'
+import { StoreModel } from './store'
+import { observer } from 'mobx-react'
 
 const options = {
   height: 390,
@@ -12,42 +14,22 @@ const options = {
   },
 }
 
-export default function PlayerPanel({
-  filter,
+export default observer(function PlayerPanel({
+  model,
   playing,
   playlist,
-  shuffle,
-  followPlaying,
-  currentPlaylist,
   playlists,
-  autoplay,
   goToNext,
   goToPrev,
-  setCurrentPlaylist,
-  setAutoplay,
-  setFollowPlaying,
-  setShuffle,
-  setQuery,
-  setFilter,
   setPlaying,
 }: {
-  filter: string
+  model: StoreModel
   playing?: string
-  followPlaying: boolean
   playlist: Playlist
-  shuffle: boolean
-  autoplay: boolean
   playlists: Record<string, string>
-  currentPlaylist: string
   goToPrev: () => void
   goToNext: () => void
-  setFilter: (arg: string) => void
   setPlaying: (arg?: string) => void
-  setAutoplay: (arg: boolean) => void
-  setFollowPlaying: (arg: boolean) => void
-  setQuery: (arg: string) => void
-  setShuffle: (arg: boolean) => void
-  setCurrentPlaylist: (arg: string) => void
 }) {
   return (
     <div className="container">
@@ -58,12 +40,12 @@ export default function PlayerPanel({
             <input
               id="filter"
               type="text"
-              value={filter}
-              onChange={event => setFilter(event.target.value)}
+              value={model.filter}
+              onChange={event => model.setFilter(event.target.value)}
             />
           </div>
           <PlaylistTable
-            followPlaying={followPlaying}
+            model={model}
             playlist={playlist}
             playing={playing}
             onPlay={videoId => setPlaying(videoId)}
@@ -72,26 +54,18 @@ export default function PlayerPanel({
       ) : null}
       <div>
         <PlayerControls
-          currentPlaylist={currentPlaylist}
-          followPlaying={followPlaying}
-          setFollowPlaying={setFollowPlaying}
+          model={model}
           goToNext={goToNext}
           goToPrev={goToPrev}
-          autoplay={autoplay}
-          shuffle={shuffle}
           playlists={playlists}
-          setQuery={setQuery}
-          setCurrentPlaylist={setCurrentPlaylist}
           setPlaying={setPlaying}
-          setShuffle={setShuffle}
-          setAutoplay={setAutoplay}
         />
         {playing ? (
           <YouTube
             videoId={playing}
             opts={options}
             onEnd={() => {
-              if (autoplay) {
+              if (model.autoplay) {
                 goToNext()
               }
             }}
@@ -107,4 +81,4 @@ export default function PlayerPanel({
       </div>
     </div>
   )
-}
+})

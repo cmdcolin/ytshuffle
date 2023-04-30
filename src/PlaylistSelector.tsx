@@ -1,11 +1,12 @@
-export default function PlaylistSelector({
-  currentPlaylist,
+import { observer } from 'mobx-react'
+import { StoreModel } from './store'
+
+export default observer(function PlaylistSelector({
+  model,
   playlists,
-  setCurrentPlaylist,
 }: {
-  currentPlaylist: string
+  model: StoreModel
   playlists: Record<string, string>
-  setCurrentPlaylist: (arg: string) => void
 }) {
   const keys = Object.keys(playlists).sort()
   return (
@@ -15,8 +16,8 @@ export default function PlaylistSelector({
       </label>
       <select
         id="currplaylist"
-        value={currentPlaylist}
-        onChange={event => setCurrentPlaylist(event.target.value)}
+        value={model.playlist}
+        onChange={event => model.setPlaylist(event.target.value)}
       >
         {(keys.length > 0 ? keys : ['No playlists saved yet']).map(name => (
           <option key={name} value={name}>
@@ -26,4 +27,4 @@ export default function PlaylistSelector({
       </select>
     </>
   )
-}
+})
