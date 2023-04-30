@@ -3,7 +3,7 @@ import { observer } from 'mobx-react'
 
 // locals
 import PlaylistControls from './PlaylistControls'
-import { StoreModel } from './store'
+import { StoreModel } from '../store'
 
 export default observer(function PlaylistEditor({
   model,

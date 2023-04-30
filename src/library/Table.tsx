@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
 import { format } from 'timeago.js'
-import { StoreModel } from './store'
 import { observer } from 'mobx-react'
+
+import { StoreModel } from '../store'
 
 export default observer(function PlaylistTable({
   model,

@@ -3,8 +3,8 @@ import SavePlaylistModal from './SavePlaylistModal'
 import { observer } from 'mobx-react'
 
 // locals
-import { mydef } from './util'
-import { StoreModel } from './store'
+import { mydef } from '../util'
+import { StoreModel } from '../store'
 
 export default observer(function PlaylistControls({
   model,

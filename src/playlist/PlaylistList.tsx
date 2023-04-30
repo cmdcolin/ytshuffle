@@ -1,6 +1,6 @@
 import localforage from 'localforage'
-import { StoreModel } from './store'
 import { observer } from 'mobx-react'
+import { StoreModel } from '../store'
 
 export default observer(function PlaylistList({
   model,

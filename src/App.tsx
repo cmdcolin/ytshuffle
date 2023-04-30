@@ -1,13 +1,12 @@
 // locals
 import ErrorMessage from './ErrorMessage'
-import PlaylistList from './PlaylistList'
-import PlaylistEditor from './PlaylistEditor'
+import PlaylistList from './playlist//PlaylistList'
+import PlaylistEditor from './playlist/PlaylistEditor'
+import PlayerPanel from './player/PlayerPanel'
 import Footer from './Footer'
-import PlayerPanel from './PlayerPanel'
 import Header from './Header'
 
 // hooks
-import useUrlParameters from './useUrlParameters'
 import createStore, { StoreModel } from './store'
 import { observer } from 'mobx-react'
 
@@ -33,8 +32,6 @@ const App2 = observer(function ({
   model: StoreModel
   showPrivacyPolicy: () => void
 }) {
-  useUrlParameters(model.query, model.playlist)
-
   return (
     <>
       <Header />

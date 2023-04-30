@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react'
-import { StoreModel } from './store'
+import { StoreModel } from '../store'
 
 export default observer(function PlaylistSelector({
   model,

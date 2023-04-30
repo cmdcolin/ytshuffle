@@ -1,4 +1,4 @@
-import useDialogShown from './useDialogShown'
+import { useDialogShown } from './util'
 
 export default function ConfirmDialog({
   open,

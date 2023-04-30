@@ -165,6 +165,14 @@ export default function createStore() {
             localStorage.setItem('playlists', JSON.stringify(self.playlists))
           }),
         )
+        addDisposer(
+          self,
+          autorun(() => {
+            const url = new URL(window.location.href)
+            url.searchParams.set('ids', getIds(self.query).join(','))
+            window.history.replaceState({}, '', url)
+          }),
+        )
       },
     }))
 }

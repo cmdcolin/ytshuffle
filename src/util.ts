@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react'
+
 export async function myfetch<T>(url: string, rest?: RequestInit) {
   const response = await fetch(url, rest)
   if (!response.ok) {
@@ -60,4 +62,27 @@ export const mydef = {
 
 export function clamp(p: number, min: number, max: number) {
   return Math.max(min, Math.min(max, p))
+}
+
+export function useDialogShown(open: boolean) {
+  const ref = useRef<HTMLDialogElement>(null)
+  const shown = useRef(false)
+  useEffect(() => {
+    if (!ref.current) {
+      return
+    }
+
+    if (open) {
+      if (!shown.current) {
+        ref.current.showModal()
+      }
+      shown.current = true
+    } else {
+      if (shown.current) {
+        ref.current.close()
+      }
+      shown.current = false
+    }
+  }, [open])
+  return ref
 }

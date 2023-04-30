@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react'
-import PlaylistSelector from './PlaylistSelector'
-import { StoreModel } from './store'
+import PlaylistSelector from '../playlist/PlaylistSelector'
+import { StoreModel } from '../store'
 
 export default observer(function PlayerControls({
   model,

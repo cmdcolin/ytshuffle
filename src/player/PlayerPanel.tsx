@@ -1,8 +1,9 @@
 import YouTube from 'react-youtube'
-import PlaylistTable from './PlaylistTable'
-import PlayerControls from './PlayerControls'
-import { StoreModel } from './store'
 import { observer } from 'mobx-react'
+
+import PlaylistTable from '../library/Table'
+import PlayerControls from './PlayerControls'
+import { StoreModel } from '../store'
 
 const options = {
   height: 390,

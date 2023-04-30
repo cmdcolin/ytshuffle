@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import useDialogShown from './useDialogShown'
+import { useDialogShown } from '../util'
 
 export default function SavePlaylistModal({
   open,
