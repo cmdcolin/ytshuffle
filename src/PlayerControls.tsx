@@ -4,21 +4,15 @@ import { StoreModel } from './store'
 
 export default observer(function PlayerControls({
   model,
-  setPlaying,
-  goToNext,
-  goToPrev,
 }: {
   model: StoreModel
-  setPlaying: (arg?: string) => void
-  goToNext: () => void
-  goToPrev: () => void
 }) {
   return (
     <div className="player_controls">
       <div>
-        <button onClick={() => setPlaying()}>Stop</button>
-        <button onClick={() => goToNext()}>Next</button>
-        <button onClick={() => goToPrev()}>Prev</button>
+        <button onClick={() => model.setPlaying()}>Stop</button>
+        <button onClick={() => model.goToNext()}>Next</button>
+        <button onClick={() => model.goToPrev()}>Prev</button>
         <PlaylistSelector model={model} />
       </div>
       <div>

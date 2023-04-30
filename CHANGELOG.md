@@ -1,3 +1,6 @@
+- Switch to mobx-state-tree for state management. Tried zustand, but found it
+  tricky
+
 ## v0.0.1
 
 - Let's you create playlists that are stored in localStorage

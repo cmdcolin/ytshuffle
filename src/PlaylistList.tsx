@@ -1,13 +1,10 @@
 import localforage from 'localforage'
 import { StoreModel } from './store'
+import { observer } from 'mobx-react'
 
-export default function PlaylistList({
-  counts,
-  channelToId,
+export default observer(function PlaylistList({
   model,
 }: {
-  counts: Record<string, number>
-  channelToId: Record<string, string>
   model: StoreModel
 }) {
   return (
@@ -22,7 +19,9 @@ export default function PlaylistList({
         </thead>
         <tbody>
           <tr>
-            <td>All ({Object.values(counts).reduce((a, b) => a + b, 0)})</td>
+            <td>
+              All ({Object.values(model.counts).reduce((a, b) => a + b, 0)})
+            </td>
             <td>
               <button onClick={() => model.setFilter('')}>Show all</button>
             </td>
@@ -30,7 +29,7 @@ export default function PlaylistList({
               <button
                 onClick={async () => {
                   await Promise.all(
-                    Object.values(channelToId).map(item =>
+                    Object.values(model.channelToId).map(item =>
                       localforage.removeItem(item),
                     ),
                   )
@@ -41,7 +40,7 @@ export default function PlaylistList({
               </button>
             </td>
           </tr>
-          {Object.entries(counts).map(([key, value]) => (
+          {Object.entries(model.counts).map(([key, value]) => (
             <tr key={key}>
               <td>
                 {key} ({value || 0})
@@ -52,7 +51,7 @@ export default function PlaylistList({
               <td>
                 <button
                   onClick={async () => {
-                    await localforage.removeItem(channelToId[key])
+                    await localforage.removeItem(model.channelToId[key])
                     window.location.reload()
                   }}
                 >
@@ -65,4 +64,4 @@ export default function PlaylistList({
       </table>
     </div>
   )
-}
+})

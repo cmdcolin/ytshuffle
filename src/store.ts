@@ -1,6 +1,7 @@
 import { autorun } from 'mobx'
 import { Instance, addDisposer, types } from 'mobx-state-tree'
 import {
+  clamp,
   getIds,
   mydef,
   myfetch,
@@ -24,7 +25,9 @@ export default function createStore() {
       autoplay: true,
       playlist: types.string,
       playing: types.maybe(types.string),
-      playlists: types.frozen(),
+      playlists: types.optional(types.frozen(), () =>
+        JSON.parse(localStorage.getItem('playlists') || JSON.stringify(mydef)),
+      ),
     })
     .volatile(() => ({
       videoMap: undefined as PlaylistMap | undefined,
@@ -32,7 +35,7 @@ export default function createStore() {
       currentlyProcessing: '',
     }))
     .actions(self => ({
-      setPlaying(arg: string) {
+      setPlaying(arg?: string) {
         self.playing = arg
       },
       setPlaylist(arg: string) {
@@ -40,6 +43,13 @@ export default function createStore() {
       },
       setQuery(arg: string) {
         self.query = arg
+      },
+      updateCurrPlaylist(arg: string) {
+        self.query = arg
+        this.setPlaylists({
+          ...self.playlists,
+          [self.playlist]: arg,
+        })
       },
       setFilter(arg: string) {
         self.filter = arg
@@ -66,7 +76,50 @@ export default function createStore() {
         self.playlists = arg
       },
     }))
+    .views(self => ({
+      get list() {
+        const pre = Object.values(self.videoMap || {}).flat()
+        const lc = self.filter.toLowerCase()
+        return pre.filter(
+          f =>
+            f.channel.toLowerCase().includes(lc) ||
+            f.title.toLowerCase().includes(lc),
+        )
+      },
+      get counts() {
+        const c = {} as Record<string, number>
+        for (const row of Object.values(self.videoMap || {}).flat()) {
+          c[row.channel] = (c[row.channel] || 0) + 1
+        }
+        return c
+      },
+      get channelToId() {
+        const c = {} as Record<string, string>
+        for (const [key, value] of Object.entries(self.videoMap || {})) {
+          c[value[0].channel] = key
+        }
+        return c
+      },
+      index(r: number) {
+        const p = this.list
+        return p[
+          self.shuffle
+            ? Math.floor(Math.random() * p.length)
+            : clamp(
+                p.findIndex(p => self.playing === p.videoId) + r,
+                0,
+                p.length,
+              )
+        ]
+      },
+    }))
     .actions(self => ({
+      goToNext() {
+        self.setPlaying(self.index(1)?.videoId)
+      },
+      goToPrev() {
+        self.setPlaying(self.index(-1)?.videoId)
+      },
       afterCreate() {
         addDisposer(
           self,
@@ -103,15 +156,7 @@ export default function createStore() {
         addDisposer(
           self,
           autorun(() => {
-            const returnValue = JSON.parse(
-              localStorage.getItem('playlists') || JSON.stringify(mydef),
-            )
-            // we add default back if there is none because it gets
-            // confused on visiting with blank urlparams otherwise
-            self.setPlaylists({
-              ...returnValue,
-              [self.playlist]: self.query || '',
-            })
+            self.setQuery(self.playlists[self.playlist] || '')
           }),
         )
         addDisposer(

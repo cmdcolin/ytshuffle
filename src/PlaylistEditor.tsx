@@ -42,7 +42,7 @@ export default observer(function PlaylistEditor({
                 style={{ maxWidth: '100%' }}
                 id="video"
                 value={model.query}
-                onChange={event => model.setQuery(event.target.value)}
+                onChange={event => model.updateCurrPlaylist(event.target.value)}
               />
             </div>
             <PlaylistControls model={model} />

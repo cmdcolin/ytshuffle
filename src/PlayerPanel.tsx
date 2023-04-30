@@ -1,6 +1,5 @@
 import YouTube from 'react-youtube'
 import PlaylistTable from './PlaylistTable'
-import { Playlist } from './util'
 import PlayerControls from './PlayerControls'
 import { StoreModel } from './store'
 import { observer } from 'mobx-react'
@@ -14,56 +13,33 @@ const options = {
   },
 }
 
-export default observer(function PlayerPanel({
-  model,
-  playing,
-  playlist,
-  goToNext,
-  goToPrev,
-  setPlaying,
-}: {
-  model: StoreModel
-  playing?: string
-  playlist: Playlist
-  goToPrev: () => void
-  goToNext: () => void
-  setPlaying: (arg?: string) => void
-}) {
+export default observer(function PlayerPanel({ model }: { model: StoreModel }) {
   return (
     <div className="container">
-      {playlist.length > 0 ? (
+      <div>
         <div>
-          <div>
-            <label htmlFor="filter">Filter: </label>
-            <input
-              id="filter"
-              type="text"
-              value={model.filter}
-              onChange={event => model.setFilter(event.target.value)}
-            />
-          </div>
-          <PlaylistTable
-            model={model}
-            playlist={playlist}
-            playing={playing}
-            onPlay={videoId => setPlaying(videoId)}
+          <label htmlFor="filter">Filter: </label>
+          <input
+            id="filter"
+            type="text"
+            value={model.filter}
+            onChange={event => model.setFilter(event.target.value)}
           />
         </div>
-      ) : null}
-      <div>
-        <PlayerControls
+        <PlaylistTable
           model={model}
-          goToNext={goToNext}
-          goToPrev={goToPrev}
-          setPlaying={setPlaying}
+          onPlay={videoId => model.setPlaying(videoId)}
         />
-        {playing ? (
+      </div>
+      <div>
+        <PlayerControls model={model} />
+        {model.playing ? (
           <YouTube
-            videoId={playing}
+            videoId={model.playing}
             opts={options}
             onEnd={() => {
               if (model.autoplay) {
-                goToNext()
+                model.goToNext()
               }
             }}
           />

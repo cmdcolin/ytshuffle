@@ -1,28 +1,23 @@
 import { useEffect } from 'react'
 import { format } from 'timeago.js'
-import { Playlist } from './util'
 import { StoreModel } from './store'
 import { observer } from 'mobx-react'
 
 export default observer(function PlaylistTable({
   model,
-  playlist,
   onPlay,
-  playing,
 }: {
   model: StoreModel
-  playlist: Playlist
   onPlay: (string_: string) => void
-  playing?: string
 }) {
   useEffect(() => {
     if (model.follow) {
       // id starts with vid because id must start with alphachar
       document
-        .querySelector(`#vid${playing}`)
+        .querySelector(`#vid${model.playing}`)
         ?.scrollIntoView({ block: 'center', behavior: 'smooth' })
     }
-  }, [playing, model.follow])
+  }, [model.playing, model.follow])
   return (
     <div className="playlist_table">
       <table>
@@ -36,9 +31,9 @@ export default observer(function PlaylistTable({
           </tr>
         </thead>
         <tbody>
-          {playlist.map(item => (
+          {model.list.map(item => (
             <tr key={item.id} id={`vid${item.videoId}`}>
-              <td>{item.videoId === playing ? '>' : ''}</td>
+              <td>{item.videoId === model.playing ? '>' : ''}</td>
               <td>{item.title}</td>
               <td>{item.channel}</td>
               <td>{format(item.publishedAt)}</td>
