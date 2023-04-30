@@ -8,6 +8,7 @@ export async function myfetch<T>(url: string, rest?: RequestInit) {
   return response.json() as T
 }
 
+// xref https://stackoverflow.com/a/9102270/2129219
 export function getVideoId(url: string) {
   const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/
   const match = url.match(regExp)
