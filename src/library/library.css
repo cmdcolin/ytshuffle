@@ -1,0 +1,23 @@
+.library_table {
+  max-height: 500px;
+  overflow: auto;
+}
+
+th {
+  text-align: left;
+  background: #ccc;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+table,
+th,
+td {
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+}
+th,
+td {
+  max-width: 500px;
+}

@@ -1,0 +1,10 @@
+.header {
+  display: flex;
+  margin-bottom: 20px;
+  background: #ccc;
+  padding: 20px;
+}
+.title {
+  margin: 0;
+  margin-left: 10;
+}

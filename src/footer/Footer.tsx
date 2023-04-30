@@ -1,4 +1,5 @@
 import localforage from 'localforage'
+import './footer.css'
 
 export default function Footer({
   showPrivacyPolicy,
@@ -8,7 +9,7 @@ export default function Footer({
   return (
     <div className="footer">
       <a href="https://github.com/cmdcolin/ytshuffle">Source code</a>
-      <div className="privacy">
+      <div className="footer_buttons">
         <button onClick={() => showPrivacyPolicy()}>Show privacy policy</button>
         <button
           onClick={async () => {

@@ -1,0 +1,15 @@
+.container {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 600px) {
+  .container {
+    flex-direction: row;
+  }
+
+  .App {
+    margin-left: 20px;
+  }
+}

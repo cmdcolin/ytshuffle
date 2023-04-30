@@ -3,6 +3,7 @@ import { format } from 'timeago.js'
 import { observer } from 'mobx-react'
 
 import { StoreModel } from '../store'
+import './library.css'
 
 export default observer(function PlaylistTable({
   model,
@@ -20,7 +21,7 @@ export default observer(function PlaylistTable({
     }
   }, [model.playing, model.follow])
   return (
-    <div className="playlist_table">
+    <div className="library_table">
       <table>
         <thead>
           <tr>

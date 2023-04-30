@@ -1,14 +1,17 @@
 // locals
 import ErrorMessage from './ErrorMessage'
-import PlaylistList from './playlist//PlaylistList'
+import PlaylistList from './playlist/PlaylistList'
 import PlaylistEditor from './playlist/PlaylistEditor'
 import PlayerPanel from './player/PlayerPanel'
-import Footer from './Footer'
-import Header from './Header'
+import Footer from './footer/Footer'
+import Header from './header/Header'
+
+import './App.css'
 
 // hooks
 import createStore, { StoreModel } from './store'
 import { observer } from 'mobx-react'
+import PlaylistPanel from './playlist/PlaylistPanel'
 
 export default function App({
   initialQuery,
@@ -37,10 +40,7 @@ const App2 = observer(function ({
       <Header />
       <div className="App">
         {model.error ? <ErrorMessage error={model.error} /> : null}
-        <div className="playlist_header">
-          <PlaylistEditor model={model} />
-          <PlaylistList model={model} />
-        </div>
+        <PlaylistPanel model={model} />
 
         <div>
           {model.currentlyProcessing ? (
