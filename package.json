@@ -11,7 +11,9 @@
     "postdeploy": "git push",
     "lint": "eslint src",
     "test": "vitest",
-    "lambda": "yarn tsc --target es2020 --moduleResolution nodenext lambda/index.ts"
+    "lambda1": "yarn tsc --target esnext --moduleResolution nodenext lambda/getPlaylist.ts",
+    "lambda2": "yarn tsc --target esnext --moduleResolution nodenext lambda/getPlaylistContents.ts",
+    "lambda": "yarn lambda1 && yarn lambda2"
   },
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^5.59.1",
@@ -32,6 +34,7 @@
     "@types/react-dom": "^18.2.0",
     "@types/youtube-player": "^5.5.7",
     "@vitejs/plugin-react": "^4.0.0",
+    "eslint-plugin-react": "^7.32.2",
     "gh-pages": "^5.0.0",
     "typescript": "^5.0.4",
     "vite": "^4.3.1",

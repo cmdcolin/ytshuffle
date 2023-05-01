@@ -3,6 +3,8 @@ import { Instance, addDisposer, types } from 'mobx-state-tree'
 import {
   clamp,
   getIds,
+  getPlaylistIds,
+  getVideoIds,
   mydef,
   myfetch,
   Playlist,
@@ -12,8 +14,11 @@ import {
 } from './util'
 import localforage from 'localforage'
 
-const root =
-  'https://39b5dlncof.execute-api.us-east-1.amazonaws.com/youtubeApiV3'
+const getChannel =
+  'https://hwml60od9i.execute-api.us-east-1.amazonaws.com/default/youtubeGetChannel'
+
+const getContents =
+  'https://m0v7dr1zz2.execute-api.us-east-1.amazonaws.com/default/youtubeGetPlaylistContents'
 
 const s = (l: string) => encodeURIComponent(l)
 
@@ -34,7 +39,9 @@ export default function createStore() {
     .volatile(() => ({
       videoMap: undefined as PlaylistMap | undefined,
       error: undefined as unknown,
-      processing: '',
+      processing: undefined as
+        | { current: number; name: string; total: number }
+        | undefined,
     }))
     .actions(self => ({
       setPlaying(arg?: string) {
@@ -42,12 +49,10 @@ export default function createStore() {
       },
       setPlaylist(arg: string) {
         self.playlist = arg
-        console.log('here', arg)
         self.query = self.playlists.get(arg) || ''
       },
       setQuery(arg: string) {
         self.query = arg
-        console.log('here2', arg, self.playlist)
         self.playlists.set(self.playlist, self.query)
       },
 
@@ -69,7 +74,7 @@ export default function createStore() {
       setVideoMap(arg: PlaylistMap) {
         self.videoMap = arg
       },
-      setCurrentlyProcessing(arg: string) {
+      setProcessing(arg?: { name: string; current: number; total: number }) {
         self.processing = arg
       },
       setPlaylists(arg: Record<string, string>) {
@@ -126,24 +131,35 @@ export default function createStore() {
           autorun(async () => {
             try {
               self.setError(undefined)
-              for (const id of getIds(self.query)) {
-                let r1 = await localforage.getItem<Playlist>(id)
-                if (!r1) {
-                  self.setCurrentlyProcessing(id)
-                  r1 = remap(
-                    await myfetch<PreItem[]>(
-                      `${root}?videoId=${id}&maxResults=50`,
-                    ),
-                  )
-                  await localforage.setItem(id, r1)
+              for (const item of getIds(self.query)) {
+                console.log({ item })
+                if ('videoId' in item && item.videoId) {
+                  const { videoId } = item
+                  let items = await localforage.getItem<Playlist>(videoId)
+                  if (!items) {
+                    self.setProcessing({
+                      name: videoId,
+                      total: 0,
+                      current: 0,
+                    })
+                    items = await fetchItems(self, videoId)
+                    await localforage.setItem(videoId, items)
+                  }
+                  self.setVideoMap({ ...self.videoMap, [videoId]: items })
+                } else if ('playlistId' in item && item.playlistId) {
+                  const { playlistId } = item
+                  let items = await localforage.getItem<Playlist>(playlistId)
+                  if (!items) {
+                    items = await fetchPlaylist(self, playlistId)
+                    self.setVideoMap({ ...self.videoMap, [playlistId]: items })
+                  }
                 }
-                self.setVideoMap({ ...self.videoMap, [id]: r1 })
               }
             } catch (e) {
               console.error(e)
               self.setError(e)
             } finally {
-              self.setCurrentlyProcessing('')
+              self.setProcessing()
             }
           }),
         )
@@ -151,7 +167,6 @@ export default function createStore() {
         addDisposer(
           self,
           autorun(() => {
-            console.log(self.playlists.toJSON())
             localStorage.setItem(
               'playlists',
               JSON.stringify({
@@ -165,13 +180,45 @@ export default function createStore() {
           self,
           autorun(() => {
             const url = new URL(window.location.href)
-            url.searchParams.set('ids', s(getIds(self.query).join(',')))
+            const playlistIds = getPlaylistIds(self.query)
+            const videoIds = getVideoIds(self.query)
+            url.searchParams.set('ids', s(videoIds.join(',')))
+            url.searchParams.set('pids', s(playlistIds.join(',')))
             url.searchParams.set('playlist', s(self.playlist))
             window.history.replaceState({}, '', url)
           }),
         )
       },
     }))
+}
+
+async function fetchItems(self: any, videoId: string) {
+  const res = await myfetch<{ playlistId: string }>(
+    `${getChannel}?videoId=${videoId}`,
+  )
+  return fetchPlaylist(self, res.playlistId)
+}
+
+async function fetchPlaylist(self: any, playlistId: string) {
+  let nextPageToken = ''
+  let items = [] as any[]
+  const url = `${getContents}?playlistId=${playlistId}`
+  do {
+    const res2 = await myfetch<{
+      items: PreItem[]
+      nextPageToken: string
+      totalResults: number
+    }>(url + (nextPageToken ? `&nextPageToken=${nextPageToken}` : ''))
+
+    items = [...items, ...remap(res2.items)]
+    self.setProcessing({
+      name: playlistId,
+      current: items.length,
+      total: res2.totalResults,
+    })
+    nextPageToken = res2.nextPageToken
+  } while (nextPageToken)
+  return items
 }
 
 export type StoreModel = Instance<ReturnType<typeof createStore>>

@@ -1,16 +1,15 @@
 import localforage from 'localforage'
 import './footer.css'
+import { useLocalStorage } from '../util'
+import ConfirmDialog from '../startscreen/ConfirmDialog'
 
-export default function Footer({
-  showPrivacyPolicy,
-}: {
-  showPrivacyPolicy: () => void
-}) {
+export default function Footer() {
+  const [showPolicy, setShowPolicy] = useLocalStorage('confirmed', true)
   return (
     <div className="footer">
       <a href="https://github.com/cmdcolin/ytshuffle">Source code</a>
       <div className="footer_buttons">
-        <button onClick={() => showPrivacyPolicy()}>Show privacy policy</button>
+        <button onClick={() => setShowPolicy(true)}>Show privacy policy</button>
         <button
           onClick={async () => {
             await localforage.clear()
@@ -20,6 +19,7 @@ export default function Footer({
           Clear entire local cache
         </button>
       </div>
+      <ConfirmDialog open={showPolicy} onClose={() => setShowPolicy(false)} />
     </div>
   )
 }

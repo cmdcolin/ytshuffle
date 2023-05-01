@@ -4,6 +4,7 @@
 - Put the playlist name in the URL
 - Allow hiding the playlist table
 - Modularize codebase more
+- Allow submitting playlists
 
 ## v0.0.1
 

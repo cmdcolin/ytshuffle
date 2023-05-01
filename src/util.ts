@@ -10,9 +10,14 @@ export async function myfetch<T>(url: string, rest?: RequestInit) {
 
 // xref https://stackoverflow.com/a/9102270/2129219
 export function getVideoId(url: string) {
-  const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/
-  const match = url.match(regExp)
-  return match?.[2].length == 11 ? match[2] : undefined
+  const match1 = url.match(/^.*?(?:list)=(.*?)(?:&|$)/)
+  if (match1) {
+    return { playlistId: match1[1] }
+  }
+  const match2 = url.match(
+    /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/,
+  )
+  return match2?.[2].length == 11 ? { videoId: match2[2] } : undefined
 }
 
 export function remap(items: PreItem[]): Item[] {
@@ -31,7 +36,19 @@ export function getIds(text: string) {
     .map(f => f.trim())
     .filter((f): f is string => !!f)
     .map(f => getVideoId(f))
-    .filter((f): f is string => !!f)
+    .filter((f): f is { videoId: string } | { playlistId: string } => !!f)
+}
+
+export function getPlaylistIds(text: string) {
+  return getIds(text)
+    .filter((f): f is { playlistId: string } => 'playlistId' in f)
+    .map(f => f.playlistId)
+}
+
+export function getVideoIds(text: string) {
+  return getIds(text)
+    .filter((f): f is { videoId: string } => 'videoId' in f)
+    .map(f => f.videoId)
 }
 
 export interface PreItem {

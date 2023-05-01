@@ -1,8 +1,28 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`getIds 1`] = `
+exports[`get playlist 1`] = `
 [
-  "uMRqnJ9yZiU",
-  "GHIYeB-TGj0",
+  {
+    "playlistId": "PLWIFgIFN2QqgcqnwaQMud0HJWLMiFAK7i",
+  },
+]
+`;
+
+exports[`get playlist with video id 1`] = `
+[
+  {
+    "playlistId": "PLWIFgIFN2QqgcqnwaQMud0HJWLMiFAK7i",
+  },
+]
+`;
+
+exports[`get video ids 1`] = `
+[
+  {
+    "videoId": "uMRqnJ9yZiU",
+  },
+  {
+    "videoId": "GHIYeB-TGj0",
+  },
 ]
 `;

@@ -1,9 +1,17 @@
 {
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint"],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
   "extends": [
+    "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:unicorn/recommended"
+    "plugin:unicorn/recommended",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime"
   ],
   "rules": {
     "no-underscore-dangle": 0,
@@ -16,6 +24,7 @@
     "unicorn/no-null": 0,
     "unicorn/no-useless-undefined": 0,
     "unicorn/prevent-abbreviations": 0,
-    "unicorn/catch-error-name": 0
+    "unicorn/catch-error-name": 0,
+    "unicorn/better-regex": 0
   }
 }

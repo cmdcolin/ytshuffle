@@ -5,12 +5,26 @@
 }
 
 .playlist_editor {
-  max-width: 600px;
+  width: 800px;
+  max-width: 100%;
   margin-top: 10px;
   border: 1px solid #ccc;
+}
+.playlist_margin {
+  margin: 10px;
 }
 
 .text_header {
   background: #ccc;
   font-weight: bold;
+}
+
+.form_editor {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: 100px;
+}
+.form_description {
+  display: block;
 }

@@ -15,31 +15,23 @@ import createStore, { StoreModel } from '../store'
 export default function App({
   initialQuery,
   initialPlaylist,
-  showPrivacyPolicy,
 }: {
   initialQuery: string
   initialPlaylist: string
-  showPrivacyPolicy: () => void
 }) {
   const model = createStore().create({
     query: initialQuery,
     playlist: initialPlaylist,
   })
-  return <App2 model={model} showPrivacyPolicy={showPrivacyPolicy} />
+  return <App2 model={model} />
 }
 
-const App2 = observer(function ({
-  model,
-  showPrivacyPolicy,
-}: {
-  model: StoreModel
-  showPrivacyPolicy: () => void
-}) {
+const App2 = observer(function ({ model }: { model: StoreModel }) {
   return (
     <>
       <Header />
       <AppBody model={model} />
-      <Footer showPrivacyPolicy={showPrivacyPolicy} />
+      <Footer />
     </>
   )
 })
@@ -52,7 +44,10 @@ const AppBody = observer(function AppBody({ model }: { model: StoreModel }) {
       <PlaylistPanel model={model} />
 
       {processing ? (
-        <div>Currently processing: {processing}</div>
+        <div>
+          Currently processing: {processing.name} ({processing.current}/
+          {processing.total})
+        </div>
       ) : null}
       <PlayerPanel model={model} />
     </div>
