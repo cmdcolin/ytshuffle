@@ -1,4 +1,4 @@
-import { autorun } from 'mobx'
+import { autorun, observable } from 'mobx'
 import { Instance, addDisposer, types } from 'mobx-state-tree'
 import {
   clamp,
@@ -37,7 +37,7 @@ export default function createStore() {
       ),
     })
     .volatile(() => ({
-      videoMap: undefined as PlaylistMap | undefined,
+      videoMap: observable.map<string, Playlist>(),
       error: undefined as unknown,
       processing: undefined as
         | { current: number; name: string; total: number }
@@ -71,9 +71,6 @@ export default function createStore() {
       setError(arg: unknown) {
         self.error = arg
       },
-      setVideoMap(arg: PlaylistMap) {
-        self.videoMap = arg
-      },
       setProcessing(arg?: { name: string; current: number; total: number }) {
         self.processing = arg
       },
@@ -82,10 +79,12 @@ export default function createStore() {
       },
     }))
     .views(self => ({
+      get videoFlat() {
+        return [...self.videoMap.values()].flat()
+      },
       get list() {
-        const pre = Object.values(self.videoMap || {}).flat()
         const lc = self.filter.toLowerCase()
-        return pre.filter(
+        return this.videoFlat.filter(
           f =>
             f.channel.toLowerCase().includes(lc) ||
             f.title.toLowerCase().includes(lc),
@@ -93,14 +92,14 @@ export default function createStore() {
       },
       get counts() {
         const c = {} as Record<string, number>
-        for (const row of Object.values(self.videoMap || {}).flat()) {
+        for (const row of this.videoFlat) {
           c[row.channel] = (c[row.channel] || 0) + 1
         }
         return c
       },
       get channelToId() {
         const c = {} as Record<string, string>
-        for (const [key, value] of Object.entries(self.videoMap || {})) {
+        for (const [key, value] of self.videoMap.entries()) {
           c[value[0].channel] = key
         }
         return c
@@ -132,7 +131,6 @@ export default function createStore() {
             try {
               self.setError(undefined)
               for (const item of getIds(self.query)) {
-                console.log({ item })
                 if ('videoId' in item && item.videoId) {
                   const { videoId } = item
                   let items = await localforage.getItem<Playlist>(videoId)
@@ -145,14 +143,23 @@ export default function createStore() {
                     items = await fetchItems(self, videoId)
                     await localforage.setItem(videoId, items)
                   }
-                  self.setVideoMap({ ...self.videoMap, [videoId]: items })
+                  self.videoMap.set(videoId, items)
                 } else if ('playlistId' in item && item.playlistId) {
                   const { playlistId } = item
                   let items = await localforage.getItem<Playlist>(playlistId)
                   if (!items) {
                     items = await fetchPlaylist(self, playlistId)
-                    self.setVideoMap({ ...self.videoMap, [playlistId]: items })
+                    self.videoMap.set(playlistId, items)
                   }
+                }
+              }
+              const keys = new Set([
+                ...getVideoIds(self.query),
+                ...getPlaylistIds(self.query),
+              ])
+              for (const key of self.videoMap.keys()) {
+                if (!keys.has(key)) {
+                  self.videoMap.delete(key)
                 }
               }
             } catch (e) {
