@@ -11,11 +11,7 @@ const options = {
   },
 }
 
-export default observer(function YoutubePanel({
-  model,
-}: {
-  model: StoreModel
-}) {
+const YoutubePanel = observer(function ({ model }: { model: StoreModel }) {
   const { playing, autoplay } = model
   return (
     <>
@@ -44,3 +40,4 @@ export default observer(function YoutubePanel({
     </>
   )
 })
+export default YoutubePanel

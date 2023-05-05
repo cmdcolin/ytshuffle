@@ -10,7 +10,7 @@ export async function myfetch<T>(url: string, rest?: RequestInit) {
 
 // xref https://stackoverflow.com/a/9102270/2129219
 export function getVideoId(url: string) {
-  const match1 = url.match(/^.*?(?:list)=(.*?)(?:&|$)/)
+  const match1 = url.match(/^.*?list=(.*?)(?:&|$)/)
   if (match1) {
     return { playlistId: match1[1] }
   }

@@ -1,11 +1,7 @@
 import { observer } from 'mobx-react'
 import { StoreModel } from '../store'
 
-export default observer(function PlaylistSelector({
-  model,
-}: {
-  model: StoreModel
-}) {
+const PlaylistSelector = observer(function ({ model }: { model: StoreModel }) {
   const { playlist, playlists } = model
   return (
     <>
@@ -29,3 +25,5 @@ export default observer(function PlaylistSelector({
     </>
   )
 })
+
+export default PlaylistSelector

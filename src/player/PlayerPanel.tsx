@@ -6,7 +6,7 @@ import YoutubePanel from './YoutubePanel'
 import { StoreModel } from '../store'
 import './player.css'
 
-export default observer(function PlayerPanel({ model }: { model: StoreModel }) {
+const PlayerPanel = observer(function ({ model }: { model: StoreModel }) {
   return (
     <div className="container">
       <div>
@@ -31,3 +31,5 @@ export default observer(function PlayerPanel({ model }: { model: StoreModel }) {
     </div>
   )
 })
+
+export default PlayerPanel

@@ -5,11 +5,7 @@ import { observer } from 'mobx-react'
 import { StoreModel } from '../store'
 import { useLocalStorage } from '../util'
 
-export default observer(function PlaylistList({
-  model,
-}: {
-  model: StoreModel
-}) {
+const PlaylistList = observer(function ({ model }: { model: StoreModel }) {
   const [showTable, setShowTable] = useLocalStorage('show_playlists', true)
   return (
     <>
@@ -36,13 +32,16 @@ export default observer(function PlaylistList({
                 </td>
                 <td>
                   <button
-                    onClick={async () => {
-                      await Promise.all(
-                        Object.values(model.channelToId).map(item =>
-                          localforage.removeItem(item),
-                        ),
-                      )
-                      window.location.reload()
+                    onClick={() => {
+                      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+                      ;(async () => {
+                        await Promise.all(
+                          Object.values(model.channelToId).map(item =>
+                            localforage.removeItem(item),
+                          ),
+                        )
+                        window.location.reload()
+                      })()
                     }}
                   >
                     Clear all and refresh
@@ -59,9 +58,12 @@ export default observer(function PlaylistList({
                   </td>
                   <td>
                     <button
-                      onClick={async () => {
-                        await localforage.removeItem(model.channelToId[key])
-                        window.location.reload()
+                      onClick={() => {
+                        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+                        ;(async () => {
+                          await localforage.removeItem(model.channelToId[key])
+                          window.location.reload()
+                        })()
                       }}
                     >
                       Clear data and refresh
@@ -76,3 +78,5 @@ export default observer(function PlaylistList({
     </>
   )
 })
+
+export default PlaylistList

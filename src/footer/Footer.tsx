@@ -11,9 +11,12 @@ export default function Footer() {
       <div className="footer_buttons">
         <button onClick={() => setShowPolicy(true)}>Show privacy policy</button>
         <button
-          onClick={async () => {
-            await localforage.clear()
-            window.location.reload()
+          onClick={() => {
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
+            ;(async () => {
+              await localforage.clear()
+              window.location.reload()
+            })()
           }}
         >
           Clear entire local cache

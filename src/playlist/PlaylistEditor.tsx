@@ -6,11 +6,7 @@ import { StoreModel } from '../store'
 import { useLocalStorage } from '../util'
 import './playlist.css'
 
-export default observer(function PlaylistEditor({
-  model,
-}: {
-  model: StoreModel
-}) {
+const PlaylistEditor = observer(function ({ model }: { model: StoreModel }) {
   const [hide, setHide] = useLocalStorage('hide_form', false)
   return (
     <div>
@@ -45,3 +41,5 @@ export default observer(function PlaylistEditor({
     </div>
   )
 })
+
+export default PlaylistEditor

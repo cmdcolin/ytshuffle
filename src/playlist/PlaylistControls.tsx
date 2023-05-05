@@ -6,11 +6,7 @@ import { observer } from 'mobx-react'
 import { mydef } from '../util'
 import { StoreModel } from '../store'
 
-export default observer(function PlaylistControls({
-  model,
-}: {
-  model: StoreModel
-}) {
+const PlaylistControls = observer(function ({ model }: { model: StoreModel }) {
   const [saveAsModalOpen, setSaveAsModalOpen] = useState(false)
   const [renameModalOpen, setRenameModalOpen] = useState(false)
   const [newModalOpen, setNewModalOpen] = useState(false)
@@ -81,3 +77,4 @@ export default observer(function PlaylistControls({
     </div>
   )
 })
+export default PlaylistControls

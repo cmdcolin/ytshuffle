@@ -5,7 +5,7 @@ import { observer } from 'mobx-react'
 import { StoreModel } from '../store'
 import './library.css'
 
-export default observer(function PlaylistTable({
+const PlaylistTable = observer(function ({
   model,
   onPlay,
 }: {
@@ -54,3 +54,4 @@ export default observer(function PlaylistTable({
     </div>
   )
 })
+export default PlaylistTable

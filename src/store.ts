@@ -8,7 +8,6 @@ import {
   mydef,
   myfetch,
   Playlist,
-  PlaylistMap,
   PreItem,
   remap,
 } from './util'
@@ -33,7 +32,7 @@ export default function createStore() {
       playlist: types.string,
       playing: types.maybe(types.string),
       playlists: types.optional(types.map(types.string), () =>
-        JSON.parse(localStorage.getItem('playlists') || JSON.stringify(mydef)),
+        JSON.parse(localStorage.getItem('playlists') ?? JSON.stringify(mydef)),
       ),
     })
     .volatile(() => ({
@@ -49,7 +48,7 @@ export default function createStore() {
       },
       setPlaylist(arg: string) {
         self.playlist = arg
-        self.query = self.playlists.get(arg) || ''
+        self.query = self.playlists.get(arg) ?? ''
       },
       setQuery(arg: string) {
         self.query = arg
@@ -162,9 +161,9 @@ export default function createStore() {
                   self.videoMap.delete(key)
                 }
               }
-            } catch (e) {
-              console.error(e)
-              self.setError(e)
+            } catch (error) {
+              console.error(error)
+              self.setError(error)
             } finally {
               self.setProcessing()
             }
@@ -199,6 +198,7 @@ export default function createStore() {
     }))
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function fetchItems(self: any, videoId: string) {
   const res = await myfetch<{ playlistId: string }>(
     `${getChannel}?videoId=${videoId}`,
@@ -206,8 +206,10 @@ async function fetchItems(self: any, videoId: string) {
   return fetchPlaylist(self, res.playlistId)
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function fetchPlaylist(self: any, playlistId: string) {
   let nextPageToken = ''
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let items = [] as any[]
   const url = `${getContents}?playlistId=${playlistId}`
   do {
