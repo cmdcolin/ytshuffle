@@ -1,5 +1,6 @@
 {
   "name": "ytshuffle",
+  "type": "module",
   "private": true,
   "version": "0.0.2",
   "license": "MIT",
@@ -9,7 +10,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "postdeploy": "git push",
-    "lint": "eslint src",
+    "lint": "eslint src --ext .js,.ts,.jsx,.tsx",
     "test": "vitest",
     "lambda1": "yarn tsc --target esnext --moduleResolution nodenext lambda/getPlaylist.ts",
     "lambda2": "yarn tsc --target esnext --moduleResolution nodenext lambda/getPlaylistContents.ts",
@@ -40,7 +41,7 @@
     "gh-pages": "^6.0.0",
     "prettier": "^3.0.3",
     "typescript": "^5.2.2",
-    "vite": "^4.4.9",
+    "vite": "^5.0.0",
     "vitest": "^0.34.4"
   }
 }
