@@ -17,10 +17,10 @@
     "lambda": "yarn lambda1 && yarn lambda2"
   },
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.7.0",
-    "@typescript-eslint/parser": "^6.7.0",
+    "@typescript-eslint/eslint-plugin": "^7.3.1",
+    "@typescript-eslint/parser": "^7.3.1",
     "eslint": "^8.49.0",
-    "eslint-plugin-unicorn": "^50.0.1",
+    "eslint-plugin-unicorn": "^51.0.1",
     "localforage": "^1.10.0",
     "mobx": "^6.10.2",
     "mobx-react": "^9.0.1",
