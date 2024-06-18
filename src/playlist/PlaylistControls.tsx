@@ -22,7 +22,7 @@ const PlaylistControls = observer(function ({ model }: { model: StoreModel }) {
       <button
         onClick={() => {
           const { playlist, playlists } = model
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
           const { [playlist]: current, ...rest } = playlists.toJSON()
           model.setPlaylists(rest)
           const next = Object.keys(rest)[0] || 'default'
@@ -53,7 +53,7 @@ const PlaylistControls = observer(function ({ model }: { model: StoreModel }) {
         onClose={name => {
           if (name) {
             const { query, playlist, playlists } = model
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
             const { [playlist]: current, ...rest } = playlists.toJSON()
             model.setPlaylists({ ...rest, [name]: query })
             model.setPlaylist(name)
