@@ -1,5 +1,5 @@
 import YouTube from 'react-youtube'
-import { StoreModel } from '../store'
+import type { StoreModel } from '../store'
 import { observer } from 'mobx-react'
 
 const options = {

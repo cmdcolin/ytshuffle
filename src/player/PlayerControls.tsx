@@ -1,14 +1,32 @@
 import { observer } from 'mobx-react'
 import PlaylistSelector from '../playlist/PlaylistSelector'
-import { StoreModel } from '../store'
+import type { StoreModel } from '../store'
 
 const PlayerControls = observer(function ({ model }: { model: StoreModel }) {
   return (
     <div className="player_controls">
       <div>
-        <button onClick={() => model.setPlaying()}>Stop</button>
-        <button onClick={() => model.goToNext()}>Next</button>
-        <button onClick={() => model.goToPrev()}>Prev</button>
+        <button
+          onClick={() => {
+            model.setPlaying()
+          }}
+        >
+          Stop
+        </button>
+        <button
+          onClick={() => {
+            model.goToNext()
+          }}
+        >
+          Next
+        </button>
+        <button
+          onClick={() => {
+            model.goToPrev()
+          }}
+        >
+          Prev
+        </button>
         <PlaylistSelector model={model} />
       </div>
       <div>
@@ -16,7 +34,9 @@ const PlayerControls = observer(function ({ model }: { model: StoreModel }) {
           id="shuffle"
           type="checkbox"
           checked={model.shuffle}
-          onChange={event => model.setShuffle(event.target.checked)}
+          onChange={event => {
+            model.setShuffle(event.target.checked)
+          }}
         />
         <label style={{ marginLeft: 5 }} htmlFor="shuffle">
           Shuffle?{' '}
@@ -27,7 +47,9 @@ const PlayerControls = observer(function ({ model }: { model: StoreModel }) {
           id="follow_playing"
           type="checkbox"
           checked={model.follow}
-          onChange={event => model.setFollow(event.target.checked)}
+          onChange={event => {
+            model.setFollow(event.target.checked)
+          }}
         />
         <label style={{ marginLeft: 5 }} htmlFor="follow_playing">
           Cursor follows currently playing track?{' '}
@@ -38,7 +60,9 @@ const PlayerControls = observer(function ({ model }: { model: StoreModel }) {
           id="autoplay"
           type="checkbox"
           checked={model.autoplay}
-          onChange={event => model.setAutoplay(event.target.checked)}
+          onChange={event => {
+            model.setAutoplay(event.target.checked)
+          }}
         />
         <label style={{ marginLeft: 5 }} htmlFor="autoplay">
           Autoplay?{' '}

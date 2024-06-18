@@ -3,7 +3,7 @@ import { observer } from 'mobx-react'
 import PlaylistTable from '../library/Table'
 import PlayerControls from './PlayerControls'
 import YoutubePanel from './YoutubePanel'
-import { StoreModel } from '../store'
+import type { StoreModel } from '../store'
 import './player.css'
 
 const PlayerPanel = observer(function ({ model }: { model: StoreModel }) {
@@ -16,12 +16,16 @@ const PlayerPanel = observer(function ({ model }: { model: StoreModel }) {
             id="filter"
             type="text"
             value={model.filter}
-            onChange={event => model.setFilter(event.target.value)}
+            onChange={event => {
+              model.setFilter(event.target.value)
+            }}
           />
         </div>
         <PlaylistTable
           model={model}
-          onPlay={videoId => model.setPlaying(videoId)}
+          onPlay={videoId => {
+            model.setPlaying(videoId)
+          }}
         />
       </div>
       <div>

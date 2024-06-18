@@ -4,7 +4,7 @@ import { observer } from 'mobx-react'
 
 // locals
 import { mydef } from '../util'
-import { StoreModel } from '../store'
+import type { StoreModel } from '../store'
 
 const PlaylistControls = observer(function ({ model }: { model: StoreModel }) {
   const [saveAsModalOpen, setSaveAsModalOpen] = useState(false)
@@ -12,13 +12,27 @@ const PlaylistControls = observer(function ({ model }: { model: StoreModel }) {
   const [newModalOpen, setNewModalOpen] = useState(false)
   return (
     <div>
-      <button onClick={() => setSaveAsModalOpen(true)}>
+      <button
+        onClick={() => {
+          setSaveAsModalOpen(true)
+        }}
+      >
         Save current playlist as...
       </button>
-      <button onClick={() => setRenameModalOpen(true)}>
+      <button
+        onClick={() => {
+          setRenameModalOpen(true)
+        }}
+      >
         Rename current playlist
       </button>
-      <button onClick={() => setNewModalOpen(true)}>New playlist</button>
+      <button
+        onClick={() => {
+          setNewModalOpen(true)
+        }}
+      >
+        New playlist
+      </button>
       <button
         onClick={() => {
           const { playlist, playlists } = model
@@ -26,6 +40,7 @@ const PlaylistControls = observer(function ({ model }: { model: StoreModel }) {
           const { [playlist]: current, ...rest } = playlists.toJSON()
           model.setPlaylists(rest)
           const next = Object.keys(rest)[0] || 'default'
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           if (rest[next] === undefined) {
             // just go back to defaults if nothing is there
             model.setPlaylists(mydef)

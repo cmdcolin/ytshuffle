@@ -9,7 +9,13 @@ export default function Footer() {
     <div className="footer">
       <a href="https://github.com/cmdcolin/ytshuffle">Source code</a>
       <div className="footer_buttons">
-        <button onClick={() => setShowPolicy(true)}>Show privacy policy</button>
+        <button
+          onClick={() => {
+            setShowPolicy(true)
+          }}
+        >
+          Show privacy policy
+        </button>
         <button
           onClick={() => {
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -22,7 +28,12 @@ export default function Footer() {
           Clear entire local cache
         </button>
       </div>
-      <ConfirmDialog open={showPolicy} onClose={() => setShowPolicy(false)} />
+      <ConfirmDialog
+        open={showPolicy}
+        onClose={() => {
+          setShowPolicy(false)
+        }}
+      />
     </div>
   )
 }

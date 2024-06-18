@@ -10,7 +10,7 @@ import PlaylistPanel from '../playlist/PlaylistPanel'
 import './App.css'
 
 // hooks
-import createStore, { StoreModel } from '../store'
+import createStore, { type StoreModel } from '../store'
 
 export default function App({
   initialQuery,

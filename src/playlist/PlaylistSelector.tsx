@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react'
-import { StoreModel } from '../store'
+import type { StoreModel } from '../store'
 
 const PlaylistSelector = observer(function ({ model }: { model: StoreModel }) {
   const { playlist, playlists } = model
@@ -11,7 +11,9 @@ const PlaylistSelector = observer(function ({ model }: { model: StoreModel }) {
       <select
         id="currplaylist"
         value={playlist}
-        onChange={event => model.setPlaylist(event.target.value)}
+        onChange={event => {
+          model.setPlaylist(event.target.value)
+        }}
       >
         {(playlists.size > 0
           ? [...playlists.keys()]

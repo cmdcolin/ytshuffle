@@ -10,14 +10,13 @@ export async function myfetch<T>(url: string, rest?: RequestInit) {
 
 // xref https://stackoverflow.com/a/9102270/2129219
 export function getVideoId(url: string) {
-  const match1 = url.match(/^.*?list=(.*?)(?:&|$)/)
+  const match1 = /^.*?list=(.*?)(?:&|$)/.exec(url)
   if (match1) {
     return { playlistId: match1[1] }
   }
-  const match2 = url.match(
-    /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/,
-  )
-  return match2?.[2].length == 11 ? { videoId: match2[2] } : undefined
+  const match2 =
+    /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/.exec(url)
+  return match2?.[2].length === 11 ? { videoId: match2[2] } : undefined
 }
 
 export function remap(items: PreItem[]): Item[] {

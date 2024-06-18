@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { format } from 'timeago.js'
 import { observer } from 'mobx-react'
 
-import { StoreModel } from '../store'
+import type { StoreModel } from '../store'
 import './library.css'
 
 const PlaylistTable = observer(function ({
@@ -42,7 +42,13 @@ const PlaylistTable = observer(function ({
                 <td>{item.channel}</td>
                 <td>{format(item.publishedAt)}</td>
                 <td>
-                  <button onClick={() => onPlay(item.videoId)}>Play</button>
+                  <button
+                    onClick={() => {
+                      onPlay(item.videoId)
+                    }}
+                  >
+                    Play
+                  </button>
                 </td>
               </tr>
             ))}

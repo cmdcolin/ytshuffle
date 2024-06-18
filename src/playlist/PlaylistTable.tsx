@@ -2,14 +2,18 @@ import localforage from 'localforage'
 import { observer } from 'mobx-react'
 
 // locals
-import { StoreModel } from '../store'
+import type { StoreModel } from '../store'
 import { useLocalStorage } from '../util'
 
 const PlaylistList = observer(function ({ model }: { model: StoreModel }) {
   const [showTable, setShowTable] = useLocalStorage('show_playlists', true)
   return (
     <>
-      <button onClick={() => setShowTable(s => !s)}>
+      <button
+        onClick={() => {
+          setShowTable(s => !s)
+        }}
+      >
         {showTable ? 'Hide playlist table' : 'Show playlist table'}
       </button>
       <div className="filtering">
@@ -28,7 +32,13 @@ const PlaylistList = observer(function ({ model }: { model: StoreModel }) {
                   All ({Object.values(model.counts).reduce((a, b) => a + b, 0)})
                 </td>
                 <td>
-                  <button onClick={() => model.setFilter('')}>Show all</button>
+                  <button
+                    onClick={() => {
+                      model.setFilter('')
+                    }}
+                  >
+                    Show all
+                  </button>
                 </td>
                 <td>
                   <button
@@ -54,7 +64,13 @@ const PlaylistList = observer(function ({ model }: { model: StoreModel }) {
                     {key} ({value || 0})
                   </td>
                   <td>
-                    <button onClick={() => model.setFilter(key)}>Filter</button>
+                    <button
+                      onClick={() => {
+                        model.setFilter(key)
+                      }}
+                    >
+                      Filter
+                    </button>
                   </td>
                   <td>
                     <button

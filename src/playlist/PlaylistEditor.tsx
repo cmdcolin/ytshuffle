@@ -2,7 +2,7 @@ import { observer } from 'mobx-react'
 
 // locals
 import PlaylistControls from './PlaylistControls'
-import { StoreModel } from '../store'
+import type { StoreModel } from '../store'
 import { useLocalStorage } from '../util'
 import './playlist.css'
 
@@ -10,7 +10,11 @@ const PlaylistEditor = observer(function ({ model }: { model: StoreModel }) {
   const [hide, setHide] = useLocalStorage('hide_form', false)
   return (
     <div>
-      <button onClick={() => setHide(s => !s)}>
+      <button
+        onClick={() => {
+          setHide(s => !s)
+        }}
+      >
         {hide ? 'Show controls' : 'Hide controls'}
       </button>
       {hide ? null : (
@@ -32,7 +36,9 @@ const PlaylistEditor = observer(function ({ model }: { model: StoreModel }) {
               id="video"
               className="form_editor"
               value={model.query}
-              onChange={event => model.setQuery(event.target.value)}
+              onChange={event => {
+                model.setQuery(event.target.value)
+              }}
             />
           </div>
           <PlaylistControls model={model} />

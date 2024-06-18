@@ -1,5 +1,5 @@
 import { autorun, observable } from 'mobx'
-import { Instance, addDisposer, types } from 'mobx-state-tree'
+import { type Instance, addDisposer, types } from 'mobx-state-tree'
 import {
   clamp,
   getIds,
@@ -7,8 +7,8 @@ import {
   getVideoIds,
   mydef,
   myfetch,
-  Playlist,
-  PreItem,
+  type Playlist,
+  type PreItem,
   remap,
 } from './util'
 import localforage from 'localforage'
@@ -118,10 +118,10 @@ export default function createStore() {
     }))
     .actions(self => ({
       goToNext() {
-        self.setPlaying(self.index(1)?.videoId)
+        self.setPlaying(self.index(1).videoId)
       },
       goToPrev() {
-        self.setPlaying(self.index(-1)?.videoId)
+        self.setPlaying(self.index(-1).videoId)
       },
       afterCreate() {
         addDisposer(
