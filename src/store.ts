@@ -137,33 +137,33 @@ export default function createStore() {
               for (const item of getIds(self.query)) {
                 if ('videoId' in item && item.videoId) {
                   const { videoId } = item
-                  let items = await localforage.getItem<Playlist>(videoId)
-                  if (!items) {
+                  let videos = await localforage.getItem<Playlist>(videoId)
+                  if (!videos) {
                     self.setProcessing({
                       name: videoId,
                       total: 0,
                       current: 0,
                     })
-                    items = await fetchItems(self, videoId)
-                    await localforage.setItem(videoId, items)
+                    videos = await fetchItems(self, videoId)
+                    await localforage.setItem(videoId, videos)
                   }
-                  self.videoMap.set(videoId, items)
+                  self.videoMap.set(videoId, videos)
                 } else if ('playlistId' in item && item.playlistId) {
                   const { playlistId } = item
-                  let items = await localforage.getItem<Playlist>(playlistId)
-                  if (!items) {
-                    items = await fetchPlaylist(self, playlistId)
-                    await localforage.setItem(playlistId, items)
-                    self.videoMap.set(playlistId, items)
+                  let videos = await localforage.getItem<Playlist>(playlistId)
+                  if (!videos) {
+                    videos = await fetchPlaylist(self, playlistId)
+                    await localforage.setItem(playlistId, videos)
                   }
+                  self.videoMap.set(playlistId, videos)
                 } else if ('handle' in item && item.handle) {
                   const { handle } = item
-                  let items = await localforage.getItem<Playlist>(handle)
-                  if (!items) {
-                    items = await fetchHandle(self, handle)
-                    await localforage.setItem(handle, items)
-                    self.videoMap.set(handle, items)
+                  let videos = await localforage.getItem<Playlist>(handle)
+                  if (!videos) {
+                    videos = await fetchHandle(self, handle)
+                    await localforage.setItem(handle, videos)
                   }
+                  self.videoMap.set(handle, videos)
                 }
               }
               const keys = new Set([
@@ -204,9 +204,15 @@ export default function createStore() {
             const playlistIds = getPlaylistIds(self.query)
             const videoIds = getVideoIds(self.query)
             const handles = getHandles(self.query)
-            url.searchParams.set('ids', s(videoIds.join(',')))
-            url.searchParams.set('pids', s(playlistIds.join(',')))
-            url.searchParams.set('handles', s(handles.join(',')))
+            if (videoIds.length > 0) {
+              url.searchParams.set('ids', s(videoIds.join(',')))
+            }
+            if (playlistIds.length > 0) {
+              url.searchParams.set('pids', s(playlistIds.join(',')))
+            }
+            if (handles.length > 0) {
+              url.searchParams.set('handles', s(handles.join(',')))
+            }
             url.searchParams.set('playlist', s(self.playlist))
             window.history.replaceState({}, '', url)
           }),

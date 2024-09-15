@@ -1,13 +1,12 @@
 import { lazy, Suspense, useState } from 'react'
 import localforage from 'localforage'
-import { useLocalStorage } from './util'
 import Button from './Button'
 
 const ConfirmDialog = lazy(() => import('./ConfirmDialog'))
 const AboutDialog = lazy(() => import('./AboutDialog'))
 
 export default function Footer() {
-  const [showPolicy, setShowPolicy] = useLocalStorage('confirmed', true)
+  const [showPolicy, setShowPolicy] = useState(false)
   const [showAbout, setShowAbout] = useState(false)
   return (
     <div className="mt-10">
