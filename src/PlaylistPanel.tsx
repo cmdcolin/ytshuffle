@@ -4,7 +4,7 @@ import PlaylistTable from './PlaylistTable'
 
 export default function PlaylistPanel({ model }: { model: StoreModel }) {
   return (
-    <div className="playlist_header">
+    <div className="flex">
       <PlaylistEditor model={model} />
       <PlaylistTable model={model} />
     </div>

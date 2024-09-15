@@ -1,15 +1,24 @@
+import { lazy, Suspense, useState } from 'react'
 import localforage from 'localforage'
 import { useLocalStorage } from './util'
-import ConfirmDialog from './ConfirmDialog'
 import Button from './Button'
-import Link from './Link'
+
+const ConfirmDialog = lazy(() => import('./ConfirmDialog'))
+const AboutDialog = lazy(() => import('./AboutDialog'))
 
 export default function Footer() {
   const [showPolicy, setShowPolicy] = useLocalStorage('confirmed', true)
+  const [showAbout, setShowAbout] = useState(false)
   return (
-    <div>
-      <Link href="https://github.com/cmdcolin/ytshuffle">Source code</Link>
+    <div className="mt-10">
       <div>
+        <Button
+          onClick={() => {
+            setShowAbout(true)
+          }}
+        >
+          About
+        </Button>
         <Button
           onClick={() => {
             setShowPolicy(true)
@@ -36,6 +45,16 @@ export default function Footer() {
             setShowPolicy(false)
           }}
         />
+      ) : null}
+      {showAbout ? (
+        <Suspense fallback={null}>
+          <AboutDialog
+            open
+            onClose={() => {
+              setShowAbout(false)
+            }}
+          />
+        </Suspense>
       ) : null}
     </div>
   )

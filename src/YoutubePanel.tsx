@@ -1,5 +1,5 @@
 import YouTube from 'react-youtube'
-import type { StoreModel } from '../store'
+import type { StoreModel } from './store'
 import { observer } from 'mobx-react'
 
 const options = {
@@ -30,8 +30,8 @@ const YoutubePanel = observer(function ({ model }: { model: StoreModel }) {
           style={{
             ...options,
             maxWidth: '100%',
-            background: 'grey',
           }}
+          className="bg-zinc-700 flex items-center justify-center"
         >
           <h1>Nothing playing</h1>
         </div>

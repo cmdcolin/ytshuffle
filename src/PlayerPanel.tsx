@@ -8,7 +8,7 @@ import type { StoreModel } from './store'
 
 const PlayerPanel = observer(function ({ model }: { model: StoreModel }) {
   return (
-    <div className="container">
+    <div className="flex space-x-8">
       <div>
         <FilterPanel model={model} />
         <PlaylistTable

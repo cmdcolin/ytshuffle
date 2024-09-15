@@ -9,7 +9,7 @@ import Button from './Button'
 const PlaylistEditor = observer(function ({ model }: { model: StoreModel }) {
   const [hide, setHide] = useLocalStorage('hide_form', false)
   return (
-    <div>
+    <div className="border max-w-[800px]">
       <Button
         onClick={() => {
           setHide(s => !s)
@@ -18,13 +18,13 @@ const PlaylistEditor = observer(function ({ model }: { model: StoreModel }) {
         {hide ? 'Show controls' : 'Hide controls'}
       </Button>
       {hide ? null : (
-        <div className="mb-3">
+        <div className="p-4">
           <div>Enter list of:</div>
           <div>
-            <div className="mb-3">
-              <div className="max-w-[500px] mb-3">
+            <div>
+              <div className="mb-3">
                 <label htmlFor="video">
-                  <ul className="list-disc">
+                  <ul>
                     <li>
                       - URLs for individual youtube videos (URL contains e.g.
                       v=)
@@ -42,7 +42,7 @@ const PlaylistEditor = observer(function ({ model }: { model: StoreModel }) {
               </div>
               <textarea
                 id="video"
-                className="w-[500px] h-[300px]"
+                className="p-1 w-full h-[100px]"
                 value={model.query}
                 onChange={event => {
                   model.setQuery(event.target.value)

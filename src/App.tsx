@@ -26,18 +26,18 @@ export default function App({
 
 const App2 = observer(function ({ model }: { model: StoreModel }) {
   return (
-    <>
+    <div className="m-2">
       <Header />
       <AppBody model={model} />
       <Footer />
-    </>
+    </div>
   )
 })
 
 const AppBody = observer(function AppBody({ model }: { model: StoreModel }) {
   const { error, processing } = model
   return (
-    <div className="App">
+    <div className="text-sm flex flex-col space-y-8">
       {error ? <ErrorMessage error={error} /> : null}
       <PlaylistPanel model={model} />
 

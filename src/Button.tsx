@@ -16,12 +16,7 @@ export default function Button({
   return (
     <button
       id={id}
-      className={[
-        'bg-gray-300 hover:bg-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-100 p-1 m-1 rounded',
-        className,
-      ]
-        .filter(f => !!f)
-        .join(' ')}
+      className="bg-gray-300 hover:bg-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-100 p-1 m-1 rounded"
       disabled={disabled}
       onClick={onClick}
       type={type}

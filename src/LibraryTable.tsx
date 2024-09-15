@@ -29,13 +29,15 @@ const PlaylistTable = observer(function ({
     }
   }, [playing, follow])
   return (
-    <div className="max-h-screen overflow-auto">
+    <div className="max-h-screen max-w-[800px] overflow-auto">
       {list.length > 0 ? (
         <table className="border-collapse border border-slate-500">
           <thead className="bg-slate-800 sticky top-0 z-10 text-left">
             <tr>
               <th>np</th>
-              <th>title</th>
+              <th>
+                <div className="ml-1">title</div>
+              </th>
               <th>channel</th>
               <th>published</th>
               <th>play</th>
@@ -62,7 +64,7 @@ const PlaylistTable = observer(function ({
           </tbody>
         </table>
       ) : (
-        <h2 style={{ width: 500, maxWidth: '100%' }}>No data loaded yet</h2>
+        <h2>No data loaded yet</h2>
       )}
     </div>
   )

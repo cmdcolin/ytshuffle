@@ -1,11 +1,13 @@
-import { useState } from 'react'
-import SavePlaylistModal from './SavePlaylistDialog'
+import { lazy, Suspense, useState } from 'react'
 import { observer } from 'mobx-react'
 
 // locals
 import { mydef } from './util'
-import type { StoreModel } from './store'
 import Button from './Button'
+import type { StoreModel } from './store'
+
+// lazies
+const SavePlaylistModal = lazy(() => import('./SavePlaylistDialog'))
 
 const PlaylistControls = observer(function ({ model }: { model: StoreModel }) {
   const [saveAsModalOpen, setSaveAsModalOpen] = useState(false)
@@ -51,45 +53,57 @@ const PlaylistControls = observer(function ({ model }: { model: StoreModel }) {
       >
         Delete current playlist
       </Button>
-      <SavePlaylistModal
-        open={saveAsModalOpen}
-        currentPlaylist={model.playlist}
-        onClose={name => {
-          if (name) {
-            const { playlists, query } = model
-            model.setPlaylists({ ...playlists.toJSON(), [name]: query })
-            model.setPlaylist(name)
-          }
-          setSaveAsModalOpen(false)
-        }}
-      />
-      <SavePlaylistModal
-        open={renameModalOpen}
-        currentPlaylist={model.playlist}
-        onClose={name => {
-          if (name) {
-            const { query, playlist, playlists } = model
+      {saveAsModalOpen ? (
+        <Suspense fallback={null}>
+          <SavePlaylistModal
+            open
+            currentPlaylist={model.playlist}
+            onClose={name => {
+              if (name) {
+                const { playlists, query } = model
+                model.setPlaylists({ ...playlists.toJSON(), [name]: query })
+                model.setPlaylist(name)
+              }
+              setSaveAsModalOpen(false)
+            }}
+          />
+        </Suspense>
+      ) : null}
+      {renameModalOpen ? (
+        <Suspense fallback={null}>
+          <SavePlaylistModal
+            open
+            currentPlaylist={model.playlist}
+            onClose={name => {
+              if (name) {
+                const { query, playlist, playlists } = model
 
-            const { [playlist]: current, ...rest } = playlists.toJSON()
-            model.setPlaylists({ ...rest, [name]: query })
-            model.setPlaylist(name)
-          }
-          setRenameModalOpen(false)
-        }}
-      />
-      <SavePlaylistModal
-        open={newModalOpen}
-        currentPlaylist={''}
-        onClose={name => {
-          if (name) {
-            const { playlists } = model
-            model.setPlaylists({ ...playlists.toJSON(), [name]: '' })
-            model.setQuery('')
-            model.setPlaylist(name)
-          }
-          setNewModalOpen(false)
-        }}
-      />
+                const { [playlist]: current, ...rest } = playlists.toJSON()
+                model.setPlaylists({ ...rest, [name]: query })
+                model.setPlaylist(name)
+              }
+              setRenameModalOpen(false)
+            }}
+          />
+        </Suspense>
+      ) : null}
+      {newModalOpen ? (
+        <Suspense fallback={null}>
+          <SavePlaylistModal
+            open
+            currentPlaylist={''}
+            onClose={name => {
+              if (name) {
+                const { playlists } = model
+                model.setPlaylists({ ...playlists.toJSON(), [name]: '' })
+                model.setQuery('')
+                model.setPlaylist(name)
+              }
+              setNewModalOpen(false)
+            }}
+          />
+        </Suspense>
+      ) : null}
     </div>
   )
 })
