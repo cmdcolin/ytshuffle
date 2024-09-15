@@ -1,4 +1,4 @@
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
 import type { StoreModel } from './store'
 
 const PlaylistSelector = observer(function ({ model }: { model: StoreModel }) {

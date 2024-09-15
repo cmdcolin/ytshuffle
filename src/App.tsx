@@ -1,4 +1,4 @@
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
 
 // locals
 import ErrorMessage from './ErrorMessage'

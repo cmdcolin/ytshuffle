@@ -1,4 +1,4 @@
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
 
 // locals
 import PlaylistControls from './PlaylistControls'
@@ -41,7 +41,7 @@ const ChannelEditor = observer(function ({ model }: { model: StoreModel }) {
               </div>
               <textarea
                 id="video"
-                className="p-1 w-full h-[100px]"
+                className="p-1 w-full h-[100px] bg-gray-200 dark:bg-gray-800 "
                 value={model.query}
                 onChange={event => {
                   model.setQuery(event.target.value)

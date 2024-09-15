@@ -1,6 +1,8 @@
-import YouTube from 'react-youtube'
+import { lazy, Suspense } from 'react'
 import type { StoreModel } from './store'
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
+
+const YouTube = lazy(() => import('react-youtube'))
 
 const options = {
   height: 390,
@@ -16,15 +18,17 @@ const YoutubePanel = observer(function ({ model }: { model: StoreModel }) {
   return (
     <>
       {playing ? (
-        <YouTube
-          videoId={playing}
-          opts={options}
-          onEnd={() => {
-            if (autoplay) {
-              model.goToNext()
-            }
-          }}
-        />
+        <Suspense fallback={null}>
+          <YouTube
+            videoId={playing}
+            opts={options}
+            onEnd={() => {
+              if (autoplay) {
+                model.goToNext()
+              }
+            }}
+          />
+        </Suspense>
       ) : (
         <div
           style={{

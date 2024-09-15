@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState } from 'react'
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
 
 // locals
 import { mydef } from './util'

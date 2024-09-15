@@ -1,5 +1,5 @@
 import localforage from 'localforage'
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
 
 // locals
 import type { StoreModel } from './store'

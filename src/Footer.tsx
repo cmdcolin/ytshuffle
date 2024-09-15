@@ -9,7 +9,7 @@ export default function Footer() {
   const [showPolicy, setShowPolicy] = useState(false)
   const [showAbout, setShowAbout] = useState(false)
   return (
-    <div className="mt-10">
+    <div className="mt-20">
       <div>
         <Button
           onClick={() => {
@@ -38,12 +38,14 @@ export default function Footer() {
         </Button>
       </div>
       {showPolicy ? (
-        <ConfirmDialog
-          open
-          onClose={() => {
-            setShowPolicy(false)
-          }}
-        />
+        <Suspense fallback={null}>
+          <ConfirmDialog
+            open
+            onClose={() => {
+              setShowPolicy(false)
+            }}
+          />
+        </Suspense>
       ) : null}
       {showAbout ? (
         <Suspense fallback={null}>

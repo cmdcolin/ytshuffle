@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { formatDistanceToNowStrict } from 'date-fns'
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa6'
 import Button from './Button'
 import type { StoreModel } from './store'
