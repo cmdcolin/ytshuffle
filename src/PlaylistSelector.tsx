@@ -5,9 +5,7 @@ const PlaylistSelector = observer(function ({ model }: { model: StoreModel }) {
   const { playlist, playlists } = model
   return (
     <>
-      <label style={{ marginLeft: 20 }} htmlFor="currplaylist">
-        Current playlist:{' '}
-      </label>
+      <label htmlFor="currplaylist">Current playlist: </label>
       <select
         id="currplaylist"
         value={playlist}

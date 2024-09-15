@@ -6,7 +6,11 @@ import Button from './Button'
 import type { StoreModel } from './store'
 
 function Th({ children }: { children: React.ReactNode }) {
-  return <th className="border border-slate-700">{children}</th>
+  return (
+    <th className="border border-slate-700 dark:bg-slate-800 bg-slate-300 border border-slate-500 z-10 text-left">
+      {children}
+    </th>
+  )
 }
 
 function Td({ children }: { children: React.ReactNode }) {
@@ -25,7 +29,8 @@ const LibraryTable = observer(function ({
   onPlay: (string_: string) => void
 }) {
   const { playing, follow, list } = model
-  const [sortName, setSortName] = useState(-1)
+  const [sortName, setSortName] = useState(0)
+  const [sortDate, setSortDate] = useState(0)
   useEffect(() => {
     if (follow) {
       // id starts with vid because id must start with alphachar
@@ -34,14 +39,15 @@ const LibraryTable = observer(function ({
         ?.scrollIntoView({ block: 'center', behavior: 'smooth' })
     }
   }, [playing, follow])
-  const l2 = sortName
-    ? list.toSorted((a, b) => a.title.localeCompare(b.title) * sortName)
-    : list
+  const l2 = list
+    .map(l => ({ ...l, publishedAt: +new Date(l.publishedAt) }))
+    .toSorted((a, b) => a.title.localeCompare(b.title) * sortName)
+    .toSorted((a, b) => (a.publishedAt - b.publishedAt) * sortDate)
   return (
     <div className="max-h-[500px] overflow-auto">
       {l2.length > 0 ? (
         <table className="border-collapse border border-slate-500">
-          <thead className="dark:bg-slate-800 bg-slate-300 border border-slate-500 sticky top-0 z-10 text-left">
+          <thead>
             <tr>
               <Th>np</Th>
               <Th>
@@ -67,7 +73,26 @@ const LibraryTable = observer(function ({
                 </div>
               </Th>
               <Th>channel</Th>
-              <Th>published</Th>
+              <Th>
+                <Button
+                  onClick={() => {
+                    if (sortDate === 0) {
+                      setSortDate(-1)
+                    } else if (sortDate === -1) {
+                      setSortDate(1)
+                    } else {
+                      setSortDate(0)
+                    }
+                  }}
+                >
+                  published{' '}
+                  {sortDate === 1 ? (
+                    <FaChevronUp className="inline" />
+                  ) : sortDate === -1 ? (
+                    <FaChevronDown className="inline" />
+                  ) : null}
+                </Button>
+              </Th>
               <Th>play</Th>
             </tr>
           </thead>

@@ -1,5 +1,4 @@
 import { observer } from 'mobx-react-lite'
-import PlaylistSelector from './PlaylistSelector'
 import type { StoreModel } from './store'
 import Button from './Button'
 import Checkbox from './Checkbox'
@@ -7,30 +6,27 @@ import Checkbox from './Checkbox'
 const PlayerControls = observer(function ({ model }: { model: StoreModel }) {
   return (
     <div>
-      <div>
-        <Button
-          onClick={() => {
-            model.setPlaying()
-          }}
-        >
-          Stop
-        </Button>
-        <Button
-          onClick={() => {
-            model.goToNext()
-          }}
-        >
-          Next
-        </Button>
-        <Button
-          onClick={() => {
-            model.goToPrev()
-          }}
-        >
-          Prev
-        </Button>
-        <PlaylistSelector model={model} />
-      </div>
+      <Button
+        onClick={() => {
+          model.setPlaying()
+        }}
+      >
+        Stop
+      </Button>
+      <Button
+        onClick={() => {
+          model.goToNext()
+        }}
+      >
+        Next
+      </Button>
+      <Button
+        onClick={() => {
+          model.goToPrev()
+        }}
+      >
+        Prev
+      </Button>
       <Checkbox
         id="shuffle"
         label="Shuffle?"

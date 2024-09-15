@@ -5,6 +5,7 @@ import { observer } from 'mobx-react-lite'
 import { mydef } from './util'
 import Button from './Button'
 import type { StoreModel } from './store'
+import PlaylistSelector from './PlaylistSelector'
 
 // lazies
 const SavePlaylistModal = lazy(() => import('./SavePlaylistDialog'))
@@ -53,6 +54,7 @@ const PlaylistControls = observer(function ({ model }: { model: StoreModel }) {
       >
         Delete current playlist
       </Button>
+      <PlaylistSelector model={model} />
       {saveAsModalOpen ? (
         <Suspense fallback={null}>
           <SavePlaylistModal
