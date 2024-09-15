@@ -1,10 +1,10 @@
 import { observer } from 'mobx-react'
 
-import PlaylistTable from '../LibraryTable'
+import PlaylistTable from './LibraryTable'
 import PlayerControls from './PlayerControls'
 import YoutubePanel from './YoutubePanel'
 import FilterPanel from './FilterPanel'
-import type { StoreModel } from '../store'
+import type { StoreModel } from './store'
 
 const PlayerPanel = observer(function ({ model }: { model: StoreModel }) {
   return (

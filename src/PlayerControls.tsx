@@ -1,11 +1,11 @@
 import { observer } from 'mobx-react'
-import PlaylistSelector from '../playlist/PlaylistSelector'
-import type { StoreModel } from '../store'
-import Button from '../Button'
+import PlaylistSelector from './playlist/PlaylistSelector'
+import type { StoreModel } from './store'
+import Button from './Button'
 
 const PlayerControls = observer(function ({ model }: { model: StoreModel }) {
   return (
-    <div className="player_controls">
+    <div>
       <div>
         <Button
           onClick={() => {
@@ -39,7 +39,7 @@ const PlayerControls = observer(function ({ model }: { model: StoreModel }) {
             model.setShuffle(event.target.checked)
           }}
         />
-        <label style={{ marginLeft: 5 }} htmlFor="shuffle">
+        <label className="ml-2" htmlFor="shuffle">
           Shuffle?{' '}
         </label>
       </div>
@@ -52,7 +52,7 @@ const PlayerControls = observer(function ({ model }: { model: StoreModel }) {
             model.setFollow(event.target.checked)
           }}
         />
-        <label style={{ marginLeft: 5 }} htmlFor="follow_playing">
+        <label className="ml-2" htmlFor="follow_playing">
           Cursor follows currently playing track?{' '}
         </label>
       </div>

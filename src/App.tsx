@@ -2,7 +2,7 @@ import { observer } from 'mobx-react'
 
 // locals
 import ErrorMessage from './ErrorMessage'
-import PlayerPanel from './player/PlayerPanel'
+import PlayerPanel from './PlayerPanel'
 import Footer from './Footer'
 import Header from './Header'
 import PlaylistPanel from './playlist/PlaylistPanel'
