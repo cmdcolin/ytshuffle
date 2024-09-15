@@ -1,4 +1,4 @@
-import App from '../app/App'
+import App from './App'
 
 const s = (l: string) => decodeURIComponent(l)
 

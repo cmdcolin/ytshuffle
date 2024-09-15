@@ -1,7 +1,6 @@
 import localforage from 'localforage'
-import './footer.css'
 import { useLocalStorage } from '../util'
-import ConfirmDialog from '../startscreen/ConfirmDialog'
+import ConfirmDialog from '../ConfirmDialog'
 
 export default function Footer() {
   const [showPolicy, setShowPolicy] = useLocalStorage('confirmed', true)

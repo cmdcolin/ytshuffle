@@ -7,8 +7,6 @@ import Footer from './footer/Footer'
 import Header from './Header'
 import PlaylistPanel from './playlist/PlaylistPanel'
 
-import './App.css'
-
 // hooks
 import createStore, { type StoreModel } from './store'
 

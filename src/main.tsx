@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
-import StartScreen from './startscreen/StartScreen'
+import StartScreen from './StartScreen'
 import './index.css'
 
 const rootElement = document.querySelector('#root')
