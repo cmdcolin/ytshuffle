@@ -4,8 +4,7 @@ import { observer } from 'mobx-react'
 import ErrorMessage from './ErrorMessage'
 import Footer from './Footer'
 import Header from './Header'
-import PlaylistEditor from './PlaylistEditor'
-import PlaylistTable from './PlaylistTable'
+import ChannelEditor from './ChannelEditor'
 
 // hooks
 import createStore, { type StoreModel } from './store'
@@ -13,6 +12,7 @@ import FilterPanel from './FilterPanel'
 import PlayerControls from './PlayerControls'
 import YoutubePanel from './YoutubePanel'
 import LibraryTable from './LibraryTable'
+import ChannelList from './ChannelList'
 
 export default function App({
   initialQuery,
@@ -43,9 +43,9 @@ const AppBody = observer(function AppBody({ model }: { model: StoreModel }) {
   return (
     <div>
       {error ? <ErrorMessage error={error} /> : null}
-      <div className="text-sm grid grid-cols-2">
-        <PlaylistEditor model={model} />
-        <PlaylistTable model={model} />
+      <div className="text-sm sm:flex sm:flex-col lg:grid lg:grid-cols-2">
+        <ChannelEditor model={model} />
+        <ChannelList model={model} />
 
         <div>
           <FilterPanel model={model} />

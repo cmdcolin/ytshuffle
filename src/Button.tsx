@@ -4,11 +4,9 @@ export default function Button({
   disabled,
   children,
   id,
-  className,
 }: {
   onClick?: () => void
   id?: string
-  className?: string
   type?: 'reset' | 'submit' | 'button' | undefined
   disabled?: boolean
   children: React.ReactNode

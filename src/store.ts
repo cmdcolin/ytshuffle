@@ -2,6 +2,7 @@ import { autorun, observable } from 'mobx'
 import { type Instance, addDisposer, types } from 'mobx-state-tree'
 import {
   clamp,
+  getHandles,
   getIds,
   getPlaylistIds,
   getVideoIds,
@@ -152,13 +153,23 @@ export default function createStore() {
                   let items = await localforage.getItem<Playlist>(playlistId)
                   if (!items) {
                     items = await fetchPlaylist(self, playlistId)
+                    await localforage.setItem(playlistId, items)
                     self.videoMap.set(playlistId, items)
+                  }
+                } else if ('handle' in item && item.handle) {
+                  const { handle } = item
+                  let items = await localforage.getItem<Playlist>(handle)
+                  if (!items) {
+                    items = await fetchHandle(self, handle)
+                    await localforage.setItem(handle, items)
+                    self.videoMap.set(handle, items)
                   }
                 }
               }
               const keys = new Set([
                 ...getVideoIds(self.query),
                 ...getPlaylistIds(self.query),
+                ...getHandles(self.query),
               ])
               for (const key of self.videoMap.keys()) {
                 if (!keys.has(key)) {
@@ -192,8 +203,10 @@ export default function createStore() {
             const url = new URL(window.location.href)
             const playlistIds = getPlaylistIds(self.query)
             const videoIds = getVideoIds(self.query)
+            const handles = getHandles(self.query)
             url.searchParams.set('ids', s(videoIds.join(',')))
             url.searchParams.set('pids', s(playlistIds.join(',')))
+            url.searchParams.set('handles', s(handles.join(',')))
             url.searchParams.set('playlist', s(self.playlist))
             window.history.replaceState({}, '', url)
           }),
@@ -214,6 +227,22 @@ async function fetchItems(
 ) {
   const res = await myfetch<{ playlistId: string }>(
     `${getChannel}?videoId=${videoId}`,
+  )
+  return fetchPlaylist(self, res.playlistId)
+}
+
+async function fetchHandle(
+  self: {
+    setProcessing: (arg: {
+      name: string
+      current: number
+      total: number
+    }) => void
+  },
+  handle: string,
+) {
+  const res = await myfetch<{ playlistId: string }>(
+    `${getHandle}?handle=${handle}`,
   )
   return fetchPlaylist(self, res.playlistId)
 }

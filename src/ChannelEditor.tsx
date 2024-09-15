@@ -6,10 +6,10 @@ import type { StoreModel } from './store'
 import { useLocalStorage } from './util'
 import Button from './Button'
 
-const PlaylistEditor = observer(function ({ model }: { model: StoreModel }) {
+const ChannelEditor = observer(function ({ model }: { model: StoreModel }) {
   const [hide, setHide] = useLocalStorage('hide_form', false)
   return (
-    <div className="max-w-[800px]">
+    <div>
       <Button
         onClick={() => {
           setHide(s => !s)
@@ -26,18 +26,17 @@ const PlaylistEditor = observer(function ({ model }: { model: StoreModel }) {
                 <label htmlFor="video">
                   <ul>
                     <li>
-                      - URLs for individual youtube videos (URL contains e.g.
-                      v=)
+                      - URLs for a youtube channel (URL like
+                      https://youtube.com/@username)
+                    </li>
+                    <li>
+                      - URLs for individual youtube videos (will download the
+                      whole channel's worth of info from it)
                     </li>
                     <li>
                       - URLs for youtube playlists (URL contains e.g. list=)
                     </li>
                   </ul>
-                  <p className="mt-3">
-                    In the first case, the app will download all videos from the
-                    channel that uploaded the video, and in the second case, it
-                    will download all videos from just that playlist.
-                  </p>
                 </label>
               </div>
               <textarea
@@ -57,4 +56,4 @@ const PlaylistEditor = observer(function ({ model }: { model: StoreModel }) {
   )
 })
 
-export default PlaylistEditor
+export default ChannelEditor

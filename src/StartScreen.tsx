@@ -13,12 +13,16 @@ export default function StartScreen() {
     .split(',')
     .filter(f => !!f)
     .map(id => `https://www.youtube.com/watch?list=${id}`)
+  const handles = s(urlParameters.get('handles') ?? '')
+    .split(',')
+    .filter(f => !!f)
+    .map(id => `https://www.youtube.com/@${id}`)
 
   const playlist = s(urlParameters.get('playlist') ?? 'default')
 
   return (
     <App
-      initialQuery={[...ids, ...pids].join('\n')}
+      initialQuery={[...ids, ...pids, ...handles].join('\n')}
       initialPlaylist={playlist}
     />
   )

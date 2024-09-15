@@ -31,7 +31,7 @@ const YoutubePanel = observer(function ({ model }: { model: StoreModel }) {
             ...options,
             maxWidth: '100%',
           }}
-          className="bg-zinc-700 flex items-center justify-center"
+          className="dark:bg-zinc-700 bg-zinc-300 flex items-center justify-center"
         >
           <h1>Nothing playing</h1>
         </div>

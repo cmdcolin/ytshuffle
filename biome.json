@@ -1,11 +1,11 @@
 {
-  "files": {
-    "ignore": ["packages/core/ui/react-colorful.js"]
-  },
   "linter": {
     "rules": {
       "complexity": {
         "useArrowFunction": "off"
+      },
+      "style": {
+        "noUselessElse": "off"
       }
     }
   }

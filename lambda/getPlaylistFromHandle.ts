@@ -12,7 +12,7 @@ async function myfetch(url: string) {
 
 async function getVideos(handle: string) {
   const res1 = await myfetch(
-    `${root}/channels?part=contentDetails&fromHandle=${handle}&key=${API_KEY}`,
+    `${root}/channels?part=contentDetails&forHandle=${handle}&key=${API_KEY}`,
   )
   return res1.items[0].contentDetails.relatedPlaylists.uploads
 }

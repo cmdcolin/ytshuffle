@@ -11,12 +11,23 @@ export async function myfetch<T>(url: string, rest?: RequestInit) {
 // xref https://stackoverflow.com/a/9102270/2129219
 export function getVideoId(url: string) {
   const match1 = /^.*?list=(.*?)(?:&|$)/.exec(url)
-  if (match1) {
-    return { playlistId: match1[1] }
+  if (url.startsWith('https://www.youtube.com/@')) {
+    return {
+      handle: url.replace('https://www.youtube.com/@', ''),
+    }
+  } else if (match1) {
+    return {
+      playlistId: match1[1],
+    }
+  } else {
+    const match2 =
+      /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/.exec(url)
+    return match2?.[2].length === 11
+      ? {
+          videoId: match2[2],
+        }
+      : undefined
   }
-  const match2 =
-    /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/.exec(url)
-  return match2?.[2].length === 11 ? { videoId: match2[2] } : undefined
 }
 
 export function remap(items: PreItem[]): Item[] {
@@ -35,7 +46,14 @@ export function getIds(text: string) {
     .map(f => f.trim())
     .filter((f): f is string => !!f)
     .map(f => getVideoId(f))
-    .filter((f): f is { videoId: string } | { playlistId: string } => !!f)
+    .filter(
+      (
+        f,
+      ): f is
+        | { videoId: string }
+        | { playlistId: string }
+        | { handle: string } => !!f,
+    )
 }
 
 export function getPlaylistIds(text: string) {
@@ -48,6 +66,12 @@ export function getVideoIds(text: string) {
   return getIds(text)
     .filter((f): f is { videoId: string } => 'videoId' in f)
     .map(f => f.videoId)
+}
+
+export function getHandles(text: string) {
+  return getIds(text)
+    .filter((f): f is { handle: string } => 'handle' in f)
+    .map(f => f.handle)
 }
 
 export interface PreItem {

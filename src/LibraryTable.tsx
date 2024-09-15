@@ -4,6 +4,10 @@ import { observer } from 'mobx-react'
 import Button from './Button'
 import type { StoreModel } from './store'
 
+function Th({ children }: { children: React.ReactNode }) {
+  return <th className="border border-slate-700">{children}</th>
+}
+
 function Td({ children }: { children: React.ReactNode }) {
   return (
     <td className="max-w-[500px] border border-slate-700 pl-1 pr-1">
@@ -29,18 +33,18 @@ const LibraryTable = observer(function ({
     }
   }, [playing, follow])
   return (
-    <div className="max-h-[500px] max-w-[800px] overflow-auto">
+    <div className="max-h-[500px] overflow-auto">
       {list.length > 0 ? (
         <table className="border-collapse border border-slate-500">
-          <thead className="bg-slate-800 sticky top-0 z-10 text-left">
+          <thead className="dark:bg-slate-800 bg-slate-300 border border-slate-500 sticky top-0 z-10 text-left">
             <tr>
-              <th>np</th>
-              <th>
+              <Th>np</Th>
+              <Th>
                 <div className="ml-1">title</div>
-              </th>
-              <th>channel</th>
-              <th>published</th>
-              <th>play</th>
+              </Th>
+              <Th>channel</Th>
+              <Th>published</Th>
+              <Th>play</Th>
             </tr>
           </thead>
           <tbody>
