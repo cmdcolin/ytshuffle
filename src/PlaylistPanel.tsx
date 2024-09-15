@@ -1,4 +1,4 @@
-import type { StoreModel } from '../store'
+import type { StoreModel } from './store'
 import PlaylistEditor from './PlaylistEditor'
 import PlaylistTable from './PlaylistTable'
 

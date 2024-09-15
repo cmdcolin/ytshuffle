@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { useDialogShown } from '../util'
+import Button from './Button'
+import BaseDialog from './BaseDialog'
 
 export default function SavePlaylistModal({
   open,
@@ -10,19 +11,13 @@ export default function SavePlaylistModal({
   currentPlaylist: string
   onClose: (arg?: string) => void
 }) {
-  const ref = useDialogShown(open)
   const [name, setName] = useState(currentPlaylist)
   useEffect(() => {
     setName(currentPlaylist)
   }, [currentPlaylist])
 
   return (
-    <dialog
-      ref={ref}
-      onClose={() => {
-        onClose()
-      }}
-    >
+    <BaseDialog open={open} onClose={onClose}>
       <form
         onSubmit={event => {
           event.preventDefault()
@@ -41,16 +36,16 @@ export default function SavePlaylistModal({
           />
         </div>
         <div>
-          <button type="submit">Submit</button>
-          <button
+          <Button type="submit">Submit</Button>
+          <Button
             onClick={() => {
               onClose()
             }}
           >
             Cancel
-          </button>
+          </Button>
         </div>
       </form>
-    </dialog>
+    </BaseDialog>
   )
 }

@@ -5,7 +5,7 @@ import ErrorMessage from './ErrorMessage'
 import PlayerPanel from './PlayerPanel'
 import Footer from './Footer'
 import Header from './Header'
-import PlaylistPanel from './playlist/PlaylistPanel'
+import PlaylistPanel from './PlaylistPanel'
 
 // hooks
 import createStore, { type StoreModel } from './store'

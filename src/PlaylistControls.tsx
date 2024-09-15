@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import SavePlaylistModal from './SavePlaylistModal'
+import SavePlaylistModal from './SavePlaylistDialog'
 import { observer } from 'mobx-react'
 
 // locals
-import { mydef } from '../util'
-import type { StoreModel } from '../store'
-import Button from '../Button'
+import { mydef } from './util'
+import type { StoreModel } from './store'
+import Button from './Button'
 
 const PlaylistControls = observer(function ({ model }: { model: StoreModel }) {
   const [saveAsModalOpen, setSaveAsModalOpen] = useState(false)

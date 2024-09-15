@@ -2,9 +2,9 @@ import localforage from 'localforage'
 import { observer } from 'mobx-react'
 
 // locals
-import type { StoreModel } from '../store'
-import { useLocalStorage } from '../util'
-import Button from '../Button'
+import type { StoreModel } from './store'
+import { useLocalStorage } from './util'
+import Button from './Button'
 
 const PlaylistList = observer(function ({ model }: { model: StoreModel }) {
   const [showTable, setShowTable] = useLocalStorage('show_playlists', true)

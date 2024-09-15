@@ -2,9 +2,9 @@ import { observer } from 'mobx-react'
 
 // locals
 import PlaylistControls from './PlaylistControls'
-import type { StoreModel } from '../store'
-import { useLocalStorage } from '../util'
-import Button from '../Button'
+import type { StoreModel } from './store'
+import { useLocalStorage } from './util'
+import Button from './Button'
 
 const PlaylistEditor = observer(function ({ model }: { model: StoreModel }) {
   const [hide, setHide] = useLocalStorage('hide_form', false)

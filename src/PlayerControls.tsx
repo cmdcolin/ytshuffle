@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react'
-import PlaylistSelector from './playlist/PlaylistSelector'
+import PlaylistSelector from './PlaylistSelector'
 import type { StoreModel } from './store'
 import Button from './Button'
 

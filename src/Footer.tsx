@@ -29,12 +29,14 @@ export default function Footer() {
           Clear entire local cache
         </Button>
       </div>
-      <ConfirmDialog
-        open={showPolicy}
-        onClose={() => {
-          setShowPolicy(false)
-        }}
-      />
+      {showPolicy ? (
+        <ConfirmDialog
+          open
+          onClose={() => {
+            setShowPolicy(false)
+          }}
+        />
+      ) : null}
     </div>
   )
 }
