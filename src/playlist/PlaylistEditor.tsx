@@ -5,18 +5,19 @@ import PlaylistControls from './PlaylistControls'
 import type { StoreModel } from '../store'
 import { useLocalStorage } from '../util'
 import './playlist.css'
+import Button from '../Button'
 
 const PlaylistEditor = observer(function ({ model }: { model: StoreModel }) {
   const [hide, setHide] = useLocalStorage('hide_form', false)
   return (
     <div>
-      <button
+      <Button
         onClick={() => {
           setHide(s => !s)
         }}
       >
         {hide ? 'Show controls' : 'Hide controls'}
-      </button>
+      </Button>
       {hide ? null : (
         <div className="playlist_editor">
           <div className="text_header">Enter list of:</div>

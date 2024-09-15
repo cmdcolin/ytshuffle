@@ -27,7 +27,6 @@ const YoutubePanel = observer(function ({ model }: { model: StoreModel }) {
         />
       ) : (
         <div
-          className="center"
           style={{
             ...options,
             maxWidth: '100%',

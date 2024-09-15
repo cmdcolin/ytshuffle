@@ -1,9 +1,16 @@
 import { useEffect } from 'react'
 import { format } from 'timeago.js'
 import { observer } from 'mobx-react'
+import Button from './Button'
+import type { StoreModel } from './store'
 
-import type { StoreModel } from '../store'
-import './library.css'
+function Td({ children }: { children: React.ReactNode }) {
+  return (
+    <td className="max-w-[500px] border border-slate-700 pl-1 pr-1">
+      {children}
+    </td>
+  )
+}
 
 const PlaylistTable = observer(function ({
   model,
@@ -22,10 +29,10 @@ const PlaylistTable = observer(function ({
     }
   }, [playing, follow])
   return (
-    <div className="library_table">
+    <div className="max-h-screen overflow-auto">
       {list.length > 0 ? (
-        <table>
-          <thead>
+        <table className="border-collapse border border-slate-500">
+          <thead className="bg-slate-800 sticky top-0 z-10 text-left">
             <tr>
               <th>np</th>
               <th>title</th>
@@ -37,19 +44,19 @@ const PlaylistTable = observer(function ({
           <tbody>
             {list.map(item => (
               <tr key={item.id} id={`vid${item.videoId}`}>
-                <td>{item.videoId === playing ? '>' : ''}</td>
-                <td>{item.title}</td>
-                <td>{item.channel}</td>
-                <td>{format(item.publishedAt)}</td>
-                <td>
-                  <button
+                <Td>{item.videoId === playing ? '>' : ''}</Td>
+                <Td>{item.title}</Td>
+                <Td>{item.channel}</Td>
+                <Td>{format(item.publishedAt)}</Td>
+                <Td>
+                  <Button
                     onClick={() => {
                       onPlay(item.videoId)
                     }}
                   >
                     Play
-                  </button>
-                </td>
+                  </Button>
+                </Td>
               </tr>
             ))}
           </tbody>

@@ -5,6 +5,7 @@ import { observer } from 'mobx-react'
 // locals
 import { mydef } from '../util'
 import type { StoreModel } from '../store'
+import Button from '../Button'
 
 const PlaylistControls = observer(function ({ model }: { model: StoreModel }) {
   const [saveAsModalOpen, setSaveAsModalOpen] = useState(false)
@@ -12,28 +13,28 @@ const PlaylistControls = observer(function ({ model }: { model: StoreModel }) {
   const [newModalOpen, setNewModalOpen] = useState(false)
   return (
     <div>
-      <button
+      <Button
         onClick={() => {
           setSaveAsModalOpen(true)
         }}
       >
         Save current playlist as...
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => {
           setRenameModalOpen(true)
         }}
       >
         Rename current playlist
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => {
           setNewModalOpen(true)
         }}
       >
         New playlist
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => {
           const { playlist, playlists } = model
 
@@ -49,7 +50,7 @@ const PlaylistControls = observer(function ({ model }: { model: StoreModel }) {
         }}
       >
         Delete current playlist
-      </button>
+      </Button>
       <SavePlaylistModal
         open={saveAsModalOpen}
         currentPlaylist={model.playlist}

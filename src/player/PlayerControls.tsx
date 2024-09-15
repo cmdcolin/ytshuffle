@@ -1,32 +1,33 @@
 import { observer } from 'mobx-react'
 import PlaylistSelector from '../playlist/PlaylistSelector'
 import type { StoreModel } from '../store'
+import Button from '../Button'
 
 const PlayerControls = observer(function ({ model }: { model: StoreModel }) {
   return (
     <div className="player_controls">
       <div>
-        <button
+        <Button
           onClick={() => {
             model.setPlaying()
           }}
         >
           Stop
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => {
             model.goToNext()
           }}
         >
           Next
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => {
             model.goToPrev()
           }}
         >
           Prev
-        </button>
+        </Button>
         <PlaylistSelector model={model} />
       </div>
       <div>

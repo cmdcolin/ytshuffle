@@ -4,18 +4,19 @@ import { observer } from 'mobx-react'
 // locals
 import type { StoreModel } from '../store'
 import { useLocalStorage } from '../util'
+import Button from '../Button'
 
 const PlaylistList = observer(function ({ model }: { model: StoreModel }) {
   const [showTable, setShowTable] = useLocalStorage('show_playlists', true)
   return (
     <>
-      <button
+      <Button
         onClick={() => {
           setShowTable(s => !s)
         }}
       >
         {showTable ? 'Hide playlist table' : 'Show playlist table'}
-      </button>
+      </Button>
       <div className="filtering">
         {showTable ? (
           <table>
@@ -32,16 +33,16 @@ const PlaylistList = observer(function ({ model }: { model: StoreModel }) {
                   All ({Object.values(model.counts).reduce((a, b) => a + b, 0)})
                 </td>
                 <td>
-                  <button
+                  <Button
                     onClick={() => {
                       model.setFilter('')
                     }}
                   >
                     Show all
-                  </button>
+                  </Button>
                 </td>
                 <td>
-                  <button
+                  <Button
                     onClick={() => {
                       // eslint-disable-next-line @typescript-eslint/no-floating-promises
                       ;(async () => {
@@ -55,7 +56,7 @@ const PlaylistList = observer(function ({ model }: { model: StoreModel }) {
                     }}
                   >
                     Clear all and refresh
-                  </button>
+                  </Button>
                 </td>
               </tr>
               {Object.entries(model.counts).map(([key, value]) => (
@@ -64,16 +65,16 @@ const PlaylistList = observer(function ({ model }: { model: StoreModel }) {
                     {key} ({value || 0})
                   </td>
                   <td>
-                    <button
+                    <Button
                       onClick={() => {
                         model.setFilter(key)
                       }}
                     >
                       Filter
-                    </button>
+                    </Button>
                   </td>
                   <td>
-                    <button
+                    <Button
                       onClick={() => {
                         // eslint-disable-next-line @typescript-eslint/no-floating-promises
                         ;(async () => {
@@ -83,7 +84,7 @@ const PlaylistList = observer(function ({ model }: { model: StoreModel }) {
                       }}
                     >
                       Clear data and refresh
-                    </button>
+                    </Button>
                   </td>
                 </tr>
               ))}

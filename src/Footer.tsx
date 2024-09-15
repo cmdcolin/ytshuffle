@@ -1,21 +1,23 @@
 import localforage from 'localforage'
-import { useLocalStorage } from '../util'
-import ConfirmDialog from '../ConfirmDialog'
+import { useLocalStorage } from './util'
+import ConfirmDialog from './ConfirmDialog'
+import Button from './Button'
+import Link from './Link'
 
 export default function Footer() {
   const [showPolicy, setShowPolicy] = useLocalStorage('confirmed', true)
   return (
-    <div className="footer">
-      <a href="https://github.com/cmdcolin/ytshuffle">Source code</a>
-      <div className="footer_buttons">
-        <button
+    <div>
+      <Link href="https://github.com/cmdcolin/ytshuffle">Source code</Link>
+      <div>
+        <Button
           onClick={() => {
             setShowPolicy(true)
           }}
         >
           Show privacy policy
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => {
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
             ;(async () => {
@@ -25,7 +27,7 @@ export default function Footer() {
           }}
         >
           Clear entire local cache
-        </button>
+        </Button>
       </div>
       <ConfirmDialog
         open={showPolicy}

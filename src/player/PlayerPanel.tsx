@@ -1,26 +1,16 @@
 import { observer } from 'mobx-react'
 
-import PlaylistTable from '../library/Table'
+import PlaylistTable from '../LibraryTable'
 import PlayerControls from './PlayerControls'
 import YoutubePanel from './YoutubePanel'
+import FilterPanel from './FilterPanel'
 import type { StoreModel } from '../store'
-import './player.css'
 
 const PlayerPanel = observer(function ({ model }: { model: StoreModel }) {
   return (
     <div className="container">
       <div>
-        <div className="filter">
-          <label htmlFor="filter">Filter: </label>
-          <input
-            id="filter"
-            type="text"
-            value={model.filter}
-            onChange={event => {
-              model.setFilter(event.target.value)
-            }}
-          />
-        </div>
+        <FilterPanel model={model} />
         <PlaylistTable
           model={model}
           onPlay={videoId => {
