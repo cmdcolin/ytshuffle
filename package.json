@@ -13,8 +13,9 @@
     "postdeploy": "git push",
     "lint": "eslint --report-unused-disable-directives --max-warnings 0 src",
     "test": "vitest",
-    "lambda1": "yarn tsc --target esnext --moduleResolution nodenext lambda/getPlaylist.ts",
-    "lambda2": "yarn tsc --target esnext --moduleResolution nodenext lambda/getPlaylistContents.ts",
+    "lambda1": "yarn tsc --target esnext --module nodenext --moduleResolution nodenext lambda/getPlaylist.ts",
+    "lambda2": "yarn tsc --target esnext --module nodenext --moduleResolution nodenext lambda/getPlaylistContents.ts",
+    "lambda3": "yarn tsc --target esnext --module nodenext --moduleResolution nodenext lambda/getPlaylistFromHandle.ts",
     "lambda": "yarn lambda1 && yarn lambda2"
   },
   "dependencies": {

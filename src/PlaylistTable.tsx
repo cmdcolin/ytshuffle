@@ -8,8 +8,9 @@ import Button from './Button'
 
 const PlaylistList = observer(function ({ model }: { model: StoreModel }) {
   const [showTable, setShowTable] = useLocalStorage('show_playlists', true)
+  const { processing } = model
   return (
-    <div className="border max-w-[800px]">
+    <div className="max-w-[800px]">
       <Button
         onClick={() => {
           setShowTable(s => !s)
@@ -17,6 +18,12 @@ const PlaylistList = observer(function ({ model }: { model: StoreModel }) {
       >
         {showTable ? 'Hide playlist table' : 'Show playlist table'}
       </Button>
+      {processing ? (
+        <div>
+          Currently processing: {processing.name} ({processing.current}/
+          {processing.total})
+        </div>
+      ) : null}
       {showTable ? (
         <div className="p-4">
           <div className="filtering">

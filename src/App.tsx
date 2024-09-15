@@ -2,13 +2,17 @@ import { observer } from 'mobx-react'
 
 // locals
 import ErrorMessage from './ErrorMessage'
-import PlayerPanel from './PlayerPanel'
 import Footer from './Footer'
 import Header from './Header'
-import PlaylistPanel from './PlaylistPanel'
+import PlaylistEditor from './PlaylistEditor'
+import PlaylistTable from './PlaylistTable'
 
 // hooks
 import createStore, { type StoreModel } from './store'
+import FilterPanel from './FilterPanel'
+import PlayerControls from './PlayerControls'
+import YoutubePanel from './YoutubePanel'
+import LibraryTable from './LibraryTable'
 
 export default function App({
   initialQuery,
@@ -35,19 +39,28 @@ const App2 = observer(function ({ model }: { model: StoreModel }) {
 })
 
 const AppBody = observer(function AppBody({ model }: { model: StoreModel }) {
-  const { error, processing } = model
+  const { error } = model
   return (
-    <div className="text-sm flex flex-col space-y-8">
+    <div>
       {error ? <ErrorMessage error={error} /> : null}
-      <PlaylistPanel model={model} />
+      <div className="text-sm grid grid-cols-2">
+        <PlaylistEditor model={model} />
+        <PlaylistTable model={model} />
 
-      {processing ? (
         <div>
-          Currently processing: {processing.name} ({processing.current}/
-          {processing.total})
+          <FilterPanel model={model} />
+          <LibraryTable
+            model={model}
+            onPlay={videoId => {
+              model.setPlaying(videoId)
+            }}
+          />
         </div>
-      ) : null}
-      <PlayerPanel model={model} />
+        <div>
+          <PlayerControls model={model} />
+          <YoutubePanel model={model} />
+        </div>
+      </div>
     </div>
   )
 })

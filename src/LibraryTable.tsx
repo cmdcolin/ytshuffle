@@ -12,7 +12,7 @@ function Td({ children }: { children: React.ReactNode }) {
   )
 }
 
-const PlaylistTable = observer(function ({
+const LibraryTable = observer(function ({
   model,
   onPlay,
 }: {
@@ -29,7 +29,7 @@ const PlaylistTable = observer(function ({
     }
   }, [playing, follow])
   return (
-    <div className="max-h-screen max-w-[800px] overflow-auto">
+    <div className="max-h-[500px] max-w-[800px] overflow-auto">
       {list.length > 0 ? (
         <table className="border-collapse border border-slate-500">
           <thead className="bg-slate-800 sticky top-0 z-10 text-left">
@@ -69,4 +69,4 @@ const PlaylistTable = observer(function ({
     </div>
   )
 })
-export default PlaylistTable
+export default LibraryTable

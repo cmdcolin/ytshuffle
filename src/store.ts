@@ -7,9 +7,10 @@ import {
   getVideoIds,
   mydef,
   myfetch,
+  remap,
+  type Item,
   type Playlist,
   type PreItem,
-  remap,
 } from './util'
 import localforage from 'localforage'
 
@@ -18,6 +19,9 @@ const getChannel =
 
 const getContents =
   'https://m0v7dr1zz2.execute-api.us-east-1.amazonaws.com/default/youtubeGetPlaylistContents'
+
+const getHandle =
+  'https://gbt7w5u4c1.execute-api.us-east-1.amazonaws.com/default/youtubeGetPlaylistFromHandle'
 
 const s = (l: string) => encodeURIComponent(l)
 
@@ -198,19 +202,34 @@ export default function createStore() {
     }))
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function fetchItems(self: any, videoId: string) {
+async function fetchItems(
+  self: {
+    setProcessing: (arg: {
+      name: string
+      current: number
+      total: number
+    }) => void
+  },
+  videoId: string,
+) {
   const res = await myfetch<{ playlistId: string }>(
     `${getChannel}?videoId=${videoId}`,
   )
   return fetchPlaylist(self, res.playlistId)
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function fetchPlaylist(self: any, playlistId: string) {
+async function fetchPlaylist(
+  self: {
+    setProcessing: (arg: {
+      name: string
+      current: number
+      total: number
+    }) => void
+  },
+  playlistId: string,
+) {
   let nextPageToken = ''
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let items = [] as any[]
+  let items = [] as Item[]
   const url = `${getContents}?playlistId=${playlistId}`
   do {
     const res2 = await myfetch<{

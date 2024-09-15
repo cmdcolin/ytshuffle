@@ -9,7 +9,7 @@ import Button from './Button'
 const PlaylistEditor = observer(function ({ model }: { model: StoreModel }) {
   const [hide, setHide] = useLocalStorage('hide_form', false)
   return (
-    <div className="border max-w-[800px]">
+    <div className="max-w-[800px]">
       <Button
         onClick={() => {
           setHide(s => !s)
