@@ -88,23 +88,24 @@ export default function createStore() {
       },
       get list() {
         const lc = self.filter.toLowerCase()
-        return this.videoFlat.filter(
-          f =>
-            f.channel.toLowerCase().includes(lc) ||
-            f.title.toLowerCase().includes(lc),
-        )
+        return this.videoFlat.filter(video => {
+          return (
+            video.channel?.toLowerCase().includes(lc) ||
+            video.title?.toLowerCase().includes(lc)
+          )
+        })
       },
       get counts() {
         const c = {} as Record<string, number>
-        for (const row of this.videoFlat) {
-          c[row.channel] = (c[row.channel] || 0) + 1
+        for (const { channel = '' } of this.videoFlat) {
+          c[channel] = (c[channel] || 0) + 1
         }
         return c
       },
       get channelToId() {
         const c = {} as Record<string, string>
         for (const [key, value] of self.videoMap.entries()) {
-          c[value[0].channel] = key
+          c[value[0].channel || ''] = key
         }
         return c
       },

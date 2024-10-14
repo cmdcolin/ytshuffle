@@ -23,7 +23,7 @@
     "@typescript-eslint/parser": "^8.0.1",
     "date-fns": "^4.0.0",
     "eslint": "^9.5.0",
-    "eslint-plugin-unicorn": "^55.0.0",
+    "eslint-plugin-unicorn": "^56.0.0",
     "localforage": "^1.10.0",
     "mobx": "^6.12.4",
     "mobx-react-lite": "^4.0.7",

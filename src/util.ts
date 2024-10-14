@@ -86,9 +86,9 @@ export interface PreItem {
 
 export interface Item {
   id: string
-  channel: string
+  channel?: string
   videoId: string
-  title: string
+  title?: string
   publishedAt: string
 }
 
