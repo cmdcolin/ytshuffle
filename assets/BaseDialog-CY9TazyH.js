@@ -1,2 +1,0 @@
-import{u as c,r,j as s}from"./index-1XSKazIg.js";function f({open:o,onClose:t,children:u}){const a=c(o),e=r.useRef(null);return r.useEffect(()=>{function n(i){e.current&&!e.current.contains(i.target)&&t()}return document.addEventListener("mousedown",n),()=>{document.removeEventListener("mousedown",n)}},[t]),s.jsx("dialog",{ref:a,children:s.jsx("div",{ref:e,className:"lg:m-10",children:u})})}export{f as B};
-//# sourceMappingURL=BaseDialog-CY9TazyH.js.map
