@@ -41,7 +41,7 @@ const LibraryTable = observer(function ({
   }, [playing, follow])
   const l2 = list
     .map(l => ({ ...l, publishedAt: +new Date(l.publishedAt) }))
-    .toSorted((a, b) => a.title.localeCompare(b.title) * sortName)
+    .toSorted((a, b) => (a.title || '').localeCompare(b.title || '') * sortName)
     .toSorted((a, b) => (a.publishedAt - b.publishedAt) * sortDate)
   return (
     <div className="max-h-[500px] overflow-auto">
