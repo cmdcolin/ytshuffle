@@ -1,5 +1,6 @@
-import { useDialogShown } from './util'
 import { useEffect, useRef } from 'react'
+
+import { useDialogShown } from './util'
 
 export default function BaseDialog({
   open,

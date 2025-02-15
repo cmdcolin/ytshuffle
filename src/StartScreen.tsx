@@ -3,7 +3,7 @@ import App from './App'
 const s = (l: string) => decodeURIComponent(l)
 
 export default function StartScreen() {
-  const urlParameters = new URLSearchParams(window.location.search)
+  const urlParameters = new URLSearchParams(globalThis.location.search)
 
   const ids = s(urlParameters.get('ids') ?? '')
     .split(',')

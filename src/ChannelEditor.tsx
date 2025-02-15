@@ -1,10 +1,11 @@
 import { observer } from 'mobx-react-lite'
 
 // locals
-import PlaylistControls from './PlaylistControls'
-import type { StoreModel } from './store'
-import { useLocalStorage } from './util'
 import Button from './Button'
+import PlaylistControls from './PlaylistControls'
+import { useLocalStorage } from './util'
+
+import type { StoreModel } from './store'
 
 const ChannelEditor = observer(function ({ model }: { model: StoreModel }) {
   const [hide, setHide] = useLocalStorage('hide_form', false)

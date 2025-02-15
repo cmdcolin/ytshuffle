@@ -1,18 +1,15 @@
 import { observer } from 'mobx-react-lite'
 
-// locals
+import ChannelEditor from './ChannelEditor'
+import ChannelList from './ChannelList'
 import ErrorMessage from './ErrorMessage'
+import FilterPanel from './FilterPanel'
 import Footer from './Footer'
 import Header from './Header'
-import ChannelEditor from './ChannelEditor'
-
-// hooks
-import createStore, { type StoreModel } from './store'
-import FilterPanel from './FilterPanel'
+import LibraryTable from './LibraryTable'
 import PlayerControls from './PlayerControls'
 import YoutubePanel from './YoutubePanel'
-import LibraryTable from './LibraryTable'
-import ChannelList from './ChannelList'
+import createStore, { type StoreModel } from './store'
 
 export default function App({
   initialQuery,

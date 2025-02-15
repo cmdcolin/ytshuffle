@@ -1,6 +1,11 @@
+import localforage from 'localforage'
 import { autorun, observable } from 'mobx'
 import { type Instance, addDisposer, types } from 'mobx-state-tree'
+
 import {
+  type Item,
+  type Playlist,
+  type PreItem,
   clamp,
   getHandles,
   getIds,
@@ -9,11 +14,7 @@ import {
   mydef,
   myfetch,
   remap,
-  type Item,
-  type Playlist,
-  type PreItem,
 } from './util'
-import localforage from 'localforage'
 
 const getChannel =
   'https://hwml60od9i.execute-api.us-east-1.amazonaws.com/default/youtubeGetChannel'
@@ -90,7 +91,7 @@ export default function createStore() {
         const lc = self.filter.toLowerCase()
         return this.videoFlat.filter(video => {
           return (
-            video.channel?.toLowerCase().includes(lc) ||
+            video.channel?.toLowerCase().includes(lc) ??
             video.title?.toLowerCase().includes(lc)
           )
         })
@@ -105,7 +106,7 @@ export default function createStore() {
       get channelToId() {
         const c = {} as Record<string, string>
         for (const [key, value] of self.videoMap.entries()) {
-          c[value[0].channel || ''] = key
+          c[value[0].channel ?? ''] = key
         }
         return c
       },
@@ -201,7 +202,7 @@ export default function createStore() {
         addDisposer(
           self,
           autorun(() => {
-            const url = new URL(window.location.href)
+            const url = new URL(globalThis.location.href)
             const playlistIds = getPlaylistIds(self.query)
             const videoIds = getVideoIds(self.query)
             const handles = getHandles(self.query)
@@ -215,7 +216,7 @@ export default function createStore() {
               url.searchParams.set('handles', s(handles.join(',')))
             }
             url.searchParams.set('playlist', s(self.playlist))
-            window.history.replaceState({}, '', url)
+            globalThis.history.replaceState({}, '', url)
           }),
         )
       },

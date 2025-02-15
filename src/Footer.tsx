@@ -1,5 +1,7 @@
-import { lazy, Suspense, useState } from 'react'
+import { Suspense, lazy, useState } from 'react'
+
 import localforage from 'localforage'
+
 import Button from './Button'
 
 const ConfirmDialog = lazy(() => import('./ConfirmDialog'))
@@ -30,7 +32,7 @@ export default function Footer() {
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
             ;(async () => {
               await localforage.clear()
-              window.location.reload()
+              globalThis.location.reload()
             })()
           }}
         >

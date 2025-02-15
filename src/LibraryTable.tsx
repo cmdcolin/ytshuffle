@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react'
+
 import { formatDistanceToNowStrict } from 'date-fns'
 import { observer } from 'mobx-react-lite'
-import { FaChevronUp, FaChevronDown } from 'react-icons/fa6'
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa6'
+
 import Button from './Button'
+
 import type { StoreModel } from './store'
 
 function Th({ children }: { children: React.ReactNode }) {
   return (
-    <th className="border border-slate-700 dark:bg-slate-800 bg-slate-300 border border-slate-500 z-10 text-left">
+    <th className="border border-slate-700 dark:bg-slate-800 bg-slate-300 z-10 text-left">
       {children}
     </th>
   )
@@ -41,7 +44,7 @@ const LibraryTable = observer(function ({
   }, [playing, follow])
   const l2 = list
     .map(l => ({ ...l, publishedAt: +new Date(l.publishedAt) }))
-    .toSorted((a, b) => (a.title || '').localeCompare(b.title || '') * sortName)
+    .toSorted((a, b) => (a.title ?? '').localeCompare(b.title ?? '') * sortName)
     .toSorted((a, b) => (a.publishedAt - b.publishedAt) * sortDate)
   return (
     <div className="max-h-[500px] overflow-auto">

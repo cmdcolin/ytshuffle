@@ -2,9 +2,10 @@ import localforage from 'localforage'
 import { observer } from 'mobx-react-lite'
 
 // locals
-import type { StoreModel } from './store'
-import { useLocalStorage } from './util'
 import Button from './Button'
+import { useLocalStorage } from './util'
+
+import type { StoreModel } from './store'
 
 function Th({ children }: { children: React.ReactNode }) {
   return (
@@ -76,7 +77,7 @@ const ChannelList = observer(function ({ model }: { model: StoreModel }) {
                               localforage.removeItem(item),
                             ),
                           )
-                          window.location.reload()
+                          globalThis.location.reload()
                         })()
                       }}
                     >
@@ -104,7 +105,7 @@ const ChannelList = observer(function ({ model }: { model: StoreModel }) {
                           // eslint-disable-next-line @typescript-eslint/no-floating-promises
                           ;(async () => {
                             await localforage.removeItem(model.channelToId[key])
-                            window.location.reload()
+                            globalThis.location.reload()
                           })()
                         }}
                       >
