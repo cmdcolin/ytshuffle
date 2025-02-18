@@ -9,7 +9,13 @@ import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
   {
-    ignores: ['**/build/**/*', 'lambda', 'vite.config.ts', 'eslint.config.mjs'],
+    ignores: [
+      '**/build/**/*',
+      'lambda',
+      'vite.config.ts',
+      'eslint.config.mjs',
+      'postcss.config.js',
+    ],
   },
   {
     languageOptions: {
