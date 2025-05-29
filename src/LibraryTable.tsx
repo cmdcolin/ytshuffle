@@ -1,16 +1,25 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  useReactTable,
+  type SortingState,
+} from '@tanstack/react-table'
 import { formatDistanceToNowStrict } from 'date-fns'
 import { observer } from 'mobx-react-lite'
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa6'
 
 import Button from './Button'
 
+import type { Item } from './util'
 import type { StoreModel } from './store'
 
 function Th({ children }: { children: React.ReactNode }) {
   return (
-    <th className="border border-slate-700 dark:bg-slate-800 bg-slate-300 z-10 text-left">
+    <th className="border border-slate-700 dark:bg-slate-800 bg-slate-300 z-10 text-left sticky top-0 shadow-sm after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-[1px] after:bg-slate-700">
       {children}
     </th>
   )
@@ -24,6 +33,11 @@ function Td({ children }: { children: React.ReactNode }) {
   )
 }
 
+// Define our extended Item type with publishedAt as number
+type ExtendedItem = Omit<Item, 'publishedAt'> & { publishedAt: number }
+
+const columnHelper = createColumnHelper<ExtendedItem>()
+
 const LibraryTable = observer(function ({
   model,
   onPlay,
@@ -32,89 +46,135 @@ const LibraryTable = observer(function ({
   onPlay: (string_: string) => void
 }) {
   const { playing, follow, list } = model
-  const [sortName, setSortName] = useState(0)
-  const [sortDate, setSortDate] = useState(0)
+  const [sorting, setSorting] = useState<SortingState>([])
+
+  // Process the list data
+  const data = useMemo((): ExtendedItem[] => {
+    return list.map(l => ({
+      ...l,
+      publishedAt: +new Date(l.publishedAt),
+    }))
+  }, [list])
+
+  // Define columns
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor('videoId', {
+        id: 'nowPlaying',
+        header: 'np',
+        cell: info => (info.getValue() === playing ? '>' : ''),
+      }),
+      columnHelper.accessor('title', {
+        header: ({ column }) => {
+          return (
+            <div className="ml-1">
+              <Button
+                onClick={() =>
+                  column.toggleSorting(column.getIsSorted() === 'asc')
+                }
+              >
+                title{' '}
+                {column.getIsSorted() === 'asc' ? (
+                  <FaChevronUp className="inline" />
+                ) : column.getIsSorted() === 'desc' ? (
+                  <FaChevronDown className="inline" />
+                ) : null}
+              </Button>
+            </div>
+          )
+        },
+        cell: info => info.getValue(),
+      }),
+      columnHelper.accessor('channel', {
+        header: 'channel',
+        cell: info => info.getValue(),
+      }),
+      columnHelper.accessor('publishedAt', {
+        header: ({ column }) => {
+          return (
+            <Button
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === 'asc')
+              }
+            >
+              published{' '}
+              {column.getIsSorted() === 'asc' ? (
+                <FaChevronUp className="inline" />
+              ) : column.getIsSorted() === 'desc' ? (
+                <FaChevronDown className="inline" />
+              ) : null}
+            </Button>
+          )
+        },
+        cell: info => formatDistanceToNowStrict(info.getValue()),
+      }),
+      columnHelper.display({
+        id: 'play',
+        header: 'play',
+        cell: info => (
+          <Button
+            onClick={() => {
+              onPlay(info.row.original.videoId)
+            }}
+          >
+            Play
+          </Button>
+        ),
+      }),
+    ],
+    [playing, onPlay],
+  )
+
+  // Create table instance
+  const table = useReactTable({
+    data,
+    columns,
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+  })
+
+  // Scroll to currently playing item
   useEffect(() => {
-    if (follow) {
+    if (follow && playing) {
       // id starts with vid because id must start with alphachar
       document
         .querySelector(`#vid${playing}`)
         ?.scrollIntoView({ block: 'center', behavior: 'smooth' })
     }
   }, [playing, follow])
-  const l2 = list
-    .map(l => ({ ...l, publishedAt: +new Date(l.publishedAt) }))
-    .toSorted((a, b) => (a.title ?? '').localeCompare(b.title ?? '') * sortName)
-    .toSorted((a, b) => (a.publishedAt - b.publishedAt) * sortDate)
+
   return (
-    <div className="max-h-[500px] overflow-auto">
-      {l2.length > 0 ? (
-        <table className="border-collapse border border-slate-500">
+    <div className="max-h-[500px] overflow-auto overscroll-none">
+      {data.length > 0 ? (
+        <table className="w-full border-collapse border border-slate-500">
           <thead>
-            <tr>
-              <Th>np</Th>
-              <Th>
-                <div className="ml-1">
-                  <Button
-                    onClick={() => {
-                      if (sortName === 0) {
-                        setSortName(-1)
-                      } else if (sortName === -1) {
-                        setSortName(1)
-                      } else {
-                        setSortName(0)
-                      }
-                    }}
-                  >
-                    title{' '}
-                    {sortName === 1 ? (
-                      <FaChevronUp className="inline" />
-                    ) : sortName === -1 ? (
-                      <FaChevronDown className="inline" />
-                    ) : null}
-                  </Button>
-                </div>
-              </Th>
-              <Th>channel</Th>
-              <Th>
-                <Button
-                  onClick={() => {
-                    if (sortDate === 0) {
-                      setSortDate(-1)
-                    } else if (sortDate === -1) {
-                      setSortDate(1)
-                    } else {
-                      setSortDate(0)
-                    }
-                  }}
-                >
-                  published{' '}
-                  {sortDate === 1 ? (
-                    <FaChevronUp className="inline" />
-                  ) : sortDate === -1 ? (
-                    <FaChevronDown className="inline" />
-                  ) : null}
-                </Button>
-              </Th>
-              <Th>play</Th>
-            </tr>
+            {table.getHeaderGroups().map(headerGroup => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map(header => (
+                  <Th key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </Th>
+                ))}
+              </tr>
+            ))}
           </thead>
           <tbody>
-            {l2.map(item => (
-              <tr key={item.id} id={`vid${item.videoId}`}>
-                <Td>{item.videoId === playing ? '>' : ''}</Td>
-                <Td>{item.title}</Td>
-                <Td>{item.channel}</Td>
-                <Td>{formatDistanceToNowStrict(item.publishedAt)}</Td>
-                <Td>
-                  <Button
-                    onClick={() => {
-                      onPlay(item.videoId)
-                    }}
-                  >
-                    Play
-                  </Button>
-                </Td>
+            {table.getRowModel().rows.map(row => (
+              <tr key={row.id} id={`vid${row.original.videoId}`}>
+                {row.getVisibleCells().map(cell => (
+                  <Td key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </Td>
+                ))}
               </tr>
             ))}
           </tbody>
@@ -125,4 +185,5 @@ const LibraryTable = observer(function ({
     </div>
   )
 })
+
 export default LibraryTable
