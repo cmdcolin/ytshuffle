@@ -18,7 +18,8 @@ export default function AboutDialog({
           <h1 className="ml-4 m-1 font-extrabold">ytshuffle</h1>
           <h6 className="m-1">{version}</h6>
         </div>
-        <Link href="https://github.com/cmdcolin/ytshuffle">Source code</Link>
+        Source code/contact/report issues:{' '}
+        <Link href="https://github.com/cmdcolin/ytshuffle">GitHub</Link>
       </div>
     </BaseDialog>
   )

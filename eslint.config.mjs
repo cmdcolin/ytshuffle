@@ -11,6 +11,7 @@ export default tseslint.config(
   {
     ignores: [
       '**/build/**/*',
+      'dist',
       'lambda',
       'vite.config.ts',
       'eslint.config.mjs',
