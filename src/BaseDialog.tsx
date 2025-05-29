@@ -1,5 +1,8 @@
 import { useEffect, useRef } from 'react'
 
+import { FaX } from 'react-icons/fa6'
+
+import Button from './Button'
 import { useDialogShown } from './util'
 
 export default function BaseDialog({
@@ -26,9 +29,17 @@ export default function BaseDialog({
   }, [onClose])
 
   return (
-    <dialog ref={ref}>
-      <div ref={ref2} className="lg:m-10">
-        {children}
+    <dialog ref={ref} className="modal">
+      <div className="modal-box">
+        <Button
+          className="float-right"
+          onClick={() => {
+            onClose()
+          }}
+        >
+          <FaX />
+        </Button>
+        <div ref={ref2}>{children}</div>
       </div>
     </dialog>
   )

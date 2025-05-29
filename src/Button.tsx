@@ -1,6 +1,7 @@
 export default function Button({
   onClick,
   type,
+  className,
   disabled,
   children,
   id,
@@ -8,6 +9,7 @@ export default function Button({
   onClick?: () => void
   id?: string
   type?: 'reset' | 'submit' | 'button' | undefined
+  className?: string
   disabled?: boolean
   children: React.ReactNode
 }) {
@@ -22,7 +24,10 @@ export default function Button({
         'text-sm',
         'p-1',
         'm-1',
-      ].join(' ')}
+        className,
+      ]
+        .filter(f => !!f)
+        .join(' ')}
       disabled={disabled}
       onClick={onClick}
       type={type}

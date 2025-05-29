@@ -69,9 +69,18 @@ const LibraryTable = observer(function ({
           return (
             <div className="ml-1">
               <Button
-                onClick={() =>
-                  column.toggleSorting(column.getIsSorted() === 'asc')
-                }
+                onClick={() => {
+                  if (column.getIsSorted() === false) {
+                    column.toggleSorting(false) // Sort ascending
+                  } else if (column.getIsSorted() === 'asc') {
+                    column.toggleSorting(true) // Sort descending
+                  } else {
+                    // Remove sorting
+                    setSorting(prev =>
+                      prev.filter(sort => sort.id !== column.id),
+                    )
+                  }
+                }}
               >
                 title{' '}
                 {column.getIsSorted() === 'asc' ? (
@@ -86,16 +95,45 @@ const LibraryTable = observer(function ({
         cell: info => info.getValue(),
       }),
       columnHelper.accessor('channel', {
-        header: 'channel',
+        header: ({ column }) => {
+          return (
+            <Button
+              onClick={() => {
+                if (column.getIsSorted() === false) {
+                  column.toggleSorting(false) // Sort ascending
+                } else if (column.getIsSorted() === 'asc') {
+                  column.toggleSorting(true) // Sort descending
+                } else {
+                  // Remove sorting
+                  setSorting(prev => prev.filter(sort => sort.id !== column.id))
+                }
+              }}
+            >
+              channel{' '}
+              {column.getIsSorted() === 'asc' ? (
+                <FaChevronUp className="inline" />
+              ) : column.getIsSorted() === 'desc' ? (
+                <FaChevronDown className="inline" />
+              ) : null}
+            </Button>
+          )
+        },
         cell: info => info.getValue(),
       }),
       columnHelper.accessor('publishedAt', {
         header: ({ column }) => {
           return (
             <Button
-              onClick={() =>
-                column.toggleSorting(column.getIsSorted() === 'asc')
-              }
+              onClick={() => {
+                if (column.getIsSorted() === false) {
+                  column.toggleSorting(false) // Sort ascending
+                } else if (column.getIsSorted() === 'asc') {
+                  column.toggleSorting(true) // Sort descending
+                } else {
+                  // Remove sorting
+                  setSorting(prev => prev.filter(sort => sort.id !== column.id))
+                }
+              }}
             >
               published{' '}
               {column.getIsSorted() === 'asc' ? (
