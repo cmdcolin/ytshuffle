@@ -19,7 +19,7 @@ import type { SortingState } from '@tanstack/react-table'
 
 function Th({ children }: { children: React.ReactNode }) {
   return (
-    <th className="border border-slate-700 dark:bg-slate-800 bg-slate-300 z-10 text-left sticky top-0 shadow-sm after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-[1px] after:bg-slate-700">
+    <th className="border border-slate-700 dark:bg-slate-800 bg-slate-600 z-10 text-left sticky top-0 shadow-sm after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-[1px] after:bg-slate-700">
       {children}
     </th>
   )
@@ -148,7 +148,6 @@ const LibraryTable = observer(function ({
       }),
       columnHelper.display({
         id: 'play',
-        header: 'play',
         cell: info => (
           <Button
             onClick={() => {

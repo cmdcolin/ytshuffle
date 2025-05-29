@@ -40,7 +40,7 @@ const AppBody = observer(function AppBody({ model }: { model: StoreModel }) {
   return (
     <div>
       {error ? <ErrorMessage error={error} /> : null}
-      <div className="text-sm sm:flex sm:flex-col lg:grid lg:grid-cols-2">
+      <div className="text-sm sm:flex sm:flex-col lg:grid gap-2 lg:grid-cols-2">
         <ChannelEditor model={model} />
         <ChannelList model={model} />
 
