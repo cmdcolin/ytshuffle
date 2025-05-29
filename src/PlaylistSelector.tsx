@@ -9,6 +9,7 @@ const PlaylistSelector = observer(function ({ model }: { model: StoreModel }) {
       <label htmlFor="currplaylist">Current playlist: </label>
       <select
         id="currplaylist"
+        className="border"
         value={playlist}
         onChange={event => {
           model.setPlaylist(event.target.value)
