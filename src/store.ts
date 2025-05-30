@@ -1,11 +1,8 @@
 import localforage from 'localforage'
 import { autorun, observable } from 'mobx'
-import { type Instance, addDisposer, types } from 'mobx-state-tree'
+import { addDisposer, types } from 'mobx-state-tree'
 
 import {
-  type Item,
-  type Playlist,
-  type PreItem,
   clamp,
   getHandles,
   getIds,
@@ -15,6 +12,9 @@ import {
   myfetch,
   remap,
 } from './util'
+
+import type { Item, Playlist, PreItem } from './util'
+import type { Instance } from 'mobx-state-tree'
 
 const getChannel =
   'https://hwml60od9i.execute-api.us-east-1.amazonaws.com/default/youtubeGetChannel'
@@ -91,6 +91,7 @@ export default function createStore() {
         const lc = self.filter.toLowerCase()
         return this.videoFlat.filter(
           video =>
+            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             video.channel?.toLowerCase().includes(lc) ||
             video.title?.toLowerCase().includes(lc),
         )
