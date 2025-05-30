@@ -30,6 +30,7 @@ export default function SavePlaylistModal({
           <input
             id="playlist"
             type="text"
+            className="input input-sm"
             value={name}
             onChange={event => {
               setName(event.target.value)

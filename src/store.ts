@@ -2,6 +2,9 @@ import localforage from 'localforage'
 import { autorun, observable } from 'mobx'
 import { addDisposer, types } from 'mobx-state-tree'
 
+import { fetchItems } from './fetchFromChannel'
+import { fetchHandle } from './fetchHandle'
+import { fetchPlaylist } from './fetchPlaylist'
 import {
   clamp,
   getHandles,
@@ -9,21 +12,10 @@ import {
   getPlaylistIds,
   getVideoIds,
   mydef,
-  myfetch,
-  remap,
 } from './util'
 
-import type { Item, Playlist, PreItem } from './util'
+import type { Playlist } from './util'
 import type { Instance } from 'mobx-state-tree'
-
-const getChannel =
-  'https://hwml60od9i.execute-api.us-east-1.amazonaws.com/default/youtubeGetChannel'
-
-const getContents =
-  'https://m0v7dr1zz2.execute-api.us-east-1.amazonaws.com/default/youtubeGetPlaylistContents'
-
-const getHandle =
-  'https://gbt7w5u4c1.execute-api.us-east-1.amazonaws.com/default/youtubeGetPlaylistFromHandle'
 
 const s = (l: string) => encodeURIComponent(l)
 
@@ -221,69 +213,6 @@ export default function createStore() {
         )
       },
     }))
-}
-
-async function fetchItems(
-  self: {
-    setProcessing: (arg: {
-      name: string
-      current: number
-      total: number
-    }) => void
-  },
-  videoId: string,
-) {
-  const res = await myfetch<{ playlistId: string }>(
-    `${getChannel}?videoId=${videoId}`,
-  )
-  return fetchPlaylist(self, res.playlistId)
-}
-
-async function fetchHandle(
-  self: {
-    setProcessing: (arg: {
-      name: string
-      current: number
-      total: number
-    }) => void
-  },
-  handle: string,
-) {
-  const res = await myfetch<{ playlistId: string }>(
-    `${getHandle}?handle=${handle}`,
-  )
-  return fetchPlaylist(self, res.playlistId)
-}
-
-async function fetchPlaylist(
-  self: {
-    setProcessing: (arg: {
-      name: string
-      current: number
-      total: number
-    }) => void
-  },
-  playlistId: string,
-) {
-  let nextPageToken = ''
-  let items = [] as Item[]
-  const url = `${getContents}?playlistId=${playlistId}`
-  do {
-    const res2 = await myfetch<{
-      items: PreItem[]
-      nextPageToken: string
-      totalResults: number
-    }>(url + (nextPageToken ? `&nextPageToken=${nextPageToken}` : ''))
-
-    items = [...items, ...remap(res2.items)]
-    self.setProcessing({
-      name: playlistId,
-      current: items.length,
-      total: res2.totalResults,
-    })
-    nextPageToken = res2.nextPageToken
-  } while (nextPageToken)
-  return items
 }
 
 export type StoreModel = Instance<ReturnType<typeof createStore>>
