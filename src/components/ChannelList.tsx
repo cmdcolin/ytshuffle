@@ -8,7 +8,7 @@ import type { StoreModel } from '../store'
 
 function Th({ children }: { children: React.ReactNode }) {
   return (
-    <th className="border dark:bg-slate-800 bg-slate-300 border border-slate-500 z-10 text-left">
+    <th className="border bg-slate-800 border border-slate-500 z-10 text-left">
       {children}
     </th>
   )
