@@ -11,6 +11,7 @@
     "preview": "vite preview",
     "predeploy": "yarn build",
     "deploy": "gh-pages -d dist",
+    "test": "vitest",
     "postdeploy": "git push --follow-tags",
     "lambda1": "yarn tsc --target esnext --module nodenext --moduleResolution nodenext lambda/getPlaylist.ts",
     "lambda2": "yarn tsc --target esnext --module nodenext --moduleResolution nodenext lambda/getPlaylistContents.ts",
