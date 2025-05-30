@@ -9,7 +9,9 @@ import Header from './Header'
 import LibraryTable from './LibraryTable'
 import PlayerControls from './PlayerControls'
 import YoutubePanel from './YoutubePanel'
-import createStore, { type StoreModel } from './store'
+import createStore from '../store'
+
+import type { StoreModel } from '../store'
 
 export default function App({
   initialQuery,

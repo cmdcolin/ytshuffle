@@ -2,7 +2,7 @@ import { Suspense, lazy } from 'react'
 
 import { observer } from 'mobx-react-lite'
 
-import type { StoreModel } from './store'
+import type { StoreModel } from '../store'
 
 const YouTube = lazy(() => import('react-youtube'))
 

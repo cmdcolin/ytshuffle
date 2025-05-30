@@ -1,4 +1,4 @@
-import logo from './favicon.svg'
+import logo from '../favicon.svg'
 
 export default function Header() {
   return (

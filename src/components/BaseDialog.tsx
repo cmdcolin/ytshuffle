@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 import { FaX } from 'react-icons/fa6'
 
 import Button from './Button'
-import { useDialogShown } from './util'
+import { useDialogShown } from '../util'
 
 export default function BaseDialog({
   open,

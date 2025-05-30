@@ -2,12 +2,11 @@ import { Suspense, lazy, useState } from 'react'
 
 import { observer } from 'mobx-react-lite'
 
-// locals
 import Button from './Button'
 import PlaylistSelector from './PlaylistSelector'
-import { mydef } from './util'
+import { mydef } from '../util'
 
-import type { StoreModel } from './store'
+import type { StoreModel } from '../store'
 
 // lazies
 const SavePlaylistModal = lazy(() => import('./SavePlaylistDialog'))

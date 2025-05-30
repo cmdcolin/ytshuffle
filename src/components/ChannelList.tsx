@@ -1,15 +1,14 @@
 import localforage from 'localforage'
 import { observer } from 'mobx-react-lite'
 
-// locals
 import Button from './Button'
-import { useLocalStorage } from './util'
+import { useLocalStorage } from '../util'
 
-import type { StoreModel } from './store'
+import type { StoreModel } from '../store'
 
 function Th({ children }: { children: React.ReactNode }) {
   return (
-    <th className="border border-slate-700 dark:bg-slate-800 bg-slate-300 border border-slate-500 z-10 text-left">
+    <th className="border dark:bg-slate-800 bg-slate-300 border border-slate-500 z-10 text-left">
       {children}
     </th>
   )

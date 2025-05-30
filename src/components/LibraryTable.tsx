@@ -13,8 +13,8 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa6'
 
 import Button from './Button'
 
-import type { StoreModel } from './store'
-import type { Item } from './util'
+import type { StoreModel } from '../store'
+import type { Item } from '../util'
 import type { SortingState } from '@tanstack/react-table'
 
 function Th({ children }: { children: React.ReactNode }) {

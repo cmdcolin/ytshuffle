@@ -1,7 +1,7 @@
 import BaseDialog from './BaseDialog'
 import Link from './Link'
+import { version } from '../../package.json'
 import logo from '../favicon.svg'
-import { version } from '../package.json'
 
 export default function AboutDialog({
   open,

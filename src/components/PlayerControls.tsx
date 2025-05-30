@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 import Button from './Button'
 import Checkbox from './Checkbox'
 
-import type { StoreModel } from './store'
+import type { StoreModel } from '../store'
 
 const PlayerControls = observer(function ({ model }: { model: StoreModel }) {
   return (

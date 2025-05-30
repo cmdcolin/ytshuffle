@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite'
 
-import type { StoreModel } from './store'
+import type { StoreModel } from '../store'
 
 const FilterPanel = observer(function ({ model }: { model: StoreModel }) {
   return (
