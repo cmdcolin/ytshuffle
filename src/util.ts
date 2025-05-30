@@ -11,9 +11,12 @@ export async function myfetch<T>(url: string, rest?: RequestInit) {
 // xref https://stackoverflow.com/a/9102270/2129219
 export function getVideoId(url: string) {
   const match1 = /^.*?list=(.*?)(?:&|$)/.exec(url)
-  if (url.startsWith('https://www.youtube.com/@')) {
+  if (
+    url.startsWith('https://www.youtube.com/@') ||
+    url.startsWith('https://youtube.com/@')
+  ) {
     return {
-      handle: url.replace('https://www.youtube.com/@', ''),
+      handle: url.replace(/^https:\/\/(www\.)?youtube\.com\/@/, ''),
     }
   } else if (match1) {
     return {
