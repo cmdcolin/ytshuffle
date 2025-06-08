@@ -16,7 +16,9 @@ export function getVideoId(url: string) {
     url.startsWith('https://youtube.com/@')
   ) {
     // Extract handle and remove any query parameters
-    const handle = url.replace(/^https:\/\/(www\.)?youtube\.com\/@/, '').split('?')[0]
+    const handle = url
+      .replace(/^https:\/\/(www\.)?youtube\.com\/@/, '')
+      .split('?')[0]
     return {
       handle,
     }
