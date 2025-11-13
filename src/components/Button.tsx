@@ -16,16 +16,7 @@ export default function Button({
   return (
     <button
       id={id}
-      className={[
-        'btn',
-        'btn-soft',
-        'btn-sm',
-        'font-normal',
-        'text-sm',
-        'p-1',
-        'm-1',
-        className,
-      ]
+      className={['btn', 'btn-sm', 'btn-soft', 'font-normal', className]
         .filter(f => !!f)
         .join(' ')}
       disabled={disabled}

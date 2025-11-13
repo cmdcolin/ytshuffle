@@ -6,21 +6,23 @@ const PlaylistSelector = observer(function ({ model }: { model: StoreModel }) {
   const { playlist, playlists } = model
   return (
     <span>
-      <label htmlFor="currplaylist">Current playlist:</label>
       <select
         id="currplaylist"
-        className="border border-slate-700 rounded-sm p-1 ml-2"
+        className="m-0.5 select select-sm max-w-[150px]"
         value={playlist}
         onChange={event => {
           model.setPlaylist(event.target.value)
         }}
       >
+        <option disabled selected>
+          Current playlist:
+        </option>
         {(playlists.size > 0
           ? [...playlists.keys()]
           : ['No playlists saved yet']
         ).map(name => (
           <option key={name} value={name} className="py-1">
-            {name}
+            Playlist: {name}
           </option>
         ))}
       </select>

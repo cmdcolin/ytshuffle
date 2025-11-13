@@ -6,20 +6,8 @@ import { useLocalStorage } from '../util'
 
 import type { StoreModel } from '../store'
 
-function Th({ children }: { children: React.ReactNode }) {
-  return (
-    <th className="border bg-slate-800 border border-slate-500 z-10 text-left">
-      {children}
-    </th>
-  )
-}
-
 function Td({ children }: { children: React.ReactNode }) {
-  return (
-    <td className="max-w-[500px] border border-slate-700 pl-1 pr-1">
-      {children}
-    </td>
-  )
+  return <td className="max-w-[500px] p-0.5 pl-1 pr-1">{children}</td>
 }
 
 const ChannelList = observer(function ({ model }: { model: StoreModel }) {
@@ -42,78 +30,81 @@ const ChannelList = observer(function ({ model }: { model: StoreModel }) {
       ) : null}
       {showTable ? (
         <div className="overflow-x-auto max-h-[200px] p-4">
-          <table className="table table-pin-rows border-collapse border border-slate-500">
-              <thead>
-                <tr>
-                  <Th>Channels loaded</Th>
-                  <Th>Filter</Th>
-                  <Th>Refresh</Th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
+          <table className="table table-pin-rows table-zebra">
+            <thead>
+              <tr>
+                <th>Channels loaded</th>
+                <th>Filter</th>
+                <th>Refresh</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>
+                  All ({Object.values(model.counts).reduce((a, b) => a + b, 0)})
+                </Td>
+                <Td>
+                  <Button
+                    className="btn-xs"
+                    onClick={() => {
+                      model.setFilter('')
+                    }}
+                  >
+                    Show all
+                  </Button>
+                </Td>
+                <Td>
+                  <Button
+                    className="btn-xs"
+                    onClick={() => {
+                      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+                      ;(async () => {
+                        await Promise.all(
+                          Object.values(model.channelToId).map(item =>
+                            localforage.removeItem(item),
+                          ),
+                        )
+                        globalThis.location.reload()
+                      })()
+                    }}
+                  >
+                    Clear all and refresh
+                  </Button>
+                </Td>
+              </tr>
+              {Object.entries(model.counts).map(([key, value]) => (
+                <tr key={key}>
                   <Td>
-                    All (
-                    {Object.values(model.counts).reduce((a, b) => a + b, 0)})
+                    {key} ({value || 0})
                   </Td>
                   <Td>
                     <Button
+                      className="btn-xs"
                       onClick={() => {
-                        model.setFilter('')
+                        model.setFilter(key)
                       }}
                     >
-                      Show all
+                      Filter
                     </Button>
                   </Td>
                   <Td>
                     <Button
+                      className="btn-xs"
                       onClick={() => {
                         // eslint-disable-next-line @typescript-eslint/no-floating-promises
                         ;(async () => {
-                          await Promise.all(
-                            Object.values(model.channelToId).map(item =>
-                              localforage.removeItem(item),
-                            ),
-                          )
+                          await localforage.removeItem(model.channelToId[key])
                           globalThis.location.reload()
                         })()
                       }}
                     >
-                      Clear all and refresh
+                      Clear data and refresh
                     </Button>
                   </Td>
                 </tr>
-                {Object.entries(model.counts).map(([key, value]) => (
-                  <tr key={key}>
-                    <Td>
-                      {key} ({value || 0})
-                    </Td>
-                    <Td>
-                      <Button
-                        onClick={() => {
-                          model.setFilter(key)
-                        }}
-                      >
-                        Filter
-                      </Button>
-                    </Td>
-                    <Td>
-                      <Button
-                        onClick={() => {
-                          // eslint-disable-next-line @typescript-eslint/no-floating-promises
-                          ;(async () => {
-                            await localforage.removeItem(model.channelToId[key])
-                            globalThis.location.reload()
-                          })()
-                        }}
-                      >
-                        Clear data and refresh
-                      </Button>
-                    </Td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+              ))}
+            </tbody>
+          </table>
         </div>
       ) : null}
     </div>

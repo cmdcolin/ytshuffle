@@ -17,20 +17,8 @@ import type { StoreModel } from '../store'
 import type { Item } from '../util'
 import type { SortingState } from '@tanstack/react-table'
 
-function Th({ children }: { children: React.ReactNode }) {
-  return (
-    <th className="border border-slate-700 bg-slate-800 text-left">
-      {children}
-    </th>
-  )
-}
-
 function Td({ children }: { children: React.ReactNode }) {
-  return (
-    <td className="max-w-[500px] border border-slate-700 pl-1 pr-1">
-      {children}
-    </td>
-  )
+  return <td className="max-w-[500px] p-0.5 pl-1 pr-1">{children}</td>
 }
 
 // Define our extended Item type with publishedAt as number
@@ -150,6 +138,7 @@ const LibraryTable = observer(function ({
         id: 'play',
         cell: info => (
           <Button
+            className="btn-xs"
             onClick={() => {
               onPlay(info.row.original.videoId)
             }}
@@ -187,19 +176,19 @@ const LibraryTable = observer(function ({
   return (
     <div className="overflow-x-auto max-h-[500px] overscroll-none">
       {data.length > 0 ? (
-        <table className="table table-pin-rows w-full border-collapse border border-slate-500">
+        <table className="table table-pin-rows table-zebra">
           <thead>
             {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map(header => (
-                  <Th key={header.id}>
+                  <th key={header.id}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
                           header.getContext(),
                         )}
-                  </Th>
+                  </th>
                 ))}
               </tr>
             ))}

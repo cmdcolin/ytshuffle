@@ -2,7 +2,7 @@ import { Suspense, lazy, useState } from 'react'
 
 import { observer } from 'mobx-react-lite'
 
-import Button from './Button'
+import ButtonM1 from './ButtonM1'
 import PlaylistSelector from './PlaylistSelector'
 import { mydef } from '../util'
 
@@ -17,28 +17,28 @@ const PlaylistControls = observer(function ({ model }: { model: StoreModel }) {
   const [newModalOpen, setNewModalOpen] = useState(false)
   return (
     <div>
-      <Button
+      <ButtonM1
         onClick={() => {
           setSaveAsModalOpen(true)
         }}
       >
         Save current playlist as...
-      </Button>
-      <Button
+      </ButtonM1>
+      <ButtonM1
         onClick={() => {
           setRenameModalOpen(true)
         }}
       >
         Rename current playlist
-      </Button>
-      <Button
+      </ButtonM1>
+      <ButtonM1
         onClick={() => {
           setNewModalOpen(true)
         }}
       >
         New playlist
-      </Button>
-      <Button
+      </ButtonM1>
+      <ButtonM1
         onClick={() => {
           const { playlist, playlists } = model
 
@@ -54,7 +54,7 @@ const PlaylistControls = observer(function ({ model }: { model: StoreModel }) {
         }}
       >
         Delete current playlist
-      </Button>
+      </ButtonM1>
       <PlaylistSelector model={model} />
       {saveAsModalOpen ? (
         <Suspense fallback={null}>
