@@ -19,7 +19,7 @@ import type { SortingState } from '@tanstack/react-table'
 
 function Th({ children }: { children: React.ReactNode }) {
   return (
-    <th className="border border-slate-700 bg-slate-800 z-10 text-left sticky top-0 shadow-sm after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-[1px] after:bg-slate-700">
+    <th className="border border-slate-700 bg-slate-800 text-left">
       {children}
     </th>
   )
@@ -185,9 +185,9 @@ const LibraryTable = observer(function ({
   }, [playing, follow])
 
   return (
-    <div className="max-h-[500px] overflow-auto overscroll-none">
+    <div className="overflow-x-auto max-h-[500px] overscroll-none">
       {data.length > 0 ? (
-        <table className="w-full border-collapse border border-slate-500">
+        <table className="table table-pin-rows w-full border-collapse border border-slate-500">
           <thead>
             {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>

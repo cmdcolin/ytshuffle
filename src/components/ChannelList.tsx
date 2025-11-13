@@ -41,9 +41,8 @@ const ChannelList = observer(function ({ model }: { model: StoreModel }) {
         </div>
       ) : null}
       {showTable ? (
-        <div className="overflow-auto">
-          <div className="p-4 max-h-[200px]">
-            <table className="border-collapse border border-slate-500">
+        <div className="overflow-x-auto max-h-[200px] p-4">
+          <table className="table table-pin-rows border-collapse border border-slate-500">
               <thead>
                 <tr>
                   <Th>Channels loaded</Th>
@@ -115,7 +114,6 @@ const ChannelList = observer(function ({ model }: { model: StoreModel }) {
                 ))}
               </tbody>
             </table>
-          </div>
         </div>
       ) : null}
     </div>
