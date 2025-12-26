@@ -12,14 +12,14 @@ jobs:
       - name: Check spelling
         uses: crate-ci/typos@master
   test:
-    name: Lint, build, and test on node 18.x and ubuntu-latest
+    name: Lint, build, and test on node 24.x and ubuntu-latest
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js 18.x
+      - name: Use Node.js 24.x
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 24.x
       - name: Install deps (with cache)
         uses: bahmutov/npm-install@v1
       - name: Lint codebase

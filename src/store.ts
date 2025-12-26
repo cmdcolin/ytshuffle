@@ -1,6 +1,6 @@
+import { addDisposer, types } from '@jbrowse/mobx-state-tree'
 import localforage from 'localforage'
 import { autorun, observable } from 'mobx'
-import { addDisposer, types } from 'mobx-state-tree'
 
 import { fetchItems } from './fetchFromChannel'
 import { fetchHandle } from './fetchHandle'
@@ -15,7 +15,7 @@ import {
 } from './util'
 
 import type { Playlist } from './util'
-import type { Instance } from 'mobx-state-tree'
+import type { Instance } from '@jbrowse/mobx-state-tree'
 
 const s = (l: string) => encodeURIComponent(l)
 

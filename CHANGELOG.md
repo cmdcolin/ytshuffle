@@ -1,6 +1,6 @@
 ## v0.0.2
 
-- Switch to mobx-state-tree for state management
+- Switch to @jbrowse/mobx-state-tree for state management
 - Put the playlist name in the URL
 - Allow hiding the playlist table
 - Modularize codebase more
