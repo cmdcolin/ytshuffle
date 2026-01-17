@@ -25,3 +25,9 @@ yarn dev
 yarn deploy
 
 ```
+
+## Notes
+
+Not affiliated with ytshuffle.com
+
+See also https://github.com/cmdcolin/ytshuffle2 for new re-imagining with login and more
